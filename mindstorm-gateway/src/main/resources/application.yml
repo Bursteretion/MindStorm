@@ -1,0 +1,19 @@
+server:
+  port: 7000
+
+spring:
+  application:
+    name: mindstorm-gateway
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: mindstorm-security
+          uri: lb://mindstorm-security
+          predicates:
+            - Path=/security/**
