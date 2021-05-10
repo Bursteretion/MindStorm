@@ -35,7 +35,7 @@ public enum ResultStatus implements IResultStatus {
 
     REGISTER_ERROR(20007, "注册失败！"),
 
-    USER_EXIT_ERROR(20008, "当前博客已有用户！"),
+    USER_EXIT_ERROR(20008, "当前用户已存在！"),
 
     PARAMS_ERROR(20009, "参数校验失败！"),
 

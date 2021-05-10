@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.security.entity;
+package cn.lwjppz.mindstorm.security.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;

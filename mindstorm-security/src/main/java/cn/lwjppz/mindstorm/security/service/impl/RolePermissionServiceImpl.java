@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.security.service.impl;
 
-import cn.lwjppz.mindstorm.security.entity.RolePermission;
+import cn.lwjppz.mindstorm.security.model.entity.RolePermission;
 import cn.lwjppz.mindstorm.security.mapper.RolePermissionMapper;
 import cn.lwjppz.mindstorm.security.service.RolePermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

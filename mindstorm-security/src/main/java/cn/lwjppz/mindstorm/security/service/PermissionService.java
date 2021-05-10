@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.security.service;
 
-import cn.lwjppz.mindstorm.security.entity.Permission;
+import cn.lwjppz.mindstorm.security.model.entity.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

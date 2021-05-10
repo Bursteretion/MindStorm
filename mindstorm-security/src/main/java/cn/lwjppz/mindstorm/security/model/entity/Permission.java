@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.security.entity;
+package cn.lwjppz.mindstorm.security.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 用户表
+ * 权限
  * </p>
  *
  * @author lwj
@@ -27,51 +27,39 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ms_user")
-@ApiModel(value = "User对象", description = "用户表")
-public class User implements Serializable {
+@TableName("ms_permission")
+@ApiModel(value = "Permission对象", description = "权限")
+public class Permission implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "id")
+    @ApiModelProperty(value = "编号")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
-    @ApiModelProperty(value = "用户名")
-    private String username;
+    @ApiModelProperty(value = "所属上级")
+    private String pid;
 
-    @ApiModelProperty(value = "密码")
-    private String password;
+    @ApiModelProperty(value = "名称")
+    private String name;
 
-    @ApiModelProperty(value = "昵称")
-    private String nickName;
+    @ApiModelProperty(value = "类型(1:菜单,2:按钮)")
+    private Integer type;
 
-    @ApiModelProperty(value = "真实姓名")
-    private String realName;
+    @ApiModelProperty(value = "权限值")
+    private String permissionValue;
 
-    @ApiModelProperty(value = "年龄")
-    private Integer age;
+    @ApiModelProperty(value = "访问路径")
+    private String path;
 
-    @ApiModelProperty(value = "性别 1.男 2.女")
-    private Integer sex;
+    @ApiModelProperty(value = "组件路径")
+    private String component;
 
-    @ApiModelProperty(value = "生日")
-    private Date birthDay;
-
-    @ApiModelProperty(value = "电话")
-    private String phone;
+    @ApiModelProperty(value = "图标")
+    private String icon;
 
     @ApiModelProperty(value = "状态(0:禁止,1:正常)")
     private Integer status;
-
-    @ApiModelProperty(value = "头像地址")
-    private String avatar;
-
-    @ApiModelProperty(value = "学生年级(1-12)")
-    private Integer userLevel;
-
-    @ApiModelProperty(value = "微信openId")
-    private String wxOpenId;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic
@@ -84,5 +72,6 @@ public class User implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
+
 
 }

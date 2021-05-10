@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.security.mapper;
 
-import cn.lwjppz.mindstorm.security.entity.Role;
+import cn.lwjppz.mindstorm.security.model.entity.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

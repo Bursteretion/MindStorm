@@ -11,7 +11,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @EnableDiscoveryClient
 @SpringBootApplication
-@MapperScan("cn.lwjppz.mindstorm.security")
 public class MindStormSecurityApplication {
 
     public static void main(String[] args) {
