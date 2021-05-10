@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    username: root
+    password: LWJLWJ20000829
+    url: jdbc:mysql://localhost:3306/mindstorm?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    # 连接池的配置信息
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20

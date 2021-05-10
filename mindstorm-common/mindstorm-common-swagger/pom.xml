@@ -13,10 +13,12 @@
 	<description>Demo project for Spring Boot</description>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>com.github.xiaoymin</groupId>
 			<artifactId>knife4j-spring-boot-starter</artifactId>
 		</dependency>
+
 	</dependencies>
 
 </project>

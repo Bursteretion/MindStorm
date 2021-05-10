@@ -4,16 +4,26 @@ server:
 spring:
   application:
     name: mindstorm-gateway
+
   cloud:
     nacos:
-      config:
+      discovery:
         server-addr: 127.0.0.1:8848
+
     gateway:
+      x-forwarded:
+        enabled: true
       discovery:
         locator:
           enabled: true
+          lower-case-service-id: true
       routes:
         - id: mindstorm-security
           uri: lb://mindstorm-security
           predicates:
             - Path=/security/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+  main:
+    allow-bean-definition-overriding: true

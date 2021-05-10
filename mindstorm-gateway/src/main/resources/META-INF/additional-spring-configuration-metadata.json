@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "spring.cloud.nacos.config.server-addr",
+      "type": "java.lang.String",
+      "description": "Description for spring.cloud.nacos.config.server-addr."
+    },
+    {
+      "name": "spring.cloud.nacos.config.server-addr",
+      "type": "java.lang.String",
+      "description": "Description for spring.cloud.nacos.config.server-addr."
+    }
+  ] }
