@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.lwjppz.mindstorm.common.security.service.TokenService,\
+  cn.lwjppz.mindstorm.common.security.aspect.PreAuthorizeAspect

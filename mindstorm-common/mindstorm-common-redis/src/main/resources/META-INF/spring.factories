@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.lwjppz.mindstorm.common.redis.configure.RedisConfig,\
+  cn.lwjppz.mindstorm.common.redis.service.RedisService

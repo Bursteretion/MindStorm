@@ -18,10 +18,17 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: mindstorm-security
-          uri: lb://mindstorm-security
+        - id: mindstorm-auth
+          uri: lb://mindstorm-auth
           predicates:
-            - Path=/security/**
+            - Path=/auth/**
+          filters:
+            - SwaggerHeaderFilter
+            - StripPrefix=1
+        - id: mindstorm-permission
+          uri: lb://mindstorm-permission
+          predicates:
+            - Path=/permission/**
           filters:
             - SwaggerHeaderFilter
             - StripPrefix=1

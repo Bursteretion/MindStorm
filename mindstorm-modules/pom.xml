@@ -7,16 +7,13 @@
 		<groupId>cn.lwjppz</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>mindstorm-common</artifactId>
+	<artifactId>mindstorm-modules</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mindstorm-common</name>
+	<name>mindstorm-modules</name>
 	<description>Demo project for Spring Boot</description>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>mindstorm-common-core</module>
-		<module>mindstorm-common-redis</module>
-		<module>mindstorm-common-security</module>
-		<module>mindstorm-common-swagger</module>
+		<module>mindstorm-permission</module>
 	</modules>
 </project>

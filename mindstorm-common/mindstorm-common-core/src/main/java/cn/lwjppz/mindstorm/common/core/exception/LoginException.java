@@ -3,18 +3,20 @@ package cn.lwjppz.mindstorm.common.core.exception;
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 
 /**
- * Entity already exist exception
+ * <p>
+ *
+ * </p>
  *
  * @author : lwj
- * @since : 2021-05-10
+ * @since : 2021-05-15
  */
-public class AlreadyExistsException extends AbstractMindStormException {
+public class LoginException extends AbstractMindStormException {
 
-    public AlreadyExistsException(ResultStatus status) {
+    public LoginException(ResultStatus status) {
         super(status);
     }
 
-    public AlreadyExistsException(String msg) {
+    public LoginException(String msg) {
         super(msg);
     }
 
@@ -22,5 +24,4 @@ public class AlreadyExistsException extends AbstractMindStormException {
     public ResultStatus getStatus() {
         return status;
     }
-
 }

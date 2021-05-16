@@ -17,8 +17,9 @@
 
 	<modules>
 		<module>mindstorm-common</module>
-		<module>mindstorm-security</module>
+		<module>mindstorm-auth</module>
 		<module>mindstorm-gateway</module>
+		<module>mindstorm-modules</module>
 		<module>mindstorm-generator</module>
 	</modules>
 
@@ -26,7 +27,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
+		<spring-boot.version>2.2.9.RELEASE</spring-boot.version>
 		<druid.version>1.2.4</druid.version>
+		<jackson-databind.version>2.11.3</jackson-databind.version>
 		<hutool.version>5.3.10</hutool.version>
 		<swagger.version>2.9.2</swagger.version>
 		<fastjson.version>1.2.75</fastjson.version>
@@ -37,7 +40,6 @@
 		<commons-pool.version>2.6.0</commons-pool.version>
 		<jwt.version>0.9.1</jwt.version>
 		<mybatis-plus.version>3.4.1</mybatis-plus.version>
-		<fastjson.version>1.2.3</fastjson.version>
 		<bitwalker.version>1.21</bitwalker.version>
 		<knife4j.version>2.0.4</knife4j.version>
 		<mysql.version>8.0.17</mysql.version>
@@ -99,6 +101,12 @@
 				<version>${fastjson.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson-databind.version}</version>
+			</dependency>
+
 			<!--	lombok	-->
 			<dependency>
 				<groupId>org.projectlombok</groupId>
@@ -144,6 +152,12 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-pool2</artifactId>
 				<version>${commons-pool.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-redis</artifactId>
+				<version>${spring-boot.version}</version>
 			</dependency>
 
 			<!--	spring cloud		-->
