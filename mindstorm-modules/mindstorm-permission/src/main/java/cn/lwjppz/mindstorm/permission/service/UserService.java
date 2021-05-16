@@ -2,7 +2,7 @@ package cn.lwjppz.mindstorm.permission.service;
 
 import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
-import cn.lwjppz.mindstorm.permission.model.vo.UserVO;
+import cn.lwjppz.mindstorm.permission.model.vo.user.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.lang.NonNull;
 

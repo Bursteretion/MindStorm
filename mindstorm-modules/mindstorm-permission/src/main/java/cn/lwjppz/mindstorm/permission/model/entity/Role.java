@@ -40,11 +40,14 @@ public class Role implements Serializable {
     @ApiModelProperty(value = "角色名称")
     private String roleName;
 
-    @ApiModelProperty(value = "角色编码")
-    private String roleCode;
-
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    @ApiModelProperty("排序")
+    private Integer sort;
+
+    @ApiModelProperty(value = "状态, 1 表示正常，0 表示已禁用")
+    private Integer status;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic

@@ -8,7 +8,7 @@ import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.permission.mapper.UserMapper;
 import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
-import cn.lwjppz.mindstorm.permission.model.vo.UserVO;
+import cn.lwjppz.mindstorm.permission.model.vo.user.UserVO;
 import cn.lwjppz.mindstorm.permission.service.PermissionService;
 import cn.lwjppz.mindstorm.permission.service.RoleService;
 import cn.lwjppz.mindstorm.permission.service.UserService;
@@ -23,9 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,12 +36,6 @@ import java.util.Set;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private PermissionService permissionService;
 
     @Override
     public User insertStudent(@NonNull UserVO userVO) {

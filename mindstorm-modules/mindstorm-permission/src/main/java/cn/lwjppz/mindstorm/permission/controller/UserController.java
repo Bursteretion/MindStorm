@@ -3,7 +3,7 @@ package cn.lwjppz.mindstorm.permission.controller;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
-import cn.lwjppz.mindstorm.permission.model.vo.UserVO;
+import cn.lwjppz.mindstorm.permission.model.vo.user.UserVO;
 import cn.lwjppz.mindstorm.permission.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

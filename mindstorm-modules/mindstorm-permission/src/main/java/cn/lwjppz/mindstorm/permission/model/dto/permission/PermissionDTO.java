@@ -1,8 +1,11 @@
-package cn.lwjppz.mindstorm.permission.model.dto;
+package cn.lwjppz.mindstorm.permission.model.dto.permission;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,20 +22,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@ApiModel(value = "PermissionDetailDTO对象")
-public class PermissionDetailDTO implements Serializable {
+@ApiModel(value = "PermissionDTO对象")
+public class PermissionDTO implements Serializable {
 
     @ApiModelProperty(value = "编号")
     private String id;
 
-    @ApiModelProperty(value = "所属上级")
-    private String pid;
-
     @ApiModelProperty(value = "名称")
     private String name;
-
-    @ApiModelProperty(value = "类型(1:菜单,2:按钮)")
-    private Integer type;
 
     @ApiModelProperty(value = "权限值")
     private String permissionValue;

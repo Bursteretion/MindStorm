@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.permission.model.vo;
+package cn.lwjppz.mindstorm.permission.model.vo.permission;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

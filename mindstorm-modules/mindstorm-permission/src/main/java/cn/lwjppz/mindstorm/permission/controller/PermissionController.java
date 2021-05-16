@@ -2,14 +2,13 @@ package cn.lwjppz.mindstorm.permission.controller;
 
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
-import cn.lwjppz.mindstorm.permission.model.dto.PermissionDTO;
-import cn.lwjppz.mindstorm.permission.model.dto.PermissionDetailDTO;
-import cn.lwjppz.mindstorm.permission.model.vo.PermissionVO;
+import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDetailDTO;
+import cn.lwjppz.mindstorm.permission.model.vo.permission.PermissionVO;
 import cn.lwjppz.mindstorm.permission.service.PermissionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

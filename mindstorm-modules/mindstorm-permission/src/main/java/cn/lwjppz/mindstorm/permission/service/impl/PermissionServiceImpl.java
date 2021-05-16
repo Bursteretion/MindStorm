@@ -2,10 +2,10 @@ package cn.lwjppz.mindstorm.permission.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.enums.PermissionStatus;
 import cn.lwjppz.mindstorm.permission.mapper.PermissionMapper;
-import cn.lwjppz.mindstorm.permission.model.dto.PermissionDTO;
-import cn.lwjppz.mindstorm.permission.model.dto.PermissionDetailDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Permission;
-import cn.lwjppz.mindstorm.permission.model.vo.PermissionVO;
+import cn.lwjppz.mindstorm.permission.model.vo.permission.PermissionVO;
 import cn.lwjppz.mindstorm.permission.service.PermissionService;
 import cn.lwjppz.mindstorm.permission.service.RolePermissionService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;

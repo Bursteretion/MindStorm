@@ -1,9 +1,9 @@
 package cn.lwjppz.mindstorm.permission.service;
 
-import cn.lwjppz.mindstorm.permission.model.dto.PermissionDTO;
-import cn.lwjppz.mindstorm.permission.model.dto.PermissionDetailDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Permission;
-import cn.lwjppz.mindstorm.permission.model.vo.PermissionVO;
+import cn.lwjppz.mindstorm.permission.model.vo.permission.PermissionVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.lang.NonNull;
 
