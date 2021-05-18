@@ -21,18 +21,23 @@
         <el-form-item class="btn-item">
           <el-button icon="el-icon-refresh" size="small" type="default" @click="resetForm">重置</el-button>
         </el-form-item>
-        <el-form-item class="btn-item">
-          <el-button icon="el-icon-circle-plus-outline" size="small" type="primary"
-                     @click="openDialogRoleAdd">添加
-          </el-button>
-        </el-form-item>
       </el-form>
     </div>
 
     <div>
+      <el-button
+        plain
+        icon="el-icon-circle-plus-outline"
+        size="mini"
+        type="primary"
+        @click="openDialogRoleAdd">
+        添加
+      </el-button>
+    </div>
+
+    <div style="margin-top: 15px">
       <el-table
         :data="roles"
-        border
         style="width: 100%">
         <el-table-column
           type="index"
@@ -72,8 +77,15 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              type="success"
-              @click="handleEdit(scope.row)">编辑
+              type="text"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.row)">修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-check"
+              @click="handleSetPermission(scope.row)">设置权限
             </el-button>
             <el-popconfirm
               class="delete_btn"
@@ -87,14 +99,10 @@
               <el-button
                 slot="reference"
                 size="mini"
-                type="danger">删除
+                icon="el-icon-delete"
+                type="text">删除
               </el-button>
             </el-popconfirm>
-            <el-button
-              size="mini"
-              type="success"
-              @click="handleSetPermission(scope.row)">设置权限
-            </el-button>
           </template>
         </el-table-column>
       </el-table>

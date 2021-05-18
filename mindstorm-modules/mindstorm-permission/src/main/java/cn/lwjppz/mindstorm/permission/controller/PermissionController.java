@@ -2,10 +2,10 @@ package cn.lwjppz.mindstorm.permission.controller;
 
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
-import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDTO;
-import cn.lwjppz.mindstorm.permission.model.dto.permission.PermissionDetailDTO;
-import cn.lwjppz.mindstorm.permission.model.vo.permission.PermissionVO;
-import cn.lwjppz.mindstorm.permission.service.PermissionService;
+import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
+import cn.lwjppz.mindstorm.permission.model.vo.menu.MenuVO;
+import cn.lwjppz.mindstorm.permission.service.MenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -22,34 +22,34 @@ import java.util.List;
  * @since 2021-05-09
  */
 @RestController
-@RequestMapping("permission/permission")
-@Api(tags = "权限菜单（按钮）控制器")
+@RequestMapping("permission/menu")
+@Api(tags = "菜单（按钮）控制器")
 public class PermissionController {
 
-    private final PermissionService permissionService;
+    private final MenuService permissionService;
 
-    public PermissionController(PermissionService permissionService) {
+    public PermissionController(MenuService permissionService) {
         this.permissionService = permissionService;
     }
 
     @ApiOperation("获取所有权限菜单（按钮）")
     @GetMapping("/list")
     public CommonResult listPermissions() {
-        List<PermissionDTO> permissions = permissionService.getPermissions();
+        List<MenuDTO> permissions = permissionService.getPermissions();
         return CommonResult.ok().data("permissions", permissions);
     }
 
     @ApiOperation("新增权限菜单（按钮）")
     @PostMapping("/create")
-    public CommonResult create(@ApiParam("权限菜单（按钮）信息") @RequestBody PermissionVO permissionVO) {
-        PermissionDTO permissionDTO = permissionService.insertPermission(permissionVO);
+    public CommonResult create(@ApiParam("权限菜单（按钮）信息") @RequestBody MenuVO permissionVO) {
+        MenuDTO permissionDTO = permissionService.insertPermission(permissionVO);
         return CommonResult.ok().data("permission", permissionDTO);
     }
 
     @ApiOperation("查询权限菜单（按钮）信息")
     @GetMapping("/info/{permissionId}")
     public CommonResult info(@ApiParam("权限菜单（按钮）Id") @PathVariable("permissionId") String permissionId) {
-        PermissionDetailDTO permissionInfo = permissionService.getPermissionInfo(permissionId);
+        MenuDetailDTO permissionInfo = permissionService.getPermissionInfo(permissionId);
         return CommonResult.ok().data("permission", permissionInfo);
     }
 
