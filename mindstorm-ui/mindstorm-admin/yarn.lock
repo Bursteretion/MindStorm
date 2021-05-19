@@ -864,7 +864,7 @@
     "@babel/types" "^7.4.4"
     "esutils" "^2.0.2"
 
-"@babel/runtime@^7.11.0", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.11.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.8.4":
   "integrity" "sha1-RnlLwgthLF915i3QceJN/ZXxy+Y="
   "resolved" "https://registry.nlark.com/@babel/runtime/download/@babel/runtime-7.14.0.tgz?cache=0&sync_timestamp=1619727414495&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.14.0.tgz"
   "version" "7.14.0"
@@ -1111,6 +1111,20 @@
   "integrity" "sha1-K1o6s/kYzKSKjHVMCBaOPwPrphs="
   "resolved" "https://registry.nlark.com/@nodelib/fs.stat/download/@nodelib/fs.stat-1.1.3.tgz"
   "version" "1.1.3"
+
+"@riophae/vue-treeselect@^0.4.0":
+  "integrity" "sha1-C67Vp5TP/FgLY1kfNcEl5RwN8kE="
+  "resolved" "https://registry.npm.taobao.org/@riophae/vue-treeselect/download/@riophae/vue-treeselect-0.4.0.tgz"
+  "version" "0.4.0"
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+    "babel-helper-vue-jsx-merge-props" "^2.0.3"
+    "easings-css" "^1.0.0"
+    "fuzzysearch" "^1.0.3"
+    "is-promise" "^2.1.0"
+    "lodash" "^4.0.0"
+    "material-colors" "^1.2.6"
+    "watch-size" "^2.0.0"
 
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   "integrity" "sha1-hHUdgqkwGdXJLAzw5FrFkIfNIkA="
@@ -2128,7 +2142,7 @@
     "source-map" "^0.5.7"
     "trim-right" "^1.0.1"
 
-"babel-helper-vue-jsx-merge-props@^2.0.0":
+"babel-helper-vue-jsx-merge-props@^2.0.0", "babel-helper-vue-jsx-merge-props@^2.0.3":
   "integrity" "sha1-Iq69OzOQIyjlEyk6jkmSs4T58bY="
   "resolved" "https://registry.npm.taobao.org/babel-helper-vue-jsx-merge-props/download/babel-helper-vue-jsx-merge-props-2.0.3.tgz"
   "version" "2.0.3"
@@ -3994,6 +4008,11 @@
     "readable-stream" "^2.0.0"
     "stream-shift" "^1.0.0"
 
+"easings-css@^1.0.0":
+  "integrity" "sha1-3eVpADu3pKDAt3h49ds+C+VnnIE="
+  "resolved" "https://registry.npm.taobao.org/easings-css/download/easings-css-1.0.0.tgz"
+  "version" "1.0.0"
+
 "easy-stack@^1.0.1":
   "integrity" "sha1-iv5CZGJpiMq7EfPHBMzQyDVBEGY="
   "resolved" "https://registry.nlark.com/easy-stack/download/easy-stack-1.0.1.tgz"
@@ -4907,6 +4926,11 @@
   "integrity" "sha1-YvIWwRDlqiJIav8gvniW0ZoFm3k="
   "resolved" "https://registry.npm.taobao.org/fuse.js/download/fuse.js-6.4.6.tgz"
   "version" "6.4.6"
+
+"fuzzysearch@^1.0.3":
+  "integrity" "sha1-3/yA9tawQiPyImqnndGUIxCW0Ag="
+  "resolved" "https://registry.npm.taobao.org/fuzzysearch/download/fuzzysearch-1.0.3.tgz"
+  "version" "1.0.3"
 
 "gensync@^1.0.0-beta.2":
   "integrity" "sha1-MqbudsPX9S1GsrGuXZP+qFgKJeA="
@@ -5906,6 +5930,11 @@
   "resolved" "https://registry.npm.taobao.org/is-primitive/download/is-primitive-2.0.0.tgz"
   "version" "2.0.0"
 
+"is-promise@^2.1.0":
+  "integrity" "sha1-OauVnMv5p3TPB597QMeib3YxNfE="
+  "resolved" "https://registry.nlark.com/is-promise/download/is-promise-2.2.2.tgz?cache=0&sync_timestamp=1618847016863&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fis-promise%2Fdownload%2Fis-promise-2.2.2.tgz"
+  "version" "2.2.2"
+
 "is-regex@^1.0.4", "is-regex@^1.1.2":
   "integrity" "sha1-gcjr3k2xQvLPHFP8htakV4gmYlE="
   "resolved" "https://registry.npm.taobao.org/is-regex/download/is-regex-1.1.2.tgz?cache=0&sync_timestamp=1612217695164&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fis-regex%2Fdownload%2Fis-regex-1.1.2.tgz"
@@ -6890,7 +6919,7 @@
   "resolved" "https://registry.nlark.com/lodash.uniq/download/lodash.uniq-4.5.0.tgz"
   "version" "4.5.0"
 
-"lodash@^4.17.11", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.3", "lodash@^4.17.4":
+"lodash@^4.0.0", "lodash@^4.17.11", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.3", "lodash@^4.17.4":
   "integrity" "sha1-Z5WRxWTDv/quhFTPCz3zcMPWkRw="
   "resolved" "https://registry.nlark.com/lodash/download/lodash-4.17.21.tgz"
   "version" "4.17.21"
@@ -6984,6 +7013,11 @@
   "version" "1.0.0"
   dependencies:
     "object-visit" "^1.0.0"
+
+"material-colors@^1.2.6":
+  "integrity" "sha1-bRlYhxEmmSzuzHL0vMTY8BCGX0Y="
+  "resolved" "https://registry.npm.taobao.org/material-colors/download/material-colors-1.2.6.tgz"
+  "version" "1.2.6"
 
 "math-random@^1.0.1":
   "integrity" "sha1-XdaUPJOFSCZwFtTjTwV1gwgMUUw="
@@ -10817,7 +10851,7 @@
   "resolved" "https://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2 || ^3.0.0-0", "vue@^2.5.17", "vue@^2.x", "vue@2.6.10", "vue@2.x":
+"vue@^2 || ^3.0.0-0", "vue@^2.2.0", "vue@^2.5.17", "vue@^2.x", "vue@2.6.10", "vue@2.x":
   "integrity" "sha1-pysaQqTYKnIepDjRtr9V5mGVxjc="
   "resolved" "https://registry.npm.taobao.org/vue/download/vue-2.6.10.tgz"
   "version" "2.6.10"
@@ -10849,6 +10883,11 @@
   "version" "1.0.7"
   dependencies:
     "makeerror" "1.0.x"
+
+"watch-size@^2.0.0":
+  "integrity" "sha1-CW7ijQNlvX6gPZyL8fL1CnO+FHQ="
+  "resolved" "https://registry.npm.taobao.org/watch-size/download/watch-size-2.0.0.tgz"
+  "version" "2.0.0"
 
 "watchpack-chokidar2@^2.0.1":
   "integrity" "sha1-OFAAcu5uzmbzdpk2lQ6hdxvhyVc="

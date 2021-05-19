@@ -6,7 +6,7 @@
           <el-input size="small" v-model="searchRoleVO.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-select style="width: 100px" size="small" v-model="searchRoleVO.status" placeholder="请选择">
+          <el-select size="small" v-model="searchRoleVO.status" placeholder="请选择">
             <el-option
               v-for="item in RoleStatus"
               :key="item.value"
@@ -342,7 +342,7 @@ export default {
 }
 
 .delete_btn {
-  margin-left: 10px;
+  margin-left: 13px;
   margin-right: 10px;
 }
 </style>

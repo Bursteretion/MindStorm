@@ -24,8 +24,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("permission/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @ApiOperation("测试方法")
     @GetMapping("/test")

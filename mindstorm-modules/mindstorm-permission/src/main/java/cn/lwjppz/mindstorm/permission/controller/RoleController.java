@@ -29,8 +29,11 @@ import java.util.List;
 @Api(tags = "角色控制器")
 public class RoleController {
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @ApiOperation("分页角色信息")
     @GetMapping("/page/{pageIndex}/{pageSize}")

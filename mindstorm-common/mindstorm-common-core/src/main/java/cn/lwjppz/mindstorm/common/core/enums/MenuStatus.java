@@ -8,7 +8,7 @@ import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
  * @author : lwj
  * @since : 2021-05-13
  */
-public enum PermissionStatus implements ValueEnum<Integer> {
+public enum MenuStatus implements ValueEnum<Integer> {
 
     /**
      * 禁用状态
@@ -22,7 +22,7 @@ public enum PermissionStatus implements ValueEnum<Integer> {
 
     private final Integer value;
 
-    PermissionStatus(Integer value) {
+    MenuStatus(Integer value) {
         this.value = value;
     }
 

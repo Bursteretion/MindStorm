@@ -1,3 +1,27 @@
+import request from '@/utils/request'
+
+export function listMenus() {
+  return request({
+    url: '/mindstorm-permission/permission/menu/list',
+    method: 'get'
+  })
+}
+
+export function listMenusByType(menuType) {
+  return request({
+    url: `/mindstorm-permission/permission/menu/list/type/${menuType}`,
+    method: 'get'
+  })
+}
+
+export function insertMenu(menuVO) {
+  return request({
+    url: '/mindstorm-permission/permission/menu/create',
+    method: 'post',
+    data: menuVO
+  })
+}
+
 export const MenuStatus = [
   {
     name: '正常',
@@ -8,3 +32,8 @@ export const MenuStatus = [
     value: 0
   }
 ]
+
+export const MenuType = {
+  menu: 1,
+  button: 2
+}

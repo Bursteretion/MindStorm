@@ -6,7 +6,7 @@
           <el-input size="small" v-model="searchMenuVO.name" placeholder="菜单名称"></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-select style="width: 100px" size="small" v-model="searchMenuVO.status" placeholder="请选择">
+          <el-select size="small" v-model="searchMenuVO.status" placeholder="请选择">
             <el-option
               v-for="item in MenuStatus"
               :key="item.value"
@@ -35,6 +35,87 @@
       </el-button>
     </div>
 
+    <div style="margin-top: 20px">
+      <el-table
+        :data="menus"
+        row-key="id"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+        <el-table-column
+          prop="name"
+          label="菜单名称"
+          :show-overflow-tooltip="true"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="icon"
+          label="图标"
+          align="center" width="100">
+          <template slot-scope="scope">
+            <svg-icon :icon-class="scope.row.icon"/>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="sort"
+          label="排序"
+          width="60">
+        </el-table-column>
+        <el-table-column
+          prop="permissionValue"
+          :show-overflow-tooltip="true"
+          label="权限标识">
+        </el-table-column>
+        <el-table-column
+          prop="component"
+          :show-overflow-tooltip="true"
+          label="组件路径">
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status === 1" size="medium">正常</el-tag>
+            <el-tag v-if="scope.row.status === 0" type="danger" size="medium">禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="gmtCreate"
+          label="创建时间">
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.row)">修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-plus"
+              @click="handleAddMenu(scope.row)">新增
+            </el-button>
+            <el-popconfirm
+              style="margin-left: 13px"
+              confirm-button-text='确认'
+              cancel-button-text='取消'
+              icon="el-icon-info"
+              icon-color="red"
+              title="你确定要删除这个菜单吗？"
+              @onConfirm="handleDelete(scope.row.id)"
+            >
+              <el-button
+                slot="reference"
+                size="mini"
+                icon="el-icon-delete"
+                type="text">删除
+              </el-button>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
     <el-dialog
       :title="dialogMenuTitle"
       :visible.sync="dialogMenuVisible"
@@ -45,7 +126,13 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="上级菜单">
-              <el-input v-model="menuForm.pid" autocomplete="off"></el-input>
+              <treeselect
+                v-model="menuForm.pid"
+                :options="fatherMenus"
+                :normalizer="normalizer"
+                :show-count="true"
+                placeholder="选择上级菜单"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -126,34 +213,48 @@
 
 <script>
 import {
-  MenuStatus
+  MenuStatus,
+  MenuType,
+  listMenus,
+  listMenusByType,
+  insertMenu
 } from '@/api/menu'
 
 import IconSelect from '@/components/IconSelect'
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "MenuList",
   components: {
-    IconSelect
+    IconSelect,
+    Treeselect
   },
   data() {
     return {
+      // 菜单搜索表单
       searchMenuVO: {
         name: '',
         status: ''
       },
+      menus: [],
+      // 上级菜单
+      fatherMenus: [],
+      // 菜单状态
       MenuStatus,
       dialogMenuTitle: '添加菜单',
       dialogMenuVisible: false,
       // 表单参数
       menuForm: {
         pid: '',
+        name: '',
         type: '1',
         icon: '',
         path: '',
         component: '',
         permissionValue: '',
-        status: 1
+        status: 1,
+        sort: 0
       },
       // 表单校验
       rules: {
@@ -169,7 +270,49 @@ export default {
       }
     }
   },
+  created() {
+    this.listFatherMenus()
+    this.listMenus()
+  },
   methods: {
+    listMenus() {
+      listMenus().then((res) => {
+        if (res && res.code === 20000) {
+          this.menus = res.data.menus
+        }
+      })
+    },
+    listFatherMenus() {
+      listMenusByType(MenuType.menu).then((res) => {
+        if (res && res.code === 20000) {
+          this.fatherMenus = []
+          const menu = { id: '', name: '主类目', children: [] };
+          let menus = res.data.menus
+          menu.children = menus
+          this.convertFatherMenu(menus)
+          this.fatherMenus.push(menu)
+        }
+      })
+    },
+    convertFatherMenu(menus) {
+      if (menus.length <= 0) return
+      menus.forEach(v => {
+        v.value = v.id
+        v.label = v.name
+        if (v.children.length <= 0) {
+          v.children = undefined
+        } else {
+          this.convertFatherMenu(v.children)
+        }
+      })
+    },
+    normalizer(node) {
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children,
+      }
+    },
     // 选择图标
     selected(name) {
       this.menuForm.icon = name;
@@ -185,15 +328,23 @@ export default {
       this.resetForm()
     },
     handleDialogMenuSubmit() {
-      this.dialogMenuVisible = true
+      this.$refs['menuFormSubmit'].validate((valid) => {
+        if (valid) {
+          insertMenu(this.menuForm).then((res) => {
+            if (res && res.code === 20000) {
+              this.$message.success("菜单添加成功！")
+              this.listFatherMenus()
+              this.listMenus()
+            }
+          })
+        }
+      })
+      this.dialogMenuVisible = false
       this.resetForm()
     },
     resetForm() {
       this.$refs['searchMenuForm'].resetFields()
 
-    },
-    selectIcons() {
-      this.$message.info("ssss")
     },
     resetMenuForm() {
       this.menuForm = {
@@ -206,16 +357,19 @@ export default {
         status: 1
       }
       this.$refs['menuFormSubmit'].resetFields()
+    },
+    handleEdit() {
+
+    },
+    handleAddMenu() {
+
+    },
+    handleDelete() {
+
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.el-scrollbar__wrap {
-  overflow: scroll;
-  width: 110%;
-  height: 100%;
-}
-
 </style>
