@@ -44,10 +44,9 @@ public class MenuController {
     }
 
     @ApiOperation("获取所有指定类型的菜单（按钮）")
-    @GetMapping("/list/type/{menuType}")
-    public CommonResult listMenus(@ApiParam("菜单类型") @PathVariable("menuType") Integer menuType) {
-        MenuType type = ValueEnum.valueToEnum(MenuType.class, menuType);
-        List<MenuDTO> menus = menuService.getMenus(type);
+    @PostMapping("/list/type")
+    public CommonResult listMenus(@ApiParam("菜单类型集合") @RequestBody List<Integer> types) {
+        List<MenuDTO> menus = menuService.getMenus(types);
         return CommonResult.ok().data("menus", menus);
     }
 

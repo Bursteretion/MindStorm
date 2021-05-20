@@ -7,10 +7,11 @@ export function listMenus() {
   })
 }
 
-export function listMenusByType(menuType) {
+export function listMenusByType(types) {
   return request({
-    url: `/mindstorm-permission/permission/menu/list/type/${menuType}`,
-    method: 'get'
+    url: `/mindstorm-permission/permission/menu/list/type`,
+    method: 'post',
+    data: types
   })
 }
 
@@ -34,6 +35,7 @@ export const MenuStatus = [
 ]
 
 export const MenuType = {
+  catalog: 0,
   menu: 1,
   button: 2
 }

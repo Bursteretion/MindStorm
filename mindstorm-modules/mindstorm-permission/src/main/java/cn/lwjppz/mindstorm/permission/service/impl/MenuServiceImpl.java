@@ -46,9 +46,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<MenuDTO> getMenus(@NonNull MenuType menuType) {
+    public List<MenuDTO> getMenus(@NonNull List<Integer> types) {
         LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Menu::getType, menuType.getValue());
+        queryWrapper.in(Menu::getType, types);
 
         return generateTreeMenus(queryWrapper);
     }

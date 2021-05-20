@@ -32,10 +32,10 @@ public interface MenuService extends IService<Menu> {
     /**
      * 根据菜单类型获取菜单
      *
-     * @param menuType 菜单类型
+     * @param types 菜单类型集合
      * @return 菜单集合
      */
-    List<MenuDTO> getMenus(@NonNull MenuType menuType);
+    List<MenuDTO> getMenus(@NonNull List<Integer> types);
 
     /**
      * 新增菜单

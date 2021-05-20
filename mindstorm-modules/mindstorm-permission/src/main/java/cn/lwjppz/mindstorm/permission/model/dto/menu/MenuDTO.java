@@ -31,6 +31,10 @@ public class MenuDTO implements Serializable {
 
     private String name;
 
+    private String alias;
+
+    private Integer type;
+
     private String permissionValue;
 
     private String path;
@@ -44,8 +48,6 @@ public class MenuDTO implements Serializable {
     private Integer sort;
 
     private Date gmtCreate;
-
-    private Date gmtModified;
 
     private Set<MenuDTO> children;
 

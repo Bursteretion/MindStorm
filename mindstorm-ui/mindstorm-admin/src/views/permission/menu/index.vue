@@ -61,16 +61,19 @@
         </el-table-column>
         <el-table-column
           prop="permissionValue"
+          width="200"
           :show-overflow-tooltip="true"
           label="权限标识">
         </el-table-column>
         <el-table-column
           prop="component"
+          width="250"
           :show-overflow-tooltip="true"
           label="组件路径">
         </el-table-column>
         <el-table-column
           prop="status"
+          width="100"
           label="状态">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.status === 1" size="medium">正常</el-tag>
@@ -78,7 +81,18 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="type"
+          width="100"
+          label="类型">
+          <template slot-scope="scope">
+            <el-tag effect="plain" v-if="scope.row.type === 0" size="medium">目录</el-tag>
+            <el-tag effect="plain" v-if="scope.row.type === 1" size="medium" type="info">菜单</el-tag>
+            <el-tag effect="plain" v-if="scope.row.type === 2" size="medium" type="warning">按钮</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="gmtCreate"
+          width="170"
           label="创建时间">
         </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -137,6 +151,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="菜单类型">
+              <el-radio border size="medium" v-model="menuForm.type" label="0">目录</el-radio>
               <el-radio border size="medium" v-model="menuForm.type" label="1">菜单</el-radio>
               <el-radio border size="medium" v-model="menuForm.type" label="2">按钮</el-radio>
             </el-form-item>
@@ -169,12 +184,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item v-if="menuForm.type === '0' || menuForm.type === '1'" label="菜单别名" prop="alias">
+              <el-input v-model="menuForm.alias" placeholder="请输入菜单别名"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="显示排序" prop="sort">
               <el-input-number v-model="menuForm.sort" controls-position="right" :min="0"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="menuForm.type === '1'" label="路由地址" prop="path">
+            <el-form-item v-if="menuForm.type !== '2'" label="路由地址" prop="path">
               <el-input v-model="menuForm.path" placeholder="请输入路由地址"/>
             </el-form-item>
           </el-col>
@@ -186,6 +206,11 @@
           <el-col :span="12">
             <el-form-item label="权限标识">
               <el-input v-model="menuForm.permissionValue" placeholder="请输入权限标识" maxlength="50"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="menuForm.type === '0' || menuForm.type === '1'" label="重定向">
+              <el-input v-model="menuForm.redirect" placeholder="请输入菜单重定向地址" maxlength="50"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -248,9 +273,11 @@ export default {
       menuForm: {
         pid: '',
         name: '',
-        type: '1',
+        alias: '',
+        type: '0',
         icon: '',
         path: '',
+        redirect: '',
         component: '',
         permissionValue: '',
         status: 1,
@@ -283,10 +310,11 @@ export default {
       })
     },
     listFatherMenus() {
-      listMenusByType(MenuType.menu).then((res) => {
+      const types = [MenuType.catalog, MenuType.menu]
+      listMenusByType(types).then((res) => {
         if (res && res.code === 20000) {
           this.fatherMenus = []
-          const menu = { id: '', name: '主类目', children: [] };
+          const menu = {id: '', name: '主类目', children: []};
           let menus = res.data.menus
           menu.children = menus
           this.convertFatherMenu(menus)
@@ -344,14 +372,17 @@ export default {
     },
     resetForm() {
       this.$refs['searchMenuForm'].resetFields()
-
+      this.listMenus()
     },
     resetMenuForm() {
       this.menuForm = {
         pid: '',
-        type: '1',
+        type: '0',
+        name: '',
+        alias: '',
         icon: '',
         path: '',
+        redirect: "",
         component: '',
         permissionValue: '',
         status: 1

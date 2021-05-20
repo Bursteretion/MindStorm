@@ -13,6 +13,11 @@ import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 public enum MenuType implements ValueEnum<Integer> {
 
     /**
+     * 目录
+     */
+    CATALOG(0, "目录"),
+
+    /**
      * 菜单
      */
     MENU(1, "菜单"),

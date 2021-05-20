@@ -43,7 +43,10 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "名称")
     private String name;
 
-    @ApiModelProperty(value = "类型(1:菜单,2:按钮)")
+    @ApiModelProperty(value = "菜单别名")
+    private String alias;
+
+    @ApiModelProperty(value = "类型(0:目录,1:菜单,2:按钮)")
     private Integer type;
 
     @ApiModelProperty(value = "权限标识")
@@ -51,6 +54,9 @@ public class Menu implements Serializable {
 
     @ApiModelProperty(value = "访问路径")
     private String path;
+
+    @ApiModelProperty("重定向地址")
+    private String redirect;
 
     @ApiModelProperty(value = "组件路径")
     private String component;

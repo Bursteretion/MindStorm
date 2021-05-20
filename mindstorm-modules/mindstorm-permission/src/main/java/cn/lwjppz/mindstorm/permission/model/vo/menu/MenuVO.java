@@ -29,6 +29,9 @@ public class MenuVO {
     @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "菜单别名")
+    private String alias;
+
     @ApiModelProperty(value = "类型(1:菜单,2:按钮)")
     private Integer type;
 
@@ -37,6 +40,9 @@ public class MenuVO {
 
     @ApiModelProperty(value = "访问路径")
     private String path;
+
+    @ApiModelProperty("重定向地址")
+    private String redirect;
 
     @ApiModelProperty(value = "组件路径")
     private String component;
