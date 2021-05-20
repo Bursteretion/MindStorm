@@ -1,11 +1,10 @@
 package cn.lwjppz.mindstorm.permission.service;
 
-import cn.lwjppz.mindstorm.common.core.enums.MenuType;
-import cn.lwjppz.mindstorm.permission.model.dto.menu.FatherTreeMenu;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Menu;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.MenuVO;
+import cn.lwjppz.mindstorm.permission.model.vo.menu.SearchMenuVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.lang.NonNull;
 
@@ -44,6 +43,38 @@ public interface MenuService extends IService<Menu> {
      * @return 菜单信息
      */
     Menu insertMenu(@NonNull MenuVO menuVO);
+
+    /**
+     * 更新菜单信息
+     *
+     * @param menuVO 菜单信息
+     * @return 菜单信息
+     */
+    Menu updateMenu(@NonNull MenuVO menuVO);
+
+    /**
+     * 获取菜单信息
+     *
+     * @param menuId 菜单 Id
+     * @return 菜单信息
+     */
+    Menu getMenuById(@NonNull String menuId);
+
+    /**
+     * 删除菜单
+     *
+     * @param menuId 菜单Id
+     * @return 是否删除成功
+     */
+    boolean deleteById(@NonNull String menuId);
+
+    /**
+     * 多条件查询菜单
+     *
+     * @param searchMenuVO 查询菜单信息
+     * @return 菜单集合
+     */
+    List<MenuDTO> searchMenus(@NonNull SearchMenuVO searchMenuVO);
 
     /**
      * 将 Menu 对象转化为 MenuDTO 对象

@@ -1,12 +1,12 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
-import cn.lwjppz.mindstorm.common.core.enums.MenuType;
+import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.permission.mapper.MenuMapper;
-import cn.lwjppz.mindstorm.permission.model.dto.menu.FatherTreeMenu;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Menu;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.MenuVO;
+import cn.lwjppz.mindstorm.permission.model.vo.menu.SearchMenuVO;
 import cn.lwjppz.mindstorm.permission.service.MenuService;
 import cn.lwjppz.mindstorm.permission.service.RoleMenuService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -39,10 +40,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<MenuDTO> getMenus() {
-        LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.orderByAsc(Menu::getSort);
-
-        return generateTreeMenus(queryWrapper);
+        return generateTreeMenus(Wrappers.lambdaQuery());
     }
 
     @Override
@@ -61,6 +59,52 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         baseMapper.insert(menu);
 
         return menu;
+    }
+
+    @Override
+    public Menu updateMenu(@NonNull MenuVO menuVO) {
+        Menu menu = new Menu();
+        BeanUtils.copyProperties(menuVO, menu);
+
+        baseMapper.updateById(menu);
+
+        return menu;
+    }
+
+    @Override
+    public Menu getMenuById(@NonNull String menuId) {
+        Assert.hasText(menuId, "Menu Id must not be empty!");
+
+        Menu menu = baseMapper.selectById(menuId);
+        if (null == menu) {
+            throw new EntityNotFoundException("Menu Id：" + menuId + "， 此菜单不存在。");
+        }
+
+        return menu;
+    }
+
+    @Override
+    public boolean deleteById(@NonNull String menuId) {
+        Assert.hasText(menuId, "Menu Id must not be empty!");
+
+        baseMapper.deleteById(menuId);
+        return true;
+    }
+
+    @Override
+    public List<MenuDTO> searchMenus(@NonNull SearchMenuVO searchMenuVO) {
+        Assert.notNull(searchMenuVO, "SearchMenuVO must not be null!");
+
+        LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
+        if (StringUtils.hasText(searchMenuVO.getName())) {
+            queryWrapper.like(Menu::getName, searchMenuVO.getName());
+        }
+
+        if (null != searchMenuVO.getStatus()) {
+            queryWrapper.eq(Menu::getStatus, searchMenuVO.getStatus());
+        }
+
+        return generateTreeMenus(queryWrapper);
     }
 
     @Override
@@ -92,19 +136,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     private List<MenuDTO> generateTreeMenus(LambdaQueryWrapper<Menu> queryWrapper) {
+        queryWrapper.orderByAsc(Menu::getSort);
         List<MenuDTO> menus = convertToMenuDTO(baseMapper.selectList(queryWrapper));
 
-        Map<String, Set<MenuDTO>> hash = new HashMap<>(menus.size());
+        Map<String, List<MenuDTO>> hash = new HashMap<>(menus.size());
         for (MenuDTO menuDTO : menus) {
-            menuDTO.setChildren(new HashSet<>());
+            menuDTO.setChildren(new ArrayList<>());
             hash.put(menuDTO.getId(), menuDTO.getChildren());
         }
 
         menus.forEach(v -> {
             if (StringUtils.hasText(v.getPid())) {
-                Set<MenuDTO> set = hash.get(v.getPid());
-                set.add(v);
-                hash.put(v.getPid(), set);
+                List<MenuDTO> list = hash.get(v.getPid());
+                list.add(v);
+                hash.put(v.getPid(), list);
             }
         });
 
@@ -115,6 +160,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             }
         });
 
+        res.forEach(this::sortMenu);
         return res;
+    }
+
+    private void sortMenu(MenuDTO menuDTO) {
+        menuDTO.getChildren().sort(Comparator.comparing(MenuDTO::getSort));
+        menuDTO.getChildren().forEach(this::sortMenu);
     }
 }

@@ -7,7 +7,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 /**
  * <p>
@@ -39,6 +39,8 @@ public class MenuDTO implements Serializable {
 
     private String path;
 
+    private String redirect;
+
     private String component;
 
     private String icon;
@@ -49,6 +51,6 @@ public class MenuDTO implements Serializable {
 
     private Date gmtCreate;
 
-    private Set<MenuDTO> children;
+    private List<MenuDTO> children;
 
 }

@@ -71,13 +71,13 @@ export const constantRoutes = [
         path: '/admin/permission/role/list',
         name: 'RoleList',
         component: () => import('@/views/permission/role/index'),
-        meta: { title: '角色管理' }
+        meta: { title: '角色管理', noCache: true }
       },
       {
         path: '/admin/permission/menu/list',
         name: 'MenuList',
         component: () => import('@/views/permission/menu/index'),
-        meta: { title: '菜单管理' }
+        meta: { title: '菜单管理', noCache: true }
       }
     ]
   },
@@ -93,40 +93,40 @@ export const constantRoutes = [
         path: '/admin/user/students/list',
         name: 'StudentsList',
         component: () => import('@/views/user/students/index'),
-        meta: { title: '学生列表' }
+        meta: { title: '学生列表', noCache: true }
       },
       {
         path: '/admin/user/students/edit',
         name: 'StudentEdit',
         hidden: true,
         component: () => import('@/views/user/students/edit'),
-        meta: { title: '学生创编' }
+        meta: { title: '学生创编', noCache: true }
       },
       {
         path: '/admin/user/teachers/list',
         name: 'TeachersList',
         component: () => import('@/views/user/teachers/index'),
-        meta: { title: '教师列表' }
+        meta: { title: '教师列表', noCache: true }
       },
       {
         path: '/admin/user/teachers/edit',
         name: 'TeacherEdit',
         hidden: true,
         component: () => import('@/views/user/teachers/edit'),
-        meta: { title: '教师创编' }
+        meta: { title: '教师创编', noCache: true }
       },
       {
         path: '/admin/user/admins/list',
         name: 'AdminsList',
         component: () => import('@/views/user/admins/index'),
-        meta: { title: '管理员列表' }
+        meta: { title: '管理员列表', noCache: true }
       },
       {
         path: '/admin/user/admins/edit',
         name: 'AdminEdit',
         hidden: true,
         component: () => import('@/views/user/admins/edit'),
-        meta: { title: '管理员创编' }
+        meta: { title: '管理员创编', noCache: true }
       }
     ]
   },
@@ -142,13 +142,13 @@ export const constantRoutes = [
         path: '/admin/subject/list',
         name: 'SubjectList',
         component: () => import('@/views/subject/index'),
-        meta: { title: '学科列表' }
+        meta: { title: '学科列表', noCache: true }
       },
       {
         path: '/admin/subject/edit',
         name: 'SubjectEdit',
         component: () => import('@/views/subject/edit'),
-        meta: { title: '学科创编' }
+        meta: { title: '学科创编', noCache: true }
       }
     ]
   },
@@ -164,13 +164,13 @@ export const constantRoutes = [
         path: '/admin/knowledge/list',
         name: 'KnowledgeList',
         component: () => import('@/views/knowledge/index'),
-        meta: { title: '知识点列表' }
+        meta: { title: '知识点列表', noCache: true }
       },
       {
         path: '/admin/knowledge/edit',
         name: 'KnowledgeEdit',
         component: () => import('@/views/knowledge/edit'),
-        meta: { title: '知识点创编' }
+        meta: { title: '知识点创编', noCache: true }
       }
     ]
   },

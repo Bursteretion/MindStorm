@@ -1,14 +1,12 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
 
-import cn.lwjppz.mindstorm.common.core.enums.MenuType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
-import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
-import cn.lwjppz.mindstorm.permission.model.dto.menu.FatherTreeMenu;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Menu;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.MenuVO;
+import cn.lwjppz.mindstorm.permission.model.vo.menu.SearchMenuVO;
 import cn.lwjppz.mindstorm.permission.service.MenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,6 +48,13 @@ public class MenuController {
         return CommonResult.ok().data("menus", menus);
     }
 
+    @ApiOperation("多条件查询菜单信息")
+    @PostMapping("/search")
+    public CommonResult search(@ApiParam("查询菜单信息") @RequestBody SearchMenuVO searchMenuVO) {
+        List<MenuDTO> menus = menuService.searchMenus(searchMenuVO);
+        return CommonResult.ok().data("menus", menus);
+    }
+
     @ApiOperation("新增菜单（按钮）")
     @PostMapping("/create")
     public CommonResult create(@ApiParam("菜单（按钮）信息") @RequestBody MenuVO menuVO) {
@@ -60,7 +65,23 @@ public class MenuController {
     @ApiOperation("查询菜单（按钮）信息")
     @GetMapping("/info/{menuId}")
     public CommonResult info(@ApiParam("菜单（按钮）Id") @PathVariable("menuId") String menuId) {
-        return CommonResult.ok();
+        MenuDetailDTO menu =
+                menuService.convertToMenuDetailDTO(menuService.convertToMenuDTO(menuService.getMenuById(menuId)));
+        return CommonResult.ok().data("menu", menu);
+    }
+
+    @ApiOperation("修改菜单信息")
+    @PostMapping("/update")
+    public CommonResult update(@ApiParam("菜单信息") @RequestBody MenuVO menuVO) {
+        Menu menu = menuService.updateMenu(menuVO);
+        return CommonResult.ok().data("menu", menu);
+    }
+
+    @ApiOperation("删除菜单信息")
+    @DeleteMapping("/delete/{menuId}")
+    public CommonResult delete(@ApiParam("菜单Id") @PathVariable("menuId") String menuId) {
+        boolean b = menuService.deleteById(menuId);
+        return CommonResult.ok().data("delete", b);
     }
 
 }

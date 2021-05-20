@@ -44,7 +44,7 @@
           prop="name"
           label="菜单名称"
           :show-overflow-tooltip="true"
-          width="120">
+          width="130">
         </el-table-column>
         <el-table-column
           prop="icon"
@@ -67,7 +67,7 @@
         </el-table-column>
         <el-table-column
           prop="component"
-          width="250"
+          width="220"
           :show-overflow-tooltip="true"
           label="组件路径">
         </el-table-column>
@@ -101,13 +101,13 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.row)">修改
+              @click="handleEdit(scope.row.id)">修改
             </el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-plus"
-              @click="handleAddMenu(scope.row)">新增
+              @click="handleAddMenu(scope.row.id)">新增
             </el-button>
             <el-popconfirm
               style="margin-left: 13px"
@@ -133,8 +133,9 @@
     <el-dialog
       :title="dialogMenuTitle"
       :visible.sync="dialogMenuVisible"
-      @closed="resetMenuForm"
-      width="600px"
+      append-to-body
+      @close="resetMenuForm"
+      width="700px"
       top="10vh">
       <el-form ref="menuFormSubmit" :rules="rules" :model="menuForm" label-width="80px">
         <el-row>
@@ -151,9 +152,9 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="菜单类型">
-              <el-radio border size="medium" v-model="menuForm.type" label="0">目录</el-radio>
-              <el-radio border size="medium" v-model="menuForm.type" label="1">菜单</el-radio>
-              <el-radio border size="medium" v-model="menuForm.type" label="2">按钮</el-radio>
+              <el-radio border size="medium" v-model.number="menuForm.type" :label="0">目录</el-radio>
+              <el-radio border size="medium" v-model.number="menuForm.type" :label="1">菜单</el-radio>
+              <el-radio border size="medium" v-model.number="menuForm.type" :label="2">按钮</el-radio>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -173,7 +174,7 @@
                     class="el-input__icon"
                     style="height: 32px;width: 16px;"
                   />
-                  <i v-else slot="prefix" class="el-icon-search el-input__icon"/>
+                  <em v-else slot="prefix" class="el-icon-search el-input__icon"/>
                 </el-input>
               </el-popover>
             </el-form-item>
@@ -184,7 +185,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="menuForm.type === '0' || menuForm.type === '1'" label="菜单别名" prop="alias">
+            <el-form-item v-if="menuForm.type === 0 || menuForm.type === 1" label="菜单别名">
               <el-input v-model="menuForm.alias" placeholder="请输入菜单别名"/>
             </el-form-item>
           </el-col>
@@ -194,12 +195,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="menuForm.type !== '2'" label="路由地址" prop="path">
+            <el-form-item v-if="menuForm.type !== 2" label="路由地址" prop="path">
               <el-input v-model="menuForm.path" placeholder="请输入路由地址"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="menuForm.type !== '2'">
-            <el-form-item label="组件路径" prop="component">
+          <el-col :span="12" v-if="menuForm.type !== 2">
+            <el-form-item label="组件路径">
               <el-input v-model="menuForm.component" placeholder="请输入组件路径"/>
             </el-form-item>
           </el-col>
@@ -209,7 +210,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="menuForm.type === '0' || menuForm.type === '1'" label="重定向">
+            <el-form-item v-if="menuForm.type === 0 || menuForm.type === 1" label="重定向">
               <el-input v-model="menuForm.redirect" placeholder="请输入菜单重定向地址" maxlength="50"/>
             </el-form-item>
           </el-col>
@@ -242,7 +243,11 @@ import {
   MenuType,
   listMenus,
   listMenusByType,
-  insertMenu
+  insertMenu,
+  updateMenu,
+  getMenuById,
+  deleteBeId,
+  searchMenus
 } from '@/api/menu'
 
 import IconSelect from '@/components/IconSelect'
@@ -270,26 +275,14 @@ export default {
       dialogMenuTitle: '添加菜单',
       dialogMenuVisible: false,
       // 表单参数
-      menuForm: {
-        pid: '',
-        name: '',
-        alias: '',
-        type: '0',
-        icon: '',
-        path: '',
-        redirect: '',
-        component: '',
-        permissionValue: '',
-        status: 1,
-        sort: 0
-      },
+      menuForm: {},
       // 表单校验
       rules: {
         name: [
           {required: true, message: "菜单名称不能为空", trigger: "blur"}
         ],
         sort: [
-          {required: true, message: "菜单顺序不能为空", trigger: "blur"}
+          {required: true, message: "菜单排序不能为空", trigger: "blur"}
         ],
         path: [
           {required: true, message: "路由地址不能为空", trigger: "blur"}
@@ -350,25 +343,42 @@ export default {
       this.dialogMenuVisible = true
     },
     menuSearchSubmit() {
+      searchMenus(this.searchMenuVO).then((res) => {
+        if (res && res.code === 20000) {
+          this.menus = res.data.menus
+        }
+      })
     },
     handleDialogMenuCancel() {
+      this.resetMenuForm()
       this.dialogMenuVisible = false
-      this.resetForm()
     },
     handleDialogMenuSubmit() {
       this.$refs['menuFormSubmit'].validate((valid) => {
         if (valid) {
-          insertMenu(this.menuForm).then((res) => {
-            if (res && res.code === 20000) {
-              this.$message.success("菜单添加成功！")
-              this.listFatherMenus()
-              this.listMenus()
-            }
-          })
+          if (this.dialogMenuTitle === '添加菜单') {
+            insertMenu(this.menuForm).then((res) => {
+              if (res && res.code === 20000) {
+                this.$message.success("菜单添加成功！")
+                this.listFatherMenus()
+                this.listMenus()
+              }
+            })
+          } else if (this.dialogMenuTitle === '修改菜单') {
+            updateMenu(this.menuForm).then((res) => {
+              if (res && res.code === 20000) {
+                this.$message.success("菜单信息修改成功！")
+                this.listFatherMenus()
+                this.listMenus()
+              }
+            })
+          }
+        } else {
+          return false
         }
       })
+      this.resetMenuForm()
       this.dialogMenuVisible = false
-      this.resetForm()
     },
     resetForm() {
       this.$refs['searchMenuForm'].resetFields()
@@ -376,27 +386,55 @@ export default {
     },
     resetMenuForm() {
       this.menuForm = {
+        id: '',
         pid: '',
-        type: '0',
+        type: 0,
         name: '',
         alias: '',
         icon: '',
         path: '',
-        redirect: "",
+        redirect: '',
         component: '',
         permissionValue: '',
-        status: 1
+        status: 1,
+        sort: undefined
       }
-      this.$refs['menuFormSubmit'].resetFields()
+      this.resetValid()
     },
-    handleEdit() {
-
+    resetValid() {
+      this.$nextTick(() => {
+        if (this.$refs['menuFormSubmit'] !== undefined) {
+          this.$refs['menuFormSubmit'].resetFields()
+        }
+      })
     },
-    handleAddMenu() {
-
+    handleEdit(menuId) {
+      this.listFatherMenus()
+      getMenuById(menuId).then((res) => {
+        if (res && res.code === 20000) {
+          this.dialogMenuTitle = '修改菜单'
+          this.dialogMenuVisible = true
+          this.resetMenuForm()
+          this.$nextTick(() => {
+            this.menuForm = res.data.menu
+          })
+        }
+      })
     },
-    handleDelete() {
-
+    handleAddMenu(menuId) {
+      this.resetMenuForm()
+      this.listFatherMenus()
+      this.menuForm.pid = menuId
+      this.openDialogMenuAdd()
+    },
+    handleDelete(menuId) {
+      deleteBeId(menuId).then((res) => {
+        if (res && res.code === 20000) {
+          this.$message.success("菜单删除成功！")
+          this.listFatherMenus()
+          this.listMenus()
+        }
+      })
     }
   }
 }

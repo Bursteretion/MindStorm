@@ -23,6 +23,36 @@ export function insertMenu(menuVO) {
   })
 }
 
+export function updateMenu(menuVO) {
+  return request({
+    url: '/mindstorm-permission/permission/menu/update',
+    method: 'post',
+    data: menuVO
+  })
+}
+
+export function getMenuById(menuId) {
+  return request({
+    url: `/mindstorm-permission/permission/menu/info/${menuId}`,
+    method: 'get'
+  })
+}
+
+export function deleteBeId(menuId) {
+  return request({
+    url: `/mindstorm-permission/permission/menu/delete/${menuId}`,
+    method: 'delete'
+  })
+}
+
+export function searchMenus(searchMenuVO) {
+  return request({
+    url: '/mindstorm-permission/permission/menu/search',
+    method: 'post',
+    data: searchMenuVO
+  })
+}
+
 export const MenuStatus = [
   {
     name: '正常',

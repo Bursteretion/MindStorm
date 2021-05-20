@@ -23,6 +23,9 @@ import lombok.ToString;
 @ApiModel("菜单表单信息")
 public class MenuVO {
 
+    @ApiModelProperty(value = "id")
+    private String id;
+
     @ApiModelProperty(value = "所属上级")
     private String pid;
 

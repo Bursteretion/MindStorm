@@ -24,15 +24,21 @@ public class MenuDetailDTO implements Serializable {
 
     private String name;
 
+    private String alias;
+
     private Integer type;
 
     private String permissionValue;
 
     private String path;
 
+    private String redirect;
+
     private String component;
 
     private String icon;
+
+    private Integer sort;
 
     private Integer status;
 

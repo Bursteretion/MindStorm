@@ -260,7 +260,6 @@ export default {
       this.addRoleForm.sort = 0
     },
     handleDelete(roleId) {
-      console.log(roleId)
       deleteRole(roleId).then((res) => {
         if (res && res.code === 20000 && res.data.delete) {
           this.loadRoles()
