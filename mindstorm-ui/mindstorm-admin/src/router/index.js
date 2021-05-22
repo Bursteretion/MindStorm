@@ -96,37 +96,16 @@ export const constantRoutes = [
         meta: { title: '学生列表', noCache: true }
       },
       {
-        path: '/admin/user/students/edit',
-        name: 'StudentEdit',
-        hidden: true,
-        component: () => import('@/views/user/students/edit'),
-        meta: { title: '学生创编', noCache: true }
-      },
-      {
         path: '/admin/user/teachers/list',
         name: 'TeachersList',
         component: () => import('@/views/user/teachers/index'),
         meta: { title: '教师列表', noCache: true }
       },
       {
-        path: '/admin/user/teachers/edit',
-        name: 'TeacherEdit',
-        hidden: true,
-        component: () => import('@/views/user/teachers/edit'),
-        meta: { title: '教师创编', noCache: true }
-      },
-      {
         path: '/admin/user/admins/list',
         name: 'AdminsList',
         component: () => import('@/views/user/admins/index'),
         meta: { title: '管理员列表', noCache: true }
-      },
-      {
-        path: '/admin/user/admins/edit',
-        name: 'AdminEdit',
-        hidden: true,
-        component: () => import('@/views/user/admins/edit'),
-        meta: { title: '管理员创编', noCache: true }
       }
     ]
   },

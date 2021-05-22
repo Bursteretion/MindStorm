@@ -1,5 +1,7 @@
 package cn.lwjppz.mindstorm.permission.model.vo.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +22,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@ApiModel("用户")
 public class UserVO {
 
     @ApiModelProperty("用户Id")
@@ -34,6 +37,9 @@ public class UserVO {
     @ApiModelProperty(value = "真实姓名")
     private String realName;
 
+    @ApiModelProperty(value = "学号")
+    private String sno;
+
     @ApiModelProperty(value = "年龄")
     private Integer age;
 
@@ -41,6 +47,7 @@ public class UserVO {
     private Integer sex;
 
     @ApiModelProperty(value = "生日")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date birthDay;
 
     @ApiModelProperty("手机")

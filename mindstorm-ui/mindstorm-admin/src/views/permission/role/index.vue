@@ -335,11 +335,6 @@ export default {
   margin-left: 10px;
 }
 
-.pagination {
-  margin-top: 20px;
-  float: right;
-}
-
 .delete_btn {
   margin-left: 13px;
   margin-right: 10px;

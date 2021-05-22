@@ -27,7 +27,6 @@ import lombok.EqualsAndHashCode;
  * @since 2021-05-09
  */
 @Data
-@Builder
 @EqualsAndHashCode(callSuper = false)
 @TableName("ms_user")
 @ApiModel(value = "User对象", description = "用户表")
@@ -51,6 +50,9 @@ public class User implements Serializable {
     @ApiModelProperty(value = "真实姓名")
     private String realName;
 
+    @ApiModelProperty(value = "学号")
+    private String sno;
+
     @ApiModelProperty(value = "年龄")
     private Integer age;
 
@@ -72,7 +74,7 @@ public class User implements Serializable {
     @ApiModelProperty(value = "用户类型")
     private Integer userType;
 
-    @ApiModelProperty(value = "学生年级(1-12)")
+    @ApiModelProperty(value = "学生年级(1-16)")
     private Integer userLevel;
 
     @ApiModelProperty(value = "微信openId")

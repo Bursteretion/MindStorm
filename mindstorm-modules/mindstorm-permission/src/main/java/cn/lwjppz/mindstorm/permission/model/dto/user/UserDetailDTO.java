@@ -1,0 +1,43 @@
+package cn.lwjppz.mindstorm.permission.model.dto.user;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.Date;
+
+/**
+ * <p></p>
+ *
+ * @author : lwj
+ * @since : 2021-05-22
+ */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class UserDetailDTO {
+
+    private String id;
+
+    private String username;
+
+    private String realName;
+
+    private String password;
+
+    private String sno;
+
+    private Integer age;
+
+    private Integer sex;
+
+    private Date birthDay;
+
+    private String phone;
+
+    private Integer userLevel;
+
+    private Integer status;
+}
