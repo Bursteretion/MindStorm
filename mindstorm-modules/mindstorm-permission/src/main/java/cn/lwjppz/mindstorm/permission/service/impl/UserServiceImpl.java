@@ -13,6 +13,7 @@ import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
 import cn.lwjppz.mindstorm.permission.model.vo.user.SearchUserVO;
 import cn.lwjppz.mindstorm.permission.model.vo.user.UserVO;
+import cn.lwjppz.mindstorm.permission.service.UserRoleService;
 import cn.lwjppz.mindstorm.permission.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,6 +21,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Override
     public List<User> getUsersByType(@NonNull UserType userType) {
@@ -141,6 +146,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new EntityNotFoundException(ResultStatus.NOT_FOUND);
             }
             baseMapper.deleteById(userId);
+            // 删除用户与角色相关联信息
+            userRoleService.deleteUserRole(userId);
         }
 
         return true;
@@ -210,8 +217,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BeanUtils.copyProperties(user, loginUserDTO);
 
         Set<String> permissions = new HashSet<>();
-        Set<String> roles = new HashSet<>();
-        roles.add("admin");
+
+        List<String> roleIds = userRoleService.getRoleIdsByUserId(user.getId());
+        Set<String> roles = new HashSet<>(roleIds);
+
         loginUserDTO.setPermissions(permissions);
         loginUserDTO.setRoles(roles);
 

@@ -59,6 +59,7 @@
         </el-table-column>
         <el-table-column
           prop="sex"
+          width="120"
           label="性别">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.sex === 1" type="success">男</el-tag>
@@ -204,6 +205,39 @@
           <el-button type="primary" @click="handleDialogSubmitBtn">{{ dialogBtnTitle }}</el-button>
         </div>
       </el-dialog>
+
+      <!-- 分配用户角色对话框 -->
+      <el-dialog title="为用户分配角色"
+                 :visible.sync="addUserRoleDialogVisible"
+                 width="500px"
+                 append-to-body>
+        <el-form :model="userRoleForm" label-width="80px">
+          <el-form-item label="用户名称">
+            <el-input v-model="userRoleForm.username" :disabled="true"/>
+          </el-form-item>
+          <el-form-item label="用户类型">
+            <el-input v-model="userRoleForm.userType" :disabled="true"/>
+          </el-form-item>
+          <el-form-item label="所有角色">
+            <el-select
+              v-model="userRoleForm.roles"
+              multiple
+              collapse-tags
+              placeholder="请选择角色">
+              <el-option
+                v-for="item in roleOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="handleAddUserRole">确 定</el-button>
+          <el-button @click="handleCancelAddUserRole">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -219,6 +253,15 @@ import {
   searchUsers,
   deleteUser
 } from '@/api/user'
+
+import {
+  listUnDisableRoles
+} from '@/api/role'
+
+import {
+  userRole,
+  distributeRole
+} from '@/api/userRole'
 
 export default {
   name: 'AdminsList',
@@ -243,11 +286,13 @@ export default {
       },
       // 对话框标题
       adminDialogTitle: '添加管理员',
-      // 对话框是否显示
+      // 添加/修改对话框是否显示
       adminAddDialogVisible: false,
+      // 分配角色对话框是否显示
+      addUserRoleDialogVisible: false,
       // 对话框添加（修改）按钮标题
       dialogBtnTitle: '添加',
-      // 学生表单
+      // 管理员表单
       adminForm: {},
       rules: {
         username: [
@@ -262,13 +307,19 @@ export default {
         status: [
           {required: true, message: '请选择状态', trigger: 'change'}
         ]
-      }
+      },
+      userRoleForm: {
+        userId: '',
+        username: '',
+        userType: '',
+        roles: []
+      },
+      roleOptions: []
     }
   },
   created() {
     this.loadAdmins()
   },
-  computed: {},
   methods: {
     // 加载管理员
     loadAdmins() {
@@ -281,7 +332,7 @@ export default {
     },
     // 点击添加按钮
     openAdminAddDialog() {
-      this.adminDialogTitle = '添加学生'
+      this.adminDialogTitle = '添加管理员'
       this.adminAddDialogVisible = true
     },
     // 更改管理员状态
@@ -337,7 +388,40 @@ export default {
     },
     // 为管理员分配角色
     handleAdminAddRole(adminId) {
-
+      this.addUserRoleDialogVisible = true
+      listUnDisableRoles().then((response) => {
+        if (response && response.code === 20000) {
+          this.roleOptions = response.data.roles
+          this.$nextTick(() => {
+            userRole(adminId).then((res) => {
+              if (res && res.code === 20000) {
+                const {userId, username, userType, roles} = res.data.userRoleDTO
+                this.userRoleForm.userId = userId
+                this.userRoleForm.username = username
+                this.userRoleForm.userType = userType
+                this.userRoleForm.roles = roles
+              }
+            })
+          })
+        }
+      })
+    },
+    handleAddUserRole() {
+      distributeRole(this.userRoleForm.userId, this.userRoleForm.roles).then((res) => {
+        if (res && res.code === 20000) {
+          this.$message.success('为' + this.userRoleForm.username + '分配角色成功')
+          this.handleCancelAddUserRole()
+        }
+      })
+    },
+    handleCancelAddUserRole() {
+      this.userRoleForm = {
+        userId: '',
+        username: '',
+        userType: '',
+        roles: []
+      }
+      this.addUserRoleDialogVisible = false
     },
     // 添加/修改表单提交
     handleDialogSubmitBtn() {

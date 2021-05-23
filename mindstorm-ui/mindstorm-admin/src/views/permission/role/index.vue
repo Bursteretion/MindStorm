@@ -144,6 +144,41 @@
           <el-button type="primary" @click="handleRole">确 定</el-button>
         </div>
       </el-dialog>
+
+      <!-- 分配角色菜单权限对话框 -->
+      <el-dialog title="为角色分配菜单"
+                 :visible.sync="addRoleMenuDialogVisible"
+                 width="500px"
+                 append-to-body>
+        <el-form :model="roleMenuForm" label-width="80px">
+          <el-form-item label="角色名称">
+            <el-input v-model="roleMenuForm.roleName" :disabled="true"/>
+          </el-form-item>
+          <el-form-item label="角色备注">
+            <el-input v-model="roleMenuForm.remark" :disabled="true"/>
+          </el-form-item>
+          <el-form-item label="所有菜单">
+            <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event)">展开/折叠</el-checkbox>
+            <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event)">全选/全不选</el-checkbox>
+            <el-checkbox v-model="menuCheckStrictly" @change="handleCheckedTreeConnect($event)">父子联动
+            </el-checkbox>
+            <el-tree
+              class="tree-border"
+              :data="menus"
+              show-checkbox
+              ref="menu"
+              node-key="id"
+              :check-strictly="!menuCheckStrictly"
+              empty-text="加载中，请稍后"
+              :props="defaultProps"
+            ></el-tree>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="handleAddRoleMenu">确 定</el-button>
+          <el-button @click="handleCancelAddRoleMenu">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -159,6 +194,15 @@ import {
   searchRolesPage
 } from '@/api/role'
 
+import {
+  listMenus
+} from '@/api/menu'
+
+import {
+  roleMenu,
+  distributeMenu
+} from '@/api/roleMenu'
+
 export default {
   name: "RoleList",
   data() {
@@ -169,6 +213,7 @@ export default {
       },
       RoleStatus,
       roles: [],
+      menus: [],
       role: {
         id: '',
         status: true
@@ -179,6 +224,7 @@ export default {
         total: 0
       },
       addRoleDialogVisible: false,
+      addRoleMenuDialogVisible: false,
       addRoleForm: {
         id: '',
         roleName: '',
@@ -193,7 +239,20 @@ export default {
         remark: [
           {required: true, message: '请输入角色备注信息', trigger: 'blur'}
         ]
-      }
+      },
+      roleMenuForm: {
+        roleId: '',
+        roleName: '',
+        remark: '',
+        menus: []
+      },
+      defaultProps: {
+        children: "children",
+        label: "name"
+      },
+      menuExpand: false,
+      menuNodeAll: false,
+      menuCheckStrictly: true
     }
   },
   created() {
@@ -270,8 +329,58 @@ export default {
         }
       })
     },
-    handleSetPermission(roleId) {
-      console.log(roleId)
+    handleSetPermission(role) {
+      this.addRoleMenuDialogVisible = true
+      listMenus().then((response) => {
+        if (response && response.code === 20000) {
+          this.menus = response.data.menus
+          this.$nextTick(() => {
+            roleMenu(role.id).then((res) => {
+              if (res && res.code === 20000) {
+                const {roleId, roleName, remark, checkedKeys} = res.data.menus
+                this.roleMenuForm.roleId = roleId
+                this.roleMenuForm.roleName = roleName
+                this.roleMenuForm.remark = remark
+                checkedKeys.forEach(v => {
+                  this.$nextTick(() => {
+                    this.$refs.menu.setChecked(v, true, false);
+                  })
+                })
+              }
+            })
+          })
+        }
+      })
+    },
+    // 树权限（展开/折叠）
+    handleCheckedTreeExpand(value) {
+      let treeList = this.menus;
+      treeList.forEach(v => {
+        this.$refs.menu.store.nodesMap[v.id].expanded = value
+      })
+    },
+    // 树权限（全选/全不选）
+    handleCheckedTreeNodeAll(value) {
+      this.$refs.menu.setCheckedNodes(value ? this.menus : [])
+    },
+    // 树权限（父子联动）
+    handleCheckedTreeConnect(value) {
+      this.form.menuCheckStrictly = !!value
+    },
+    handleAddRoleMenu() {
+      const menus = this.$refs.menu.getCheckedKeys()
+      distributeMenu(this.roleMenuForm.roleId, menus).then((res) => {
+        if (res && res.code === 20000) {
+          this.$message.success('为' + this.roleMenuForm.roleName + '分配菜单成功！')
+          this.handleCancelAddRoleMenu()
+        }
+      })
+    },
+    handleCancelAddRoleMenu() {
+      this.addRoleMenuDialogVisible = false
+      this.menuExpand = false
+      this.menuNodeAll = false
+      this.menuCheckStrictly = true
     },
     handleQuit() {
       this.$refs['diaRoleForm'].resetFields()

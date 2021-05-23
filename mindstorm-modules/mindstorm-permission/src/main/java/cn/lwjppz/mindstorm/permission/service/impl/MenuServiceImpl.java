@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -49,6 +50,42 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         queryWrapper.in(Menu::getType, types);
 
         return generateTreeMenus(queryWrapper);
+    }
+
+    @Override
+    public List<MenuDTO> getRouters(List<String> roleIds) {
+        Set<String> menuIdSet = new HashSet<>();
+        roleIds.forEach(v -> {
+            List<String> menuIds = roleMenuService.getMenuIdsByRoleId(v);
+            menuIdSet.addAll(menuIds);
+        });
+
+        LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.orderByAsc(Menu::getSort);
+        List<MenuDTO> menus = convertToMenuDTO(baseMapper.selectList(queryWrapper));
+        Map<String, MenuDTO> idHash = new ConcurrentReferenceHashMap<>();
+        Map<String, List<MenuDTO>> hash = getRouterMap(menus);
+
+        menus.forEach(v -> idHash.put(v.getId(), v));
+
+        Set<Map.Entry<String, List<MenuDTO>>> entries = hash.entrySet();
+
+        for (Map.Entry<String, List<MenuDTO>> v : entries) {
+            if (!menuIdSet.contains(v.getKey())) {
+                hash.remove(v.getKey());
+            }
+        }
+
+        List<MenuDTO> res = new ArrayList<>();
+        for (Map.Entry<String, List<MenuDTO>> v : hash.entrySet()) {
+            if (StringUtils.isEmpty(Objects.requireNonNull(idHash.get(v.getKey())).getPid())) {
+                res.add(idHash.get(v.getKey()));
+            }
+        }
+
+        res.forEach(this::sortMenu);
+
+        return res;
     }
 
     @Override
@@ -87,7 +124,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public boolean deleteById(@NonNull String menuId) {
         Assert.hasText(menuId, "Menu Id must not be empty!");
 
-        baseMapper.deleteById(menuId);
+        LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Menu::getId, menuId);
+        queryWrapper.eq(Menu::getPid, menuId);
+
+        baseMapper.delete(queryWrapper);
+        roleMenuService.deleteRoleMenuByMenuId(menuId);
+
         return true;
     }
 
@@ -139,19 +182,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         queryWrapper.orderByAsc(Menu::getSort);
         List<MenuDTO> menus = convertToMenuDTO(baseMapper.selectList(queryWrapper));
 
-        Map<String, List<MenuDTO>> hash = new HashMap<>(menus.size());
-        for (MenuDTO menuDTO : menus) {
-            menuDTO.setChildren(new ArrayList<>());
-            hash.put(menuDTO.getId(), menuDTO.getChildren());
-        }
-
-        menus.forEach(v -> {
-            if (StringUtils.hasText(v.getPid())) {
-                List<MenuDTO> list = hash.get(v.getPid());
-                list.add(v);
-                hash.put(v.getPid(), list);
-            }
-        });
+        getRouterMap(menus);
 
         List<MenuDTO> res = new ArrayList<>();
         menus.forEach(v -> {
@@ -162,6 +193,26 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
         res.forEach(this::sortMenu);
         return res;
+    }
+
+    private Map<String, List<MenuDTO>> getRouterMap(List<MenuDTO> menus) {
+        Map<String, List<MenuDTO>> hash = new ConcurrentReferenceHashMap<>(menus.size());
+        for (MenuDTO menuDTO : menus) {
+            menuDTO.setChildren(new ArrayList<>());
+            hash.put(menuDTO.getId(), menuDTO.getChildren());
+        }
+
+        menus.forEach(v -> {
+            if (StringUtils.hasText(v.getPid())) {
+                List<MenuDTO> list = hash.get(v.getPid());
+                if (null != list) {
+                    list.add(v);
+                    hash.put(v.getPid(), list);
+                }
+            }
+        });
+
+        return hash;
     }
 
     private void sortMenu(MenuDTO menuDTO) {

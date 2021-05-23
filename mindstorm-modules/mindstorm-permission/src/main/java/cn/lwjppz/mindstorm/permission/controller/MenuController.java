@@ -41,6 +41,13 @@ public class MenuController {
         return CommonResult.ok().data("menus", menus);
     }
 
+    @ApiOperation("根据角色Id集合获取路由表")
+    @PostMapping("routers")
+    public CommonResult getRouters(@ApiParam("角色Id集合") @RequestBody List<String> roleIds) {
+        List<MenuDTO> routers = menuService.getRouters(roleIds);
+        return CommonResult.ok().data("routes", routers);
+    }
+
     @ApiOperation("获取所有指定类型的菜单（按钮）")
     @PostMapping("/list/type")
     public CommonResult listMenus(@ApiParam("菜单类型集合") @RequestBody List<Integer> types) {

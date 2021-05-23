@@ -5,9 +5,11 @@ import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.permission.mapper.RoleMapper;
 import cn.lwjppz.mindstorm.permission.model.dto.role.RoleDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.role.SimpleRoleDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Role;
 import cn.lwjppz.mindstorm.permission.model.vo.role.RoleVO;
 import cn.lwjppz.mindstorm.permission.model.vo.role.SearchRoleVO;
+import cn.lwjppz.mindstorm.permission.service.RoleMenuService;
 import cn.lwjppz.mindstorm.permission.service.RoleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -35,6 +37,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
+
+    private final RoleMenuService roleMenuService;
+
+    public RoleServiceImpl(RoleMenuService roleMenuService) {
+        this.roleMenuService = roleMenuService;
+    }
 
     @Override
     public IPage<RoleDTO> pageBy(int pageIndex, int pageSize) {
@@ -124,6 +132,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         if (StringUtils.hasText(roleId) && !StringUtils.isEmpty(roleId)) {
             baseMapper.deleteById(roleId);
+            // 删除相关联的菜单
+            return roleMenuService.deleteRoleMenu(roleId);
         }
 
         return true;
@@ -158,6 +168,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public List<RoleDTO> convertToRoleDTO(List<Role> roles) {
         return roles.stream()
                 .map(this::convertToRoleDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SimpleRoleDTO convertToSimpleRoleDTO(Role role) {
+        SimpleRoleDTO simpleRoleDTO = new SimpleRoleDTO();
+        simpleRoleDTO.setValue(role.getId());
+        simpleRoleDTO.setLabel(role.getRoleName());
+
+        return simpleRoleDTO;
+    }
+
+    @Override
+    public List<SimpleRoleDTO> convertToSimpleRoleDTO(List<Role> roles) {
+        return roles.stream()
+                .map(this::convertToSimpleRoleDTO)
                 .collect(Collectors.toList());
     }
 

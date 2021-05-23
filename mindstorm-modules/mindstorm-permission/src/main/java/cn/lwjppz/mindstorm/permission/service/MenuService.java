@@ -37,6 +37,14 @@ public interface MenuService extends IService<Menu> {
     List<MenuDTO> getMenus(@NonNull List<Integer> types);
 
     /**
+     * 根据角色Id生成可访问的路由表
+     *
+     * @param roleIds 角色Id集合
+     * @return 路由表
+     */
+    List<MenuDTO> getRouters(List<String> roleIds);
+
+    /**
      * 新增菜单
      *
      * @param menuVO 菜单信息

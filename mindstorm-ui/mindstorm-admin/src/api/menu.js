@@ -7,6 +7,14 @@ export function listMenus() {
   })
 }
 
+export function getRouters(roleIds) {
+  return request({
+    url: '/mindstorm-permission/permission/menu/routers',
+    method: 'post',
+    data: roleIds
+  })
+}
+
 export function listMenusByType(types) {
   return request({
     url: `/mindstorm-permission/permission/menu/list/type`,

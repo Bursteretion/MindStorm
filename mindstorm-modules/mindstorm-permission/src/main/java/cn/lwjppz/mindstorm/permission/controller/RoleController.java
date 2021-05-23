@@ -3,6 +3,7 @@ package cn.lwjppz.mindstorm.permission.controller;
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.permission.model.dto.role.RoleDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.role.SimpleRoleDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Role;
 import cn.lwjppz.mindstorm.permission.model.vo.role.RoleVO;
 import cn.lwjppz.mindstorm.permission.model.vo.role.SearchRoleVO;
@@ -60,7 +61,7 @@ public class RoleController {
     @ApiOperation("获取所有未禁用角色")
     @GetMapping("/list/un-disable")
     public CommonResult listUnDisableRoles() {
-        List<Role> roles = roleService.listUnDisableRoles();
+        List<SimpleRoleDTO> roles = roleService.convertToSimpleRoleDTO(roleService.listUnDisableRoles());
         return CommonResult.ok().data("roles", roles);
     }
 

@@ -7,6 +7,13 @@ export function listRoles() {
   })
 }
 
+export function listUnDisableRoles() {
+  return request({
+    url: '/mindstorm-permission/permission/role/list/un-disable',
+    method: 'get'
+  })
+}
+
 export function pageByRoles(pageIndex, pageSize) {
   return request({
     url: `/mindstorm-permission/permission/role/page/${pageIndex}/${pageSize}`,

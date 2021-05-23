@@ -36,7 +36,6 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         const { access_token } = data
-        console.log(access_token)
         commit('SET_TOKEN', access_token)
         setToken(access_token)
         resolve()

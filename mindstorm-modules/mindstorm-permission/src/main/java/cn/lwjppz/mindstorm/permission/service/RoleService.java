@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.permission.service;
 
 import cn.lwjppz.mindstorm.permission.model.dto.role.RoleDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.role.SimpleRoleDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.Role;
 import cn.lwjppz.mindstorm.permission.model.vo.role.RoleVO;
 import cn.lwjppz.mindstorm.permission.model.vo.role.SearchRoleVO;
@@ -115,5 +116,21 @@ public interface RoleService extends IService<Role> {
      * @return RoleDTO对象集合
      */
     List<RoleDTO> convertToRoleDTO(List<Role> roles);
+
+    /**
+     * 将 Role 转化为 SimpleRoleDTO
+     *
+     * @param role Role对象
+     * @return SimpleRoleDTO对象
+     */
+    SimpleRoleDTO convertToSimpleRoleDTO(Role role);
+
+    /**
+     * 将 Role 集合转化为 SimpleRole 集合
+     *
+     * @param roles Role 集合
+     * @return SimpleRole 集合
+     */
+    List<SimpleRoleDTO> convertToSimpleRoleDTO(List<Role> roles);
 
 }
