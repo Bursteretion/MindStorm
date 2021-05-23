@@ -63,6 +63,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         LambdaQueryWrapper<Role> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Role::getStatus, RoleStatus.NORMAL.getValue());
 
+        // 获取所有未禁用的角色
         List<Role> roles = baseMapper.selectList(queryWrapper);
 
         return Optional.of(roles).orElse(Collections.emptyList());
@@ -72,6 +73,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public IPage<RoleDTO> queryPageRole(@NonNull SearchRoleVO searchRoleVO) {
         Assert.notNull(searchRoleVO, "SearchRoleVO must not be null!");
 
+        // 构造搜索角色条件
         LambdaQueryWrapper<Role> queryWrapper = Wrappers.lambdaQuery();
         if (!StringUtils.isEmpty(searchRoleVO.getName()) && StringUtils.hasText(searchRoleVO.getName())) {
             queryWrapper.like(Role::getRoleName, searchRoleVO.getName());
@@ -113,8 +115,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public Role selectRoleById(@NonNull String roleId) {
-        Assert.hasText(roleId, "Role Id must not be empty!");
-
         Role role = null;
         if (StringUtils.hasText(roleId) && !StringUtils.isEmpty(roleId)) {
             role = baseMapper.selectById(roleId);
@@ -151,6 +151,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         if (StringUtils.hasText(roleId) && !StringUtils.isEmpty(roleId)) {
             Role role = baseMapper.selectById(roleId);
+            // 转化角色状态
             role.setStatus(ValueEnum.valueToEnum(RoleStatus.class, status).getValue());
             baseMapper.updateById(role);
         }

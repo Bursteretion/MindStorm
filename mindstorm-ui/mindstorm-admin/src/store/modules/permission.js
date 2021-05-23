@@ -1,19 +1,6 @@
-import {constantRoutes} from '@/router'
+import { constantRoutes } from '@/router'
 import Layout from '@/layout'
-import {getRouters} from '@/api/menu'
-
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
-}
+import { getRouters } from '@/api/menu'
 
 const state = {
   routes: [],
@@ -29,7 +16,7 @@ const mutations = {
 
 const actions = {
   // 生成路由
-  generateRoutes({commit}, roleIds) {
+  generateRoutes({ commit }, roleIds) {
     return new Promise(resolve => {
       // 向后端请求路由数据
       getRouters(roleIds).then((res) => {
@@ -53,7 +40,7 @@ export function filterAsyncRoutes(asyncRouterMap) {
       // 路由名称，建议唯一
       name: route.alias || route.id || '',
       // meta: 页面标题, 菜单图标
-      meta: {title: route.name, icon: route.icon || undefined}
+      meta: { title: route.name, icon: route.icon || undefined }
     }
 
     if (route.component === 'Layout') {

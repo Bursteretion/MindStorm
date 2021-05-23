@@ -2,8 +2,8 @@ package cn.lwjppz.mindstorm.permission.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.enums.UserType;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
+import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.permission.mapper.UserRoleMapper;
-import cn.lwjppz.mindstorm.permission.model.dto.role.SimpleRoleDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.userRole.UserRoleDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
 import cn.lwjppz.mindstorm.permission.model.entity.UserRole;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -43,12 +42,12 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 
         List<UserRole> userRoles = baseMapper.selectList(queryWrapper);
 
-        List<String> roles = userRoles.stream()
-                .map(UserRole::getRoleId)
-                .collect(Collectors.toList());
+        // 提取角色Id
+        List<String> roles = ServiceUtils.fetchProperty(userRoles, UserRole::getRoleId);
 
         UserRoleDTO userRoleDTO = new UserRoleDTO();
         User user = userService.selectUserByUserId(userId);
+        // 转换用户状态
         String userType = ValueEnum.valueToEnum(UserType.class, user.getUserType()).getName();
 
         userRoleDTO.setUserId(userId);
@@ -91,8 +90,6 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 
         List<UserRole> roles = baseMapper.selectList(queryWrapper);
 
-        return roles.stream()
-                .map(UserRole::getRoleId)
-                .collect(Collectors.toList());
+        return ServiceUtils.fetchProperty(roles, UserRole::getRoleId);
     }
 }

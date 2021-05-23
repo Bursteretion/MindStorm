@@ -94,7 +94,7 @@ public class TokenService {
     public void refreshToken(LoginUserDTO loginUserDTO) {
         loginUserDTO.setLoginTime(System.currentTimeMillis());
         loginUserDTO.setExpireTime(loginUserDTO.getLoginTime() + EXPIRE_TIME * MILLIS_SECOND);
-        // 根据uuid将 loginUserDTO 缓存
+        // 根据 uuid 将 loginUserDTO 缓存
         String userKey = getTokenKey(loginUserDTO.getToken());
         redisService.setCacheObject(userKey, loginUserDTO, EXPIRE_TIME, TimeUnit.SECONDS);
     }

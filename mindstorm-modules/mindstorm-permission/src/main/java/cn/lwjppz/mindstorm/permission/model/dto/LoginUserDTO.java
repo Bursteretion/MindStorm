@@ -67,12 +67,13 @@ public class LoginUserDTO {
     private String ipaddr;
 
     /**
-     * 用户所拥有的权限
-     */
-    private Set<String> permissions;
-
-    /**
      * 用户所属角色
      */
     private Set<String> roles;
+
+    /**
+     * 用户所拥有权限
+     */
+    private Set<String> permissions;
+
 }

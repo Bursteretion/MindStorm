@@ -1,6 +1,5 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
-import cn.hutool.crypto.symmetric.AES;
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserType;
@@ -13,6 +12,8 @@ import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
 import cn.lwjppz.mindstorm.permission.model.vo.user.SearchUserVO;
 import cn.lwjppz.mindstorm.permission.model.vo.user.UserVO;
+import cn.lwjppz.mindstorm.permission.service.MenuService;
+import cn.lwjppz.mindstorm.permission.service.RoleMenuService;
 import cn.lwjppz.mindstorm.permission.service.UserRoleService;
 import cn.lwjppz.mindstorm.permission.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -47,10 +48,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private UserRoleService userRoleService;
 
+    @Autowired
+    private RoleMenuService roleMenuService;
+
+    @Autowired
+    private MenuService menuService;
+
     @Override
     public List<User> getUsersByType(@NonNull UserType userType) {
         Assert.notNull(userType, "User Type must not be null!");
 
+        // 构造查询条件
         LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(User::getUserType, userType.getValue());
 
@@ -62,6 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Assert.notNull(userType, "User Type must not be null!");
         IPage<User> iPage = new Page<>(pageIndex, pageSize);
 
+        // 构造查询条件
         LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(User::getUserType, userType.getValue());
         queryWrapper.orderByAsc(User::getGmtCreate);
@@ -128,6 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         User user = new User();
         BeanUtils.copyProperties(userVO, user);
+        //  密码加密
         setPassword(user, user.getPassword());
 
         baseMapper.updateById(user);
@@ -145,6 +155,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (null == user) {
                 throw new EntityNotFoundException(ResultStatus.NOT_FOUND);
             }
+            // 删除该用户
             baseMapper.deleteById(userId);
             // 删除用户与角色相关联信息
             userRoleService.deleteUserRole(userId);
@@ -165,6 +176,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new EntityNotFoundException("当前用户不存在！");
         }
 
+        // 更新用户状态
         user.setStatus(status.getValue());
         baseMapper.updateById(user);
 
@@ -181,7 +193,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUserType(userType.getValue());
         // 设置密码
         setPassword(user, user.getPassword());
-
+        // 设置状态
         user.setStatus(UserStatus.NORMAL.getValue());
 
         // 查询数据库中是否已经存在该用户
@@ -208,6 +220,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public LoginUserDTO selectUserByUserName(@NonNull String username) {
         Assert.hasText(username, "Username must not be empty!");
 
+        // 构造查询条件
         LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(User::getUsername, username);
 
@@ -216,13 +229,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginUserDTO loginUserDTO = new LoginUserDTO();
         BeanUtils.copyProperties(user, loginUserDTO);
 
-        Set<String> permissions = new HashSet<>();
-
+        // 查询该用户所拥有的角色
         List<String> roleIds = userRoleService.getRoleIdsByUserId(user.getId());
         Set<String> roles = new HashSet<>(roleIds);
-
-        loginUserDTO.setPermissions(permissions);
         loginUserDTO.setRoles(roles);
+
+        // 查询该用户所拥有的权限
+        Set<String> menuIdSet = new HashSet<>();
+        roles.forEach(v -> menuIdSet.addAll(roleMenuService.getMenuIdsByRoleId(v)));
+        Set<String> permissions = new HashSet<>();
+        menuIdSet.forEach(v -> permissions.add(menuService.getMenuById(v).getPermissionValue()));
+        loginUserDTO.setPermissions(permissions);
 
         return loginUserDTO;
     }
