@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
+import cn.lwjppz.mindstorm.common.core.enums.MenuType;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.permission.mapper.MenuMapper;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
@@ -61,6 +62,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         });
 
         LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.ne(Menu::getType, MenuType.BUTTON.getValue());
         queryWrapper.orderByAsc(Menu::getSort);
         List<MenuDTO> menus = convertToMenuDTO(baseMapper.selectList(queryWrapper));
         Map<String, MenuDTO> idHash = new ConcurrentReferenceHashMap<>();

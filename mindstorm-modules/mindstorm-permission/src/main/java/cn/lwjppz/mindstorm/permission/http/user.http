@@ -1,0 +1,7 @@
+### 测试请求
+GET http://localhost:7000/mindstorm-permission/permission/user/test
+Accept: application/json
+
+###
+
+

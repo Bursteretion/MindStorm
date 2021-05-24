@@ -70,7 +70,7 @@ const actions = {
         commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
         commit('SET_PERMISSIONS', permissions)
-        resolve(data.user)
+        resolve(roles)
       }).catch(error => {
         reject(error)
       })

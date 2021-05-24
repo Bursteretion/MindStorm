@@ -31,9 +31,17 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
+
   {
     path: '/',
-    redirect: '/admin/dashboard'
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '首页', icon: 'home', affix: true }
+    }]
   },
 
   {
@@ -46,19 +54,7 @@ export const constantRoutes = [
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
-  },
-
-  {
-    path: '/admin',
-    component: Layout,
-    redirect: '/admin/dashboard',
-    children: [{
-      path: '/admin/dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'home', affix: true }
-    }]
-  },
+  }
 
   // {
   //   path: '/admin/permission',
@@ -332,8 +328,6 @@ export const constantRoutes = [
   //   ]
   // },
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
