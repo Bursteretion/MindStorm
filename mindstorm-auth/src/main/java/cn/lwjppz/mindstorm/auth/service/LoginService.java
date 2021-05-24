@@ -49,7 +49,7 @@ public class LoginService {
         }
 
         if (null == result.getData()) {
-            throw new LoginException("登录用户：" + username + " 不存在");
+            throw new LoginException(ResultStatus.USER_NOT_EXIST);
         }
 
         // 解决 Feign 远程调用返回 LinkedHashMap 问题
@@ -57,11 +57,11 @@ public class LoginService {
         LoginUserDTO user = objectMapper.convertValue(result.getData().get("user"), LoginUserDTO.class);
 
         if (UserStatus.DISABLE.getValue().equals(user.getStatus())) {
-            throw new LoginException("对不起，您的账号：" + username + " 已停用");
+            throw new LoginException(ResultStatus.USER_IS_DISABLE);
         }
 
         if (!SecurityUtils.matchesPassword(password, user.getPassword())) {
-            throw new LoginException("用户不存在/密码错误");
+            throw new LoginException(ResultStatus.USER_NOT_EXIST);
         }
 
         return user;

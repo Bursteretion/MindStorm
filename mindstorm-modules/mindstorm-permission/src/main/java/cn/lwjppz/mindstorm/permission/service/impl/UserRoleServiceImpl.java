@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -30,8 +31,11 @@ import java.util.List;
 @Service
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements UserRoleService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserRoleServiceImpl(@Lazy UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public UserRoleDTO getRoleByUserId(@NonNull String userId) {

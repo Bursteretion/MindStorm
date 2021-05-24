@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -45,14 +45,19 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Autowired
-    private UserRoleService userRoleService;
+    private final UserRoleService userRoleService;
 
-    @Autowired
-    private RoleMenuService roleMenuService;
+    private final RoleMenuService roleMenuService;
 
-    @Autowired
-    private MenuService menuService;
+    private final MenuService menuService;
+
+    public UserServiceImpl(@Lazy UserRoleService userRoleService,
+                           @Lazy RoleMenuService roleMenuService,
+                           @Lazy MenuService menuService) {
+        this.userRoleService = userRoleService;
+        this.roleMenuService = roleMenuService;
+        this.menuService = menuService;
+    }
 
     @Override
     public List<User> getUsersByType(@NonNull UserType userType) {

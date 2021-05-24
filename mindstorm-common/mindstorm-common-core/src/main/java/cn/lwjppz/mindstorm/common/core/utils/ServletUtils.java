@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.common.core.utils;
 
 import cn.hutool.core.convert.Convert;
+import cn.lwjppz.mindstorm.common.core.constant.Constants;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -119,6 +122,20 @@ public class ServletUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 内容编码
+     *
+     * @param str 内容
+     * @return 编码后的内容
+     */
+    public static String urlEncode(String str) {
+        try {
+            return URLEncoder.encode(str, Constants.UTF8);
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
     }
 
 }

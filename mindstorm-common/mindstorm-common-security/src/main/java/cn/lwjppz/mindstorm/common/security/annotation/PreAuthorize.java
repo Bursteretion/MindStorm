@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * 权限注解
+ * 自定义权限注解
  * </p>
  *
  * @author : lwj

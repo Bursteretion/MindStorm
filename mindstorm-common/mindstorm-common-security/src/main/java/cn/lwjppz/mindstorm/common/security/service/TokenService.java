@@ -10,6 +10,7 @@ import cn.lwjppz.mindstorm.common.redis.service.RedisService;
 import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,8 +29,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TokenService {
 
-    @Autowired
-    private RedisService redisService;
+    private final RedisService redisService;
+
+    public TokenService(@Lazy RedisService redisService) {
+        this.redisService = redisService;
+    }
 
     private static final long EXPIRE_TIME = Constants.TOKEN_EXPIRE * 60;
 

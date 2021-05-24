@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -40,7 +41,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     private final RoleMenuService roleMenuService;
 
-    public RoleServiceImpl(RoleMenuService roleMenuService) {
+    public RoleServiceImpl(@Lazy RoleMenuService roleMenuService) {
         this.roleMenuService = roleMenuService;
     }
 

@@ -25,11 +25,15 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/auth")
 public class TokenController {
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
+
+    public TokenController(TokenService tokenService,
+                           LoginService loginService) {
+        this.tokenService = tokenService;
+        this.loginService = loginService;
+    }
 
     @ApiOperation("用户登录")
     @PostMapping("/login")

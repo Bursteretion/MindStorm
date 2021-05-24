@@ -14,6 +14,11 @@ public class Constants {
     }
 
     /**
+     * UTF-8
+     */
+    public static final String UTF8 = "UTF-8";
+
+    /**
      * http请求
      */
     public static final String HTTP = "http://";

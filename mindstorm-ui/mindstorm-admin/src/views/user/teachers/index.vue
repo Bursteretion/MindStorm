@@ -59,6 +59,7 @@
         </el-table-column>
         <el-table-column
           prop="sex"
+          width="100"
           label="性别">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.sex === 1" type="success">男</el-tag>

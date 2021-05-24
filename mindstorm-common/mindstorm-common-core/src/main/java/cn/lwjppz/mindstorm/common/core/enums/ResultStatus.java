@@ -65,13 +65,12 @@ public enum ResultStatus implements IResultStatus {
 
     MENU_EXIST(20022, "该菜单已存在"),
 
-    USER_NOT_EXIST(20023, "当前用户不存在"),
+    USER_NOT_EXIST(20023, "当前用户不存在/密码错误"),
+
+    USER_IS_DISABLE(20023, "当前用户已被停用"),
 
     USER_PASSWORD_NO_MATCH(20024, "用户原密码匹配错误"),
 
-    FILE_OPERATION(20025, "没有可用的文件处理程序来操作文件"),
-
-    ATTACHMENT_HANDLER_UNIQUE(20026, "附件处理器不唯一"),
 
     FORBIDDEN(20027, "您无权访问");
 
