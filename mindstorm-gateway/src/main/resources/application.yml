@@ -34,3 +34,9 @@ spring:
             - StripPrefix=1
   main:
     allow-bean-definition-overriding: true
+
+ignore:
+  whites:
+    - /mindstorm-auth/auth/login
+    - /mindstorm-auth/v2/api-docs
+    - /mindstorm-permission/v2/api-docs

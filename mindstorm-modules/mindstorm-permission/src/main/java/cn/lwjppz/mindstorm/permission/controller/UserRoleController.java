@@ -4,6 +4,7 @@ package cn.lwjppz.mindstorm.permission.controller;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.permission.model.dto.userRole.UserRoleDTO;
 import cn.lwjppz.mindstorm.permission.service.UserRoleService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/permission/user-role")
+@Api(tags = "用户角色分配控制器")
 public class UserRoleController {
 
     private final UserRoleService userRoleService;

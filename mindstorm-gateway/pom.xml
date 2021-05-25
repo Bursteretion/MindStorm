@@ -21,6 +21,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.github.xiaoymin</groupId>
+			<artifactId>knife4j-spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>cn.lwjppz</groupId>
 			<artifactId>mindstorm-common-redis</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

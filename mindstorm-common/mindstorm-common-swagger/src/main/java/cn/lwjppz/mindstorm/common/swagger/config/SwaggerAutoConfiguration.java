@@ -1,10 +1,10 @@
-package cn.lwjppz.mindstorm.permission.config;
+package cn.lwjppz.mindstorm.common.swagger.config;
 
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -20,37 +20,34 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 
 /**
- * <p></p>
+ * <p>
+ * Swagger自动配置类
+ * </p>
  *
  * @author : lwj
- * @since : 2021-05-10
+ * @since : 2021-05-25
  */
 @Configuration
 @EnableSwagger2
-@Import(BeanValidatorPluginsConfiguration.class)
 @EnableKnife4j
-@ConfigurationProperties(prefix = "swagger")
-@Getter
-@Setter
-public class SwaggerConfig {
+@EnableAutoConfiguration
+@Import(BeanValidatorPluginsConfiguration.class)
+@ConditionalOnProperty(name = "swagger.enabled", matchIfMissing = true)
+public class SwaggerAutoConfiguration {
 
-    private String title;
-    private String name;
-    private String email;
-    private String url;
-    private String version;
-    private String license;
-    private String licenseUrl;
-    private String termsOfServiceUrl;
-    private String description;
+    @Bean
+    @ConditionalOnMissingBean
+    public SwaggerProperties swaggerProperties() {
+        return new SwaggerProperties();
+    }
 
     /**
      * 创建获取api应用
      */
     @Bean
-    public Docket createRestApi() {
+    public Docket createRestApi(SwaggerProperties swaggerProperties) {
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+                .apiInfo(apiInfo(swaggerProperties))
                 .select()
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
@@ -60,14 +57,14 @@ public class SwaggerConfig {
     /**
      * 配置swagger文档显示的相关内容标识(信息会显示到swagger页面)
      */
-    private ApiInfo apiInfo() {
-        return new ApiInfo(title,
-                description,
-                version,
-                termsOfServiceUrl,
-                new Contact(name, email, url),
-                license,
-                licenseUrl,
+    private ApiInfo apiInfo(SwaggerProperties swaggerProperties) {
+        return new ApiInfo(swaggerProperties.getTitle(),
+                swaggerProperties.getDescription(),
+                swaggerProperties.getVersion(),
+                swaggerProperties.getTermsOfServiceUrl(),
+                new Contact(swaggerProperties.getName(), swaggerProperties.getEmail(), swaggerProperties.getUrl()),
+                swaggerProperties.getLicense(),
+                swaggerProperties.getLicenseUrl(),
                 new ArrayList<>());
     }
 }

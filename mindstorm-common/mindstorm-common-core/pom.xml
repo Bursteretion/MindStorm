@@ -20,6 +20,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
@@ -62,11 +68,6 @@
 			<artifactId>spring-context-support</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>cn.lwjppz</groupId>
-			<artifactId>mindstorm-common-swagger</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 </project>

@@ -16,6 +16,7 @@
 	<modules>
 		<module>mindstorm-common-core</module>
 		<module>mindstorm-common-log</module>
+		<module>mindstorm-common-mybatis</module>
 		<module>mindstorm-common-redis</module>
 		<module>mindstorm-common-security</module>
 		<module>mindstorm-common-swagger</module>

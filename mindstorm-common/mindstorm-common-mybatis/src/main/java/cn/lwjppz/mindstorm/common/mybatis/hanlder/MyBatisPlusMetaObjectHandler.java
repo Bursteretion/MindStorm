@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.permission.handler;
+package cn.lwjppz.mindstorm.common.mybatis.hanlder;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  * <p>
- * Mybatis Plus autowired handler
+ * Mybatis Plus 字段自动注入处理器
  * </p>
  *
  * @author : lwj

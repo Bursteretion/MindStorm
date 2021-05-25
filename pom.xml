@@ -32,7 +32,7 @@
 		<druid.version>1.2.4</druid.version>
 		<jackson-databind.version>2.11.3</jackson-databind.version>
 		<hutool.version>5.3.10</hutool.version>
-		<swagger.version>2.9.2</swagger.version>
+		<swagger.version>1.5.22</swagger.version>
 		<fastjson.version>1.2.75</fastjson.version>
 		<commons-io.version>1.3.2</commons-io.version>
 		<commons-lang.version>2.6</commons-lang.version>

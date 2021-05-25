@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("permission/menu")
-@Api(tags = "菜单（按钮）控制器")
+@Api(tags = "菜单权限控制器")
 public class MenuController {
 
     private final MenuService menuService;

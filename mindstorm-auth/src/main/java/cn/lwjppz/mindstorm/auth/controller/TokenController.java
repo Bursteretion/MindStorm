@@ -5,6 +5,7 @@ import cn.lwjppz.mindstorm.auth.model.LoginBody;
 import cn.lwjppz.mindstorm.auth.service.LoginService;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.security.service.TokenService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/auth")
+@Api(tags = "认证中心控制器")
 public class TokenController {
 
     private final TokenService tokenService;

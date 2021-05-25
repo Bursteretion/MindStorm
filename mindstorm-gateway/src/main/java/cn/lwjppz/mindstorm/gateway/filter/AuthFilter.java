@@ -60,7 +60,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String url = exchange.getRequest().getURI().getPath();
         // 跳过不需要验证的路径
-        ignoreWhite.getWhites().add("/mindstorm-auth/auth/login");
         if (StringUtils.matches(url, ignoreWhite.getWhites())) {
             return chain.filter(exchange);
         }

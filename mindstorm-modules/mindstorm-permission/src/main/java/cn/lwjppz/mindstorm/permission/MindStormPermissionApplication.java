@@ -1,5 +1,7 @@
 package cn.lwjppz.mindstorm.permission;
 
+import cn.lwjppz.mindstorm.common.mybatis.annotation.EnableCustomMybatis;
+import cn.lwjppz.mindstorm.common.swagger.annotation.EnableCustomSwagger2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -9,6 +11,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @since 2021-05-10
  */
 @EnableDiscoveryClient
+@EnableCustomMybatis
+@EnableCustomSwagger2
 @SpringBootApplication
 public class MindStormPermissionApplication {
 
