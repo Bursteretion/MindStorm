@@ -30,6 +30,7 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         type="primary"
+        v-hasPermission="['system:role:add']"
         @click="openDialogRoleAdd">
         添加
       </el-button>
@@ -79,12 +80,14 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
+              v-hasPermission="['system:role:update']"
               @click="handleEdit(scope.row)">修改
             </el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-check"
+              v-hasPermission="['system:role:distribute']"
               @click="handleSetPermission(scope.row)">设置权限
             </el-button>
             <el-popconfirm
@@ -94,6 +97,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="你确定要删除这个角色吗？"
+              v-hasPermission="['system:role:delete']"
               @onConfirm="handleDelete(scope.row.id)"
             >
               <el-button
@@ -368,7 +372,7 @@ export default {
       this.form.menuCheckStrictly = !!value
     },
     handleAddRoleMenu() {
-      const menus = this.$refs.menu.getCheckedKeys()
+      const menus = [...this.$refs.menu.getCheckedKeys(), ...this.$refs.menu.getHalfCheckedKeys()]
       distributeMenu(this.roleMenuForm.roleId, menus).then((res) => {
         if (res && res.code === 20000) {
           this.$message.success('为' + this.roleMenuForm.roleName + '分配菜单成功！')

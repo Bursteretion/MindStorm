@@ -49,30 +49,19 @@ public enum ResultStatus implements IResultStatus {
 
     FETCH_USERINFO_ERROR(20014, "获取用户信息失败！"),
 
-    NOT_FOUND(20015, "未找到改实体"),
+    NOT_FOUND(20015, "未找到该实体"),
 
-    NOT_INSTALL(20016, "博客尚未进行初始化！"),
+    BAD_REQUEST(20016, "系统繁忙！"),
 
-    BAD_REQUEST(20017, "系统繁忙！"),
+    MENU_EXIST(20017, "该菜单已存在"),
 
-    ALREADY_INSTALL_BLOG(20018, "该博客已初始化，不能再次安装！"),
+    USER_NOT_EXIST(20018, "当前用户不存在/密码错误"),
 
-    CATEGORY_EXIST(20019, "该分类已存在！"),
+    USER_IS_DISABLE(20019, "当前用户已被停用"),
 
-    LINK_EXIST(20020, "该友链已存在"),
+    USER_PASSWORD_NO_MATCH(20020, "用户原密码匹配错误"),
 
-    TAG_EXIST(20021, "该标签已存在！"),
-
-    MENU_EXIST(20022, "该菜单已存在"),
-
-    USER_NOT_EXIST(20023, "当前用户不存在/密码错误"),
-
-    USER_IS_DISABLE(20023, "当前用户已被停用"),
-
-    USER_PASSWORD_NO_MATCH(20024, "用户原密码匹配错误"),
-
-
-    FORBIDDEN(20027, "您无权访问");
+    FORBIDDEN(20021, "您无权访问，请联系管理员授权");
 
     private final Integer code;
 

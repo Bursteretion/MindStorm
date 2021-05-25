@@ -63,7 +63,7 @@ public class LoginService {
         }
 
         if (!SecurityUtils.matchesPassword(password, user.getPassword())) {
-            throw new LoginException(ResultStatus.USER_NOT_EXIST);
+            throw new LoginException(ResultStatus.USER_PASSWORD_NO_MATCH);
         }
 
         return user;

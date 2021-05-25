@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ms_user")
+@TableName("msp_user")
 @ApiModel(value = "User对象", description = "用户表")
 public class User implements Serializable {
 

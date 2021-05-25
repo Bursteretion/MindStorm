@@ -104,6 +104,7 @@
               @click="handleEdit(scope.row.id)">修改
             </el-button>
             <el-button
+              v-if="scope.row.type !== 2"
               size="mini"
               type="text"
               icon="el-icon-plus"

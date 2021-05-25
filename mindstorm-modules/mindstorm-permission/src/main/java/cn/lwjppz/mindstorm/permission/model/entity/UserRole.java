@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ms_user_role")
+@TableName("msp_user_role")
 @ApiModel(value = "UserRole对象", description = "用户角色表")
 public class UserRole implements Serializable {
 

@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ms_role_menu")
+@TableName("msp_role_menu")
 @ApiModel(value = "RoleMenu对象", description = "角色菜单表")
 public class RoleMenu implements Serializable {
 

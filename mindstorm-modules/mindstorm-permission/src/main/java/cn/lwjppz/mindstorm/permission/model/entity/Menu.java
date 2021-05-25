@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("ms_menu")
+@TableName("msp_menu")
 @ApiModel(value = "Menu对象", description = "菜单")
 public class Menu implements Serializable {
 

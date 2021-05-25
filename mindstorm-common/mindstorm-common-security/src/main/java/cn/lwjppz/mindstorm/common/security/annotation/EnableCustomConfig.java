@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.common.security.annotation;
 
+import cn.lwjppz.mindstorm.common.security.config.ApplicationConfig;
 import cn.lwjppz.mindstorm.common.security.feign.FeignAutoConfiguration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
@@ -20,8 +21,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 @EnableAspectJAutoProxy(exposeProxy = true)
-// 开启线程异步执行
 @EnableAsync
-@Import(FeignAutoConfiguration.class)
+@Import({FeignAutoConfiguration.class, ApplicationConfig.class})
 public @interface EnableCustomConfig {
 }
