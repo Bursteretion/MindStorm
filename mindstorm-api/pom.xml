@@ -7,17 +7,14 @@
 		<groupId>cn.lwjppz</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>mindstorm-common</artifactId>
+	<artifactId>mindstorm-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mindstorm-common</name>
-	<description>Demo project for Spring Boot</description>
+	<name>mindstorm-api</name>
 	<packaging>pom</packaging>
+	<description>Demo project for Spring Boot</description>
 
 	<modules>
-		<module>mindstorm-common-core</module>
-		<module>mindstorm-common-log</module>
-		<module>mindstorm-common-redis</module>
-		<module>mindstorm-common-security</module>
-		<module>mindstorm-common-swagger</module>
+		<module>mindstorm-api-permission</module>
 	</modules>
+
 </project>

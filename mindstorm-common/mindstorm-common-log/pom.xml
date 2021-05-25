@@ -7,24 +7,18 @@
 		<groupId>cn.lwjppz</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>mindstorm-common-security</artifactId>
+	<artifactId>mindstorm-common-log</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mindstorm-common-security</name>
+	<name>mindstorm-common-log</name>
 
 	<description>
-		mindstorm-common-security 安全模块
+		mindstorm-common-log 日志模块
 	</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>cn.lwjppz</groupId>
-			<artifactId>mindstorm-common-redis</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>cn.lwjppz</groupId>
-			<artifactId>mindstorm-api-permission</artifactId>
+			<artifactId>mindstorm-common-security</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

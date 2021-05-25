@@ -1,12 +1,12 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
+import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserType;
 import cn.lwjppz.mindstorm.common.core.exception.AlreadyExistsException;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.permission.mapper.UserMapper;
-import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
@@ -222,7 +222,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public LoginUserDTO selectUserByUserName(@NonNull String username) {
+    public Loginuser selectUserByUserName(@NonNull String username) {
         Assert.hasText(username, "Username must not be empty!");
 
         // 构造查询条件
@@ -231,7 +231,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         User user = baseMapper.selectOne(queryWrapper);
 
-        LoginUserDTO loginUserDTO = new LoginUserDTO();
+        Loginuser loginUserDTO = new Loginuser();
         BeanUtils.copyProperties(user, loginUserDTO);
 
         // 查询该用户所拥有的角色

@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.common.security.service;
 
+import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
 import cn.lwjppz.mindstorm.common.core.constant.CacheConstants;
 import cn.lwjppz.mindstorm.common.core.constant.Constants;
 import cn.lwjppz.mindstorm.common.core.utils.IdUtils;
@@ -7,9 +8,7 @@ import cn.lwjppz.mindstorm.common.core.utils.IpUtils;
 import cn.lwjppz.mindstorm.common.core.utils.SecurityUtils;
 import cn.lwjppz.mindstorm.common.core.utils.ServletUtils;
 import cn.lwjppz.mindstorm.common.redis.service.RedisService;
-import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +40,7 @@ public class TokenService {
 
     protected static final long MILLIS_SECOND = 1000;
 
-    public Map<String, Object> createToken(LoginUserDTO loginUserDTO) {
+    public Map<String, Object> createToken(Loginuser loginUserDTO) {
         // 生成token
         String token = IdUtils.fastUUID();
         loginUserDTO.setToken(token);
@@ -62,7 +61,7 @@ public class TokenService {
      *
      * @return 用户信息
      */
-    public LoginUserDTO getLoginUser() {
+    public Loginuser getLoginUser() {
         return getLoginUser(ServletUtils.getRequest());
     }
 
@@ -71,10 +70,10 @@ public class TokenService {
      *
      * @return 用户信息
      */
-    public LoginUserDTO getLoginUser(HttpServletRequest request) {
+    public Loginuser getLoginUser(HttpServletRequest request) {
         // 获取请求携带的令牌
         String token = SecurityUtils.getToken(request);
-        LoginUserDTO user = null;
+        Loginuser user = null;
         if (StringUtils.isNotEmpty(token)) {
             String userKey = getTokenKey(token);
             user = redisService.getCacheObject(userKey);
@@ -95,7 +94,7 @@ public class TokenService {
      *
      * @param loginUserDTO 登录信息
      */
-    public void refreshToken(LoginUserDTO loginUserDTO) {
+    public void refreshToken(Loginuser loginUserDTO) {
         loginUserDTO.setLoginTime(System.currentTimeMillis());
         loginUserDTO.setExpireTime(loginUserDTO.getLoginTime() + EXPIRE_TIME * MILLIS_SECOND);
         // 根据 uuid 将 loginUserDTO 缓存

@@ -131,8 +131,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         Assert.hasText(menuId, "Menu Id must not be empty!");
 
         LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Menu::getId, menuId);
-        queryWrapper.eq(Menu::getPid, menuId);
+        queryWrapper.eq(Menu::getId, menuId).or().eq(Menu::getPid, menuId);
 
         baseMapper.delete(queryWrapper);
         roleMenuService.deleteRoleMenuByMenuId(menuId);

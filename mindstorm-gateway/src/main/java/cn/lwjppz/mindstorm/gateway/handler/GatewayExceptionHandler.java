@@ -40,15 +40,13 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler {
             return Mono.error(ex);
         }
 
-        String msg;
+        String msg = "";
 
         if (ex instanceof NotFoundException) {
             msg = "服务未找到";
         } else if (ex instanceof ResponseStatusException) {
             ResponseStatusException responseStatusException = (ResponseStatusException) ex;
             msg = responseStatusException.getMessage();
-        } else {
-            msg = "内部服务器错误";
         }
 
         log.error("[网关异常处理]请求路径:{},异常信息:{}", exchange.getRequest().getPath(), ex.getMessage());
@@ -56,9 +54,10 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler {
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         response.setStatusCode(HttpStatus.OK);
 
+        String finalMsg = msg;
         return response.writeWith(Mono.fromSupplier(() -> {
             DataBufferFactory bufferFactory = response.bufferFactory();
-            return bufferFactory.wrap(JSON.toJSONBytes(CommonResult.error().message(msg)));
+            return bufferFactory.wrap(JSON.toJSONBytes(CommonResult.error().message(finalMsg)));
         }));
     }
 }

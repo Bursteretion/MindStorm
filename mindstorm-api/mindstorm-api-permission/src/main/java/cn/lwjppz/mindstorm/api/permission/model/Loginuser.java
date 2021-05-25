@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.permission.model.dto;
+package cn.lwjppz.mindstorm.api.permission.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +11,13 @@ import java.util.Set;
  * <p></p>
  *
  * @author : lwj
- * @since : 2021-05-15
+ * @since : 2021-05-25
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class LoginUserDTO {
+public class Loginuser {
 
     private static final long serialVersionUID = 1L;
 

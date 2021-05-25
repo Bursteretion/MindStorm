@@ -3,28 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>mindstorm-common</artifactId>
+		<artifactId>mindstorm-api</artifactId>
 		<groupId>cn.lwjppz</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>mindstorm-common-security</artifactId>
+	<artifactId>mindstorm-api-permission</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mindstorm-common-security</name>
+	<name>mindstorm-api-permission</name>
 
 	<description>
-		mindstorm-common-security 安全模块
+		mindstorm-api-permission 权限接口
 	</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>cn.lwjppz</groupId>
-			<artifactId>mindstorm-common-redis</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>cn.lwjppz</groupId>
-			<artifactId>mindstorm-api-permission</artifactId>
+			<artifactId>mindstorm-common-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

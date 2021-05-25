@@ -1,10 +1,10 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
+import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
-import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
@@ -64,7 +64,7 @@ public class UserController {
     @ApiOperation("获取用户信息")
     @GetMapping("/info/{username}")
     public CommonResult infoByUserName(@ApiParam("用户名") @PathVariable("username") String username) {
-        LoginUserDTO loginUserDTO = userService.selectUserByUserName(username);
+        Loginuser loginUserDTO = userService.selectUserByUserName(username);
         return CommonResult.ok().data("user", loginUserDTO);
     }
 

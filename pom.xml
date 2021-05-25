@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>mindstorm-common</module>
+		<module>mindstorm-api</module>
 		<module>mindstorm-auth</module>
 		<module>mindstorm-gateway</module>
 		<module>mindstorm-modules</module>

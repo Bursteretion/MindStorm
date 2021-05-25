@@ -1,15 +1,14 @@
 package cn.lwjppz.mindstorm.auth.service;
 
-import cn.lwjppz.mindstorm.auth.feign.UserFeignService;
+import cn.lwjppz.mindstorm.api.permission.feign.RemoteUserFeignService;
+import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
 import cn.lwjppz.mindstorm.common.core.constant.UserConstants;
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
 import cn.lwjppz.mindstorm.common.core.exception.LoginException;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.core.utils.SecurityUtils;
-import cn.lwjppz.mindstorm.permission.model.dto.LoginUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -22,10 +21,13 @@ import org.springframework.util.StringUtils;
 @Service
 public class LoginService {
 
-    @Autowired
-    private UserFeignService userFeignService;
+    private final RemoteUserFeignService remoteUserFeignService;
 
-    public LoginUserDTO login(String username, String password) {
+    public LoginService(RemoteUserFeignService remoteUserFeignService) {
+        this.remoteUserFeignService = remoteUserFeignService;
+    }
+
+    public Loginuser login(String username, String password) {
         if (!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
             // TODO log
             throw new LoginException("用户/密码必须填写");
@@ -42,7 +44,7 @@ public class LoginService {
         }
 
         // 查询用户信息
-        CommonResult result = userFeignService.selectUserByUsername(username);
+        CommonResult result = remoteUserFeignService.selectUserByUsername(username);
 
         if (ResultStatus.ERROR.getCode().equals(result.getCode())) {
             throw new LoginException(result.getMessage());
@@ -54,7 +56,7 @@ public class LoginService {
 
         // 解决 Feign 远程调用返回 LinkedHashMap 问题
         ObjectMapper objectMapper = new ObjectMapper();
-        LoginUserDTO user = objectMapper.convertValue(result.getData().get("user"), LoginUserDTO.class);
+        Loginuser user = objectMapper.convertValue(result.getData().get("user"), Loginuser.class);
 
         if (UserStatus.DISABLE.getValue().equals(user.getStatus())) {
             throw new LoginException(ResultStatus.USER_IS_DISABLE);
