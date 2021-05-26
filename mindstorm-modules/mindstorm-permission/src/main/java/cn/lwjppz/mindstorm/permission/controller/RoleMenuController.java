@@ -39,6 +39,7 @@ public class RoleMenuController {
 
     @ApiOperation("为角色分配菜单")
     @PostMapping("/distribute/{roleId}")
+    @PreAuthorize(hasPermission = "system:role:distribute")
     public CommonResult distributeMenu(@ApiParam("角色Id") @PathVariable("roleId") String roleId,
                                        @ApiParam("菜单") @RequestBody List<String> menus) {
         boolean b = roleMenuService.insertRoleMenu(roleId, menus);

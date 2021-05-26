@@ -83,7 +83,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          v-hasPermission="['system:student:disable']"
+          v-hasPermission="['system:student:status']"
           label="状态">
           <template slot-scope="scope">
             <el-switch

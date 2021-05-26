@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.permission.controller;
 
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.Router;
@@ -35,58 +36,63 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    @ApiOperation("获取所有菜单（按钮）")
     @GetMapping("/list")
+    @ApiOperation("获取所有菜单（按钮）")
+    @PreAuthorize(hasPermission = "system:menu:list")
     public CommonResult listMenus() {
         List<MenuDTO> menus = menuService.getMenus();
         return CommonResult.ok().data("menus", menus);
     }
 
-    @ApiOperation("根据角色Id集合获取路由表")
     @PostMapping("routers")
+    @ApiOperation("根据角色Id集合获取路由表")
     public CommonResult getRouters(@ApiParam("角色Id集合") @RequestBody List<String> roleIds) {
         List<Router> routers = menuService.getRouters(roleIds);
         return CommonResult.ok().data("routes", routers);
     }
 
-    @ApiOperation("获取所有指定类型的菜单（按钮）")
     @PostMapping("/list/type")
+    @ApiOperation("获取所有指定类型的菜单（按钮）")
     public CommonResult listMenus(@ApiParam("菜单类型集合") @RequestBody List<Integer> types) {
         List<MenuDTO> menus = menuService.getMenus(types);
         return CommonResult.ok().data("treeMenus", menus);
     }
 
-    @ApiOperation("多条件查询菜单信息")
     @PostMapping("/search")
+    @ApiOperation("多条件查询菜单信息")
+    @PreAuthorize(hasPermission = "system:menu:query")
     public CommonResult search(@ApiParam("查询菜单信息") @RequestBody SearchMenuVO searchMenuVO) {
         List<MenuDTO> menus = menuService.searchMenus(searchMenuVO);
         return CommonResult.ok().data("searchMenus", menus);
     }
 
-    @ApiOperation("新增菜单（按钮）")
     @PostMapping("/create")
+    @ApiOperation("新增菜单（按钮）")
+    @PreAuthorize(hasPermission = "system:menu:add")
     public CommonResult create(@ApiParam("菜单（按钮）信息") @RequestBody MenuVO menuVO) {
         Menu menu = menuService.insertMenu(menuVO);
         return CommonResult.ok().data("menu", menu);
     }
 
-    @ApiOperation("查询菜单（按钮）信息")
     @GetMapping("/info/{menuId}")
+    @ApiOperation("查询菜单（按钮）信息")
     public CommonResult info(@ApiParam("菜单（按钮）Id") @PathVariable("menuId") String menuId) {
         MenuDetailDTO menu =
                 menuService.convertToMenuDetailDTO(menuService.convertToMenuDTO(menuService.getMenuById(menuId)));
         return CommonResult.ok().data("menu", menu);
     }
 
-    @ApiOperation("修改菜单信息")
     @PostMapping("/update")
+    @ApiOperation("修改菜单信息")
+    @PreAuthorize(hasPermission = "system:menu:update")
     public CommonResult update(@ApiParam("菜单信息") @RequestBody MenuVO menuVO) {
         Menu menu = menuService.updateMenu(menuVO);
         return CommonResult.ok().data("menu", menu);
     }
 
-    @ApiOperation("删除菜单信息")
     @DeleteMapping("/delete/{menuId}")
+    @ApiOperation("删除菜单信息")
+    @PreAuthorize(hasPermission = "system:menu:delete")
     public CommonResult delete(@ApiParam("菜单Id") @PathVariable("menuId") String menuId) {
         boolean b = menuService.deleteById(menuId);
         return CommonResult.ok().data("delete", b);

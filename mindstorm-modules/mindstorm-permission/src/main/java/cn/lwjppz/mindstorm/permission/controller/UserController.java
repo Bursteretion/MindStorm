@@ -5,6 +5,7 @@ import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
+import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
@@ -44,6 +45,7 @@ public class UserController {
 
     @ApiOperation("根据用户类型获取用户信息")
     @GetMapping("/list/{pageIndex}/{pageSize}/{userType}")
+    @PreAuthorize(hasAnyPermission = {"system:admin:list", "system:student:list", "system:teacher:list"})
     public CommonResult pageBy(@ApiParam("第几页") @PathVariable("pageIndex") Integer pageIndex,
                                @ApiParam("每页条数") @PathVariable("pageSize") Integer pageSize,
                                @ApiParam("用户类型") @PathVariable("userType") Integer userType) {
@@ -54,6 +56,7 @@ public class UserController {
 
     @ApiOperation("多条件查询用户信息")
     @PostMapping("/search/{pageIndex}/{pageSize}")
+    @PreAuthorize(hasAnyPermission = {"system:admin:query", "system:student:query", "system:teacher:query"})
     public CommonResult pageBySearch(@ApiParam("第几页") @PathVariable("pageIndex") Integer pageIndex,
                                      @ApiParam("每页条数") @PathVariable("pageSize") Integer pageSize,
                                      @ApiParam("查询表单信息") @RequestBody SearchUserVO searchUserVO) {
@@ -77,6 +80,7 @@ public class UserController {
 
     @ApiOperation("新增学生")
     @PostMapping("/create/student")
+    @PreAuthorize(hasPermission = "system:student:add")
     public CommonResult createStudent(@ApiParam("学生信息") @RequestBody UserVO userVO) {
         User student = userService.insertStudent(userVO);
         return CommonResult.ok().data("student", student);
@@ -84,6 +88,7 @@ public class UserController {
 
     @ApiOperation("新增教师")
     @PostMapping("/create/teacher")
+    @PreAuthorize(hasPermission = "system:teacher:add")
     public CommonResult createTeacher(@ApiParam("教师信息") @RequestBody UserVO userVO) {
         User teacher = userService.insertTeacher(userVO);
         return CommonResult.ok().data("teacher", teacher);
@@ -91,6 +96,7 @@ public class UserController {
 
     @ApiOperation("新增管理员")
     @PostMapping("/create/admin")
+    @PreAuthorize(hasPermission = "system:admin:add")
     public CommonResult createAdmin(@ApiParam("管理员信息") @RequestBody UserVO userVO) {
         User admin = userService.insertAdmin(userVO);
         return CommonResult.ok().data("admin", admin);
@@ -98,6 +104,7 @@ public class UserController {
 
     @ApiOperation("修改用户信息")
     @PostMapping("/update")
+    @PreAuthorize(hasAnyPermission = {"system:admin:update", "system:student:update", "system:teacher:update"})
     public CommonResult update(@ApiParam("用户信息") @RequestBody UserVO userVO) {
         User user = userService.updateUser(userVO);
         return CommonResult.ok().data("user", user);
@@ -105,6 +112,7 @@ public class UserController {
 
     @ApiOperation("删除用户")
     @DeleteMapping("/delete/{userId}")
+    @PreAuthorize(hasAnyPermission = {"system:admin:delete", "system:student:delete", "system:teacher:delete"})
     public CommonResult delete(@ApiParam("用户Id") @PathVariable("userId") String userId) {
         boolean b = userService.deleteUser(userId);
         return CommonResult.ok().data("delete", b);
@@ -112,6 +120,7 @@ public class UserController {
 
     @ApiOperation("更改用户状态")
     @GetMapping("/change")
+    @PreAuthorize(hasAnyPermission = {"system:admin:status", "system:student:status", "system:teacher:status"})
     public CommonResult change(@ApiParam("用户Id") @RequestParam("userId") String userId,
                                @ApiParam("用户状态") @RequestParam("status") Integer status) {
         UserStatus userStatus = ValueEnum.valueToEnum(UserStatus.class, status);

@@ -78,7 +78,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          v-hasPermission="['system:admin:disable']"
+          v-hasPermission="['system:admin:status']"
           label="状态">
           <template slot-scope="scope">
             <el-switch
