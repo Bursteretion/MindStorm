@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div>
+    <div v-hasPermission="['system:admin:query']">
       <el-form ref="searchAdminForm" :inline="true" :model="searchAdminVO">
         <el-form-item label="用户名" prop="username">
           <el-input size="small" v-model="searchAdminVO.username" placeholder="用户名"></el-input>
@@ -33,6 +33,7 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         type="primary"
+        v-hasPermission="['system:admin:add']"
         @click="openAdminAddDialog">
         添加
       </el-button>
@@ -77,6 +78,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
+          v-hasPermission="['system:admin:disable']"
           label="状态">
           <template slot-scope="scope">
             <el-switch
@@ -97,6 +99,7 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
+              v-hasPermission="['system:admin:update']"
               @click="handleAdminEdit(scope.row.id)">
               修改
             </el-button>
@@ -104,6 +107,7 @@
               size="mini"
               type="text"
               icon="el-icon-check"
+              v-hasPermission="['system:admin:distribute']"
               @click="handleAdminAddRole(scope.row.id)">
               分配角色
             </el-button>
@@ -112,6 +116,7 @@
               size="mini"
               icon="el-icon-delete"
               type="text"
+              v-hasPermission="['system:admin:delete']"
               @click="handleAdminDelete(scope.row)">
               删除
             </el-button>

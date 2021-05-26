@@ -2,9 +2,11 @@ package cn.lwjppz.mindstorm.permission.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.enums.MenuType;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
+import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.permission.mapper.MenuMapper;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.menu.Router;
 import cn.lwjppz.mindstorm.permission.model.entity.Menu;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.MenuVO;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.SearchMenuVO;
@@ -14,13 +16,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.ConcurrentReferenceHashMap;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +42,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         this.roleMenuService = roleMenuService;
     }
 
-
     @Override
     public List<MenuDTO> getMenus() {
         return generateTreeMenus(Wrappers.lambdaQuery());
@@ -58,7 +56,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<MenuDTO> getRouters(List<String> roleIds) {
+    public List<Router> getRouters(List<String> roleIds) {
         Set<String> menuIdSet = new HashSet<>();
         roleIds.forEach(v -> {
             List<String> menuIds = roleMenuService.getMenuIdsByRoleId(v);
@@ -68,28 +66,38 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.ne(Menu::getType, MenuType.BUTTON.getValue());
         queryWrapper.orderByAsc(Menu::getSort);
-        List<MenuDTO> menus = convertToMenuDTO(baseMapper.selectList(queryWrapper));
-        Map<String, MenuDTO> idHash = new ConcurrentReferenceHashMap<>();
-        Map<String, List<MenuDTO>> hash = getRouterMap(menus);
+        List<Router> menus = convertToRouter(baseMapper.selectList(queryWrapper));
 
-        menus.forEach(v -> idHash.put(v.getId(), v));
+        Map<String, Router> idHash = new HashMap<>(menus.size());
+        Map<String, List<Router>> hash = new HashMap<>(menus.size());
 
-        Set<Map.Entry<String, List<MenuDTO>>> entries = hash.entrySet();
+        menus.forEach(v -> {
+            v.setChildren(new ArrayList<>());
+            hash.put(v.getId(), v.getChildren());
+            idHash.put(v.getId(), v);
+        });
 
-        for (Map.Entry<String, List<MenuDTO>> v : entries) {
-            if (!menuIdSet.contains(v.getKey())) {
-                hash.remove(v.getKey());
+        Set<Map.Entry<String, List<Router>>> entries = hash.entrySet();
+        for (Map.Entry<String, List<Router>> v : entries) {
+            if (menuIdSet.contains(v.getKey())) {
+                Router currentRouter = idHash.get(v.getKey());
+                if (StringUtils.isNotEmpty(currentRouter.getPid())) {
+                    List<Router> routers = hash.get(currentRouter.getPid());
+                    routers.add(currentRouter);
+                    hash.put(currentRouter.getPid(), routers);
+                }
             }
         }
 
-        List<MenuDTO> res = new ArrayList<>();
-        for (Map.Entry<String, List<MenuDTO>> v : hash.entrySet()) {
-            if (StringUtils.isEmpty(Objects.requireNonNull(idHash.get(v.getKey())).getPid())) {
+        List<Router> res = new ArrayList<>();
+        for (Map.Entry<String, List<Router>> v : hash.entrySet()) {
+            if (menuIdSet.contains(v.getKey()) &&
+                    StringUtils.isEmpty(Objects.requireNonNull(idHash.get(v.getKey())).getPid())) {
                 res.add(idHash.get(v.getKey()));
             }
         }
 
-        res.forEach(this::sortMenu);
+        res.forEach(this::sortRouter);
 
         return res;
     }
@@ -144,7 +152,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         Assert.notNull(searchMenuVO, "SearchMenuVO must not be null!");
 
         LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
-        if (StringUtils.hasText(searchMenuVO.getName())) {
+        if (StringUtils.isNotEmpty(searchMenuVO.getName())) {
             queryWrapper.like(Menu::getName, searchMenuVO.getName());
         }
 
@@ -183,11 +191,40 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Router convertToRouter(Menu menu) {
+        Router router = new Router();
+        BeanUtils.copyProperties(menu, router);
+
+        return router;
+    }
+
+    @Override
+    public List<Router> convertToRouter(List<Menu> menus) {
+        return menus.stream()
+                .map(this::convertToRouter)
+                .collect(Collectors.toList());
+    }
+
     private List<MenuDTO> generateTreeMenus(LambdaQueryWrapper<Menu> queryWrapper) {
         queryWrapper.orderByAsc(Menu::getSort);
         List<MenuDTO> menus = convertToMenuDTO(baseMapper.selectList(queryWrapper));
 
-        getRouterMap(menus);
+        Map<String, List<MenuDTO>> hash = new HashMap<>(menus.size());
+        for (MenuDTO menuDTO : menus) {
+            menuDTO.setChildren(new ArrayList<>());
+            hash.put(menuDTO.getId(), menuDTO.getChildren());
+        }
+
+        menus.forEach(v -> {
+            if (StringUtils.isNotEmpty(v.getPid())) {
+                List<MenuDTO> list = hash.get(v.getPid());
+                if (null != list) {
+                    list.add(v);
+                    hash.put(v.getPid(), list);
+                }
+            }
+        });
 
         List<MenuDTO> res = new ArrayList<>();
         menus.forEach(v -> {
@@ -200,28 +237,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return res;
     }
 
-    private Map<String, List<MenuDTO>> getRouterMap(List<MenuDTO> menus) {
-        Map<String, List<MenuDTO>> hash = new ConcurrentReferenceHashMap<>(menus.size());
-        for (MenuDTO menuDTO : menus) {
-            menuDTO.setChildren(new ArrayList<>());
-            hash.put(menuDTO.getId(), menuDTO.getChildren());
-        }
-
-        menus.forEach(v -> {
-            if (StringUtils.hasText(v.getPid())) {
-                List<MenuDTO> list = hash.get(v.getPid());
-                if (null != list) {
-                    list.add(v);
-                    hash.put(v.getPid(), list);
-                }
-            }
-        });
-
-        return hash;
-    }
-
     private void sortMenu(MenuDTO menuDTO) {
         menuDTO.getChildren().sort(Comparator.comparing(MenuDTO::getSort));
         menuDTO.getChildren().forEach(this::sortMenu);
+    }
+
+    private void sortRouter(Router router) {
+        router.getChildren().sort(Comparator.comparing(Router::getSort));
+        router.getChildren().forEach(this::sortRouter);
     }
 }

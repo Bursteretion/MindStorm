@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div>
+    <div v-hasPermission="['system:menu:query']">
       <el-form ref="searchMenuForm" :inline="true" :model="searchMenuVO">
         <el-form-item label="菜单名称" prop="name">
           <el-input size="small" v-model="searchMenuVO.name" placeholder="菜单名称"></el-input>
@@ -30,6 +30,7 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         type="primary"
+        v-hasPermission="['system:menu:add']"
         @click="openDialogMenuAdd">
         添加
       </el-button>
@@ -101,6 +102,7 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
+              v-hasPermission="['system:menu:update']"
               @click="handleEdit(scope.row.id)">修改
             </el-button>
             <el-button
@@ -108,6 +110,7 @@
               size="mini"
               type="text"
               icon="el-icon-plus"
+              v-hasPermission="['system:menu:add']"
               @click="handleAddMenu(scope.row.id)">新增
             </el-button>
             <el-popconfirm
@@ -117,6 +120,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="你确定要删除这个菜单吗？"
+              v-hasPermission="['system:menu:delete']"
               @onConfirm="handleDelete(scope.row.id)"
             >
               <el-button
@@ -309,7 +313,7 @@ export default {
         if (res && res.code === 20000) {
           this.fatherMenus = []
           const menu = {id: '', name: '主类目', children: []};
-          let menus = res.data.menus
+          let menus = res.data.treeMenus
           menu.children = menus
           this.convertFatherMenu(menus)
           this.fatherMenus.push(menu)
@@ -346,7 +350,7 @@ export default {
     menuSearchSubmit() {
       searchMenus(this.searchMenuVO).then((res) => {
         if (res && res.code === 20000) {
-          this.menus = res.data.menus
+          this.menus = res.data.searchMenus
         }
       })
     },

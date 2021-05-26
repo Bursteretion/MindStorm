@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div>
+    <div v-hasPermission="['system:role:query']">
       <el-form ref="roleForm" :inline="true" :model="searchRoleVO">
         <el-form-item label="名称" prop="name">
           <el-input size="small" v-model="searchRoleVO.name" placeholder="名称"></el-input>
@@ -60,6 +60,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
+          v-hasPermission="['system:role:disable']"
           label="状态">
           <template slot-scope="scope">
             <el-switch

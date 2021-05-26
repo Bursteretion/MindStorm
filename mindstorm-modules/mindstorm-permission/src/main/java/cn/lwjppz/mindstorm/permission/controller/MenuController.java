@@ -4,6 +4,7 @@ package cn.lwjppz.mindstorm.permission.controller;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.menu.Router;
 import cn.lwjppz.mindstorm.permission.model.entity.Menu;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.MenuVO;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.SearchMenuVO;
@@ -44,7 +45,7 @@ public class MenuController {
     @ApiOperation("根据角色Id集合获取路由表")
     @PostMapping("routers")
     public CommonResult getRouters(@ApiParam("角色Id集合") @RequestBody List<String> roleIds) {
-        List<MenuDTO> routers = menuService.getRouters(roleIds);
+        List<Router> routers = menuService.getRouters(roleIds);
         return CommonResult.ok().data("routes", routers);
     }
 
@@ -52,14 +53,14 @@ public class MenuController {
     @PostMapping("/list/type")
     public CommonResult listMenus(@ApiParam("菜单类型集合") @RequestBody List<Integer> types) {
         List<MenuDTO> menus = menuService.getMenus(types);
-        return CommonResult.ok().data("menus", menus);
+        return CommonResult.ok().data("treeMenus", menus);
     }
 
     @ApiOperation("多条件查询菜单信息")
     @PostMapping("/search")
     public CommonResult search(@ApiParam("查询菜单信息") @RequestBody SearchMenuVO searchMenuVO) {
         List<MenuDTO> menus = menuService.searchMenus(searchMenuVO);
-        return CommonResult.ok().data("menus", menus);
+        return CommonResult.ok().data("searchMenus", menus);
     }
 
     @ApiOperation("新增菜单（按钮）")

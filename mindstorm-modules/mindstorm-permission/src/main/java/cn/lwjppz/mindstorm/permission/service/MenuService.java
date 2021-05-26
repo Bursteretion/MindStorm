@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.permission.service;
 
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
+import cn.lwjppz.mindstorm.permission.model.dto.menu.Router;
 import cn.lwjppz.mindstorm.permission.model.entity.Menu;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.MenuVO;
 import cn.lwjppz.mindstorm.permission.model.vo.menu.SearchMenuVO;
@@ -42,7 +43,7 @@ public interface MenuService extends IService<Menu> {
      * @param roleIds 角色Id集合
      * @return 路由表
      */
-    List<MenuDTO> getRouters(List<String> roleIds);
+    List<Router> getRouters(List<String> roleIds);
 
     /**
      * 新增菜单
@@ -116,4 +117,19 @@ public interface MenuService extends IService<Menu> {
      */
     List<MenuDetailDTO> convertToMenuDetailDTO(List<MenuDTO> menus);
 
+    /**
+     * 将 Menu 对象转化为 Router 对象
+     *
+     * @param menu Menu 对象
+     * @return Router 对象
+     */
+    Router convertToRouter(Menu menu);
+
+    /**
+     * 将 Menu 集合转化为 Router 集合
+     *
+     * @param menus Menu 集合
+     * @return Router 集合
+     */
+    List<Router> convertToRouter(List<Menu> menus);
 }
