@@ -141,8 +141,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Menu::getId, menuId).or().eq(Menu::getPid, menuId);
 
+        List<Menu> menus = baseMapper.selectList(queryWrapper);
+
         baseMapper.delete(queryWrapper);
-        roleMenuService.deleteRoleMenuByMenuId(menuId);
+
+        menus.forEach(v -> roleMenuService.deleteRoleMenuByMenuId(v.getId()));
 
         return true;
     }
