@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.knowledge.service.impl;
 
-import cn.lwjppz.mindstorm.knowledge.model.entity.SubjectKnowledge;
-import cn.lwjppz.mindstorm.knowledge.mapper.SubjectKnowledgeMapper;
+import cn.lwjppz.mindstorm.knowledge.model.entity.SubjectIdea;
+import cn.lwjppz.mindstorm.knowledge.mapper.SubjectIdeaMapper;
 import cn.lwjppz.mindstorm.knowledge.service.SubjectKnowledgeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-05-27
  */
 @Service
-public class SubjectKnowledgeServiceImpl extends ServiceImpl<SubjectKnowledgeMapper, SubjectKnowledge> implements SubjectKnowledgeService {
+public class SubjectIdeaServiceImpl extends ServiceImpl<SubjectIdeaMapper, SubjectIdea> implements SubjectKnowledgeService {
 
 }

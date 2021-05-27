@@ -7,7 +7,6 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.io.Serializable;
@@ -19,7 +18,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 知识点
+ * 学科知识点
  * </p>
  *
  * @author lwj
@@ -27,31 +26,21 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("msk_knowledge")
-@ApiModel(value = "Knowledge对象", description = "知识点信息表")
-public class Knowledge implements Serializable {
+@TableName("msk_subject_knowledge")
+@ApiModel(value = "SubjectKnowledge对象", description = "学科知识点表")
+public class SubjectIdea implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "知识点Id")
+    @ApiModelProperty(value = "Id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
-    @ApiModelProperty(value = "上级知识点Id")
-    private String pid;
+    @ApiModelProperty(value = "学科Id")
+    private String subjectId;
 
-    @ApiModelProperty(value = "知识点名称")
-    private String name;
-
-    @ApiModelProperty(value = "知识点描述")
-    private String description;
-
-    @ApiModelProperty(value = "排序")
-    private Integer sort;
-
-    @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
-    @TableLogic
-    private Boolean isDeleted;
+    @ApiModelProperty(value = "知识点Id")
+    private String knowledgeId;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)

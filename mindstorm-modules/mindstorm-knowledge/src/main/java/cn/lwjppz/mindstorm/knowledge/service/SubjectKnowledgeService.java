@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.knowledge.service;
 
-import cn.lwjppz.mindstorm.knowledge.model.entity.SubjectKnowledge;
+import cn.lwjppz.mindstorm.knowledge.model.entity.SubjectIdea;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author lwj
  * @since 2021-05-27
  */
-public interface SubjectKnowledgeService extends IService<SubjectKnowledge> {
+public interface SubjectKnowledgeService extends IService<SubjectIdea> {
 
 }

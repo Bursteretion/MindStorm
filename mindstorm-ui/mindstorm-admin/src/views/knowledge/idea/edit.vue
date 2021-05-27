@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    知识点管理
+    知识点创编
   </div>
 </template>
 
 <script>
 export default {
-  name: "IdeaList"
+  name: "IdeaEdit"
 }
 </script>
 

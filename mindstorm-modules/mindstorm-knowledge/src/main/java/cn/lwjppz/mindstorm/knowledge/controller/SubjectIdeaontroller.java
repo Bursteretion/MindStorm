@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/knowledge/subject-knowledge")
-public class SubjectKnowledgeController {
+public class SubjectIdeaontroller {
 
 }
 

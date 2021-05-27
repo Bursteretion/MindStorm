@@ -1,12 +1,10 @@
 <template>
-  <div class="app-container">
-    知识点管理
-  </div>
+  <router-view/>
 </template>
 
 <script>
 export default {
-  name: "IdeaList"
+  name: "Knowledge"
 }
 </script>
 

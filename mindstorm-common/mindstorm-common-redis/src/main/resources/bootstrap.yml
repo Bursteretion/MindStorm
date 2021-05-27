@@ -1,0 +1,4 @@
+spring:
+  redis:
+    host: 119.29.28.63
+    port: 6380
