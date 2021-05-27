@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div v-hasPermission="['system:role:query']">
+    <div v-hasPermission="['permission:role:query']">
       <el-form ref="roleForm" :inline="true" :model="searchRoleVO">
         <el-form-item label="名称" prop="name">
           <el-input size="small" v-model="searchRoleVO.name" placeholder="名称"></el-input>
@@ -30,7 +30,7 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         type="primary"
-        v-hasPermission="['system:role:add']"
+        v-hasPermission="['permission:role:add']"
         @click="openDialogRoleAdd">
         添加
       </el-button>
@@ -60,7 +60,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          v-hasPermission="['system:role:status']"
+          v-hasPermission="['permission:role:status']"
           label="状态">
           <template slot-scope="scope">
             <el-switch
@@ -81,14 +81,14 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
-              v-hasPermission="['system:role:update']"
+              v-hasPermission="['permission:role:update']"
               @click="handleEdit(scope.row)">修改
             </el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-check"
-              v-hasPermission="['system:role:distribute']"
+              v-hasPermission="['permission:role:distribute']"
               @click="handleSetPermission(scope.row)">设置权限
             </el-button>
             <el-popconfirm
@@ -98,7 +98,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="你确定要删除这个角色吗？"
-              v-hasPermission="['system:role:delete']"
+              v-hasPermission="['permission:role:delete']"
               @onConfirm="handleDelete(scope.row.id)"
             >
               <el-button

@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.permission.controller;
 
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.userRole.UserRoleDTO;
 import cn.lwjppz.mindstorm.permission.service.UserRoleService;
 import io.swagger.annotations.Api;
@@ -39,6 +40,7 @@ public class UserRoleController {
 
     @ApiOperation("为用户分配角色")
     @PostMapping("/distribute/{userId}")
+    @PreAuthorize(hasAnyPermission = {"user:admin:distribute", "user:student:distribute", "user:teacher:distribute"})
     public CommonResult distributeRole(@ApiParam("用户Id") @PathVariable("userId") String userId,
                                        @ApiParam("菜单") @RequestBody List<String> roles) {
         boolean b = userRoleService.insertUserRole(userId, roles);

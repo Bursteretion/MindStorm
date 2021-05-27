@@ -38,7 +38,7 @@ public class RoleController {
 
     @ApiOperation("分页角色信息")
     @GetMapping("/page/{pageIndex}/{pageSize}")
-    @PreAuthorize(hasPermission = "system:role:list")
+    @PreAuthorize(hasPermission = "permission:role:list")
     public CommonResult pageBy(@ApiParam("pageIndex") @PathVariable("pageIndex") String pageIndex,
                                @ApiParam("pageSize") @PathVariable("pageSize") String pageSize) {
         IPage<RoleDTO> page = roleService.pageBy(Integer.parseInt(pageIndex), Integer.parseInt(pageSize));
@@ -47,7 +47,7 @@ public class RoleController {
 
     @ApiOperation("根据查询条件查询角色列表")
     @PostMapping("/search")
-    @PreAuthorize(hasPermission = "system:role:query")
+    @PreAuthorize(hasPermission = "permission:role:query")
     public CommonResult pageBySearch(@ApiParam("查询信息") @RequestBody SearchRoleVO searchRoleVO) {
         IPage<RoleDTO> page = roleService.queryPageRole(searchRoleVO);
         return CommonResult.ok().data("searchRoles", page);
@@ -55,7 +55,7 @@ public class RoleController {
 
     @ApiOperation("获取所有角色")
     @GetMapping("/list")
-    @PreAuthorize(hasPermission = "system:role:list")
+    @PreAuthorize(hasPermission = "permission:role:list")
     public CommonResult listRoles() {
         List<Role> roles = roleService.listRoles();
         return CommonResult.ok().data("roles", roles);
@@ -70,7 +70,7 @@ public class RoleController {
 
     @ApiOperation("新增角色")
     @PostMapping("/create")
-    @PreAuthorize(hasPermission = "system:role:add")
+    @PreAuthorize(hasPermission = "permission:role:add")
     public CommonResult create(@ApiParam("角色信息") @RequestBody RoleVO roleVO) {
         RoleDTO roleDTO = roleService.convertToRoleDTO(roleService.insertRole(roleVO));
         return CommonResult.ok().data("role", roleDTO);
@@ -78,7 +78,7 @@ public class RoleController {
 
     @ApiOperation("修改角色信息")
     @PostMapping("/update")
-    @PreAuthorize(hasPermission = "system:role:update")
+    @PreAuthorize(hasPermission = "permission:role:update")
     public CommonResult update(@ApiParam("角色信息") @RequestBody RoleVO roleVO) {
         RoleDTO roleDTO = roleService.convertToRoleDTO(roleService.updateRole(roleVO));
         return CommonResult.ok().data("role", roleDTO);
@@ -93,7 +93,7 @@ public class RoleController {
 
     @ApiOperation("根据角色Id删除角色")
     @DeleteMapping("/delete/{roleId}")
-    @PreAuthorize(hasPermission = "system:role:delete")
+    @PreAuthorize(hasPermission = "permission:role:delete")
     public CommonResult delete(@ApiParam("roleId") @PathVariable("roleId") String roleId) {
         boolean b = roleService.deleteRoleById(roleId);
         return CommonResult.ok().data("delete", b);
@@ -108,7 +108,7 @@ public class RoleController {
 
     @ApiOperation("更改角色状态")
     @GetMapping("/change/{roleId}/{status}")
-    @PreAuthorize(hasPermission = "system:role:status")
+    @PreAuthorize(hasPermission = "permission:role:status")
     public CommonResult disable(@ApiParam("roleId") @PathVariable("roleId") String roleId,
                                 @ApiParam("status") @PathVariable("status") Integer status) {
         boolean b = roleService.changeRoleStatus(roleId, status);

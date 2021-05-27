@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div v-hasPermission="['system:menu:query']">
+    <div v-hasPermission="['permission:menu:query']">
       <el-form ref="searchMenuForm" :inline="true" :model="searchMenuVO">
         <el-form-item label="菜单名称" prop="name">
           <el-input size="small" v-model="searchMenuVO.name" placeholder="菜单名称"></el-input>
@@ -30,7 +30,7 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         type="primary"
-        v-hasPermission="['system:menu:add']"
+        v-hasPermission="['permission:menu:add']"
         @click="openDialogMenuAdd">
         添加
       </el-button>
@@ -102,7 +102,7 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
-              v-hasPermission="['system:menu:update']"
+              v-hasPermission="['permission:menu:update']"
               @click="handleEdit(scope.row.id)">修改
             </el-button>
             <el-button
@@ -110,7 +110,7 @@
               size="mini"
               type="text"
               icon="el-icon-plus"
-              v-hasPermission="['system:menu:add']"
+              v-hasPermission="['permission:menu:add']"
               @click="handleAddMenu(scope.row.id)">新增
             </el-button>
             <el-popconfirm
@@ -120,7 +120,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="你确定要删除这个菜单吗？"
-              v-hasPermission="['system:menu:delete']"
+              v-hasPermission="['permission:menu:delete']"
               @onConfirm="handleDelete(scope.row.id)"
             >
               <el-button

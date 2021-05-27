@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div v-hasPermission="['system:student:query']">
+    <div v-hasPermission="['user:student:query']">
       <el-form ref="searchStudentForm" :inline="true" :model="searchStudentVO">
         <el-form-item label="用户名" prop="username">
           <el-input size="small" v-model="searchStudentVO.username" placeholder="用户名"></el-input>
@@ -33,7 +33,7 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         type="primary"
-        v-hasPermission="['system:student:add']"
+        v-hasPermission="['user:student:add']"
         @click="openStudentAddDialog">
         添加
       </el-button>
@@ -83,7 +83,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          v-hasPermission="['system:student:status']"
+          v-hasPermission="['user:student:status']"
           label="状态">
           <template slot-scope="scope">
             <el-switch
@@ -104,7 +104,7 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
-              v-hasPermission="['system:student:update']"
+              v-hasPermission="['user:student:update']"
               @click="handleStudentEdit(scope.row.id)">
               修改
             </el-button>
@@ -113,7 +113,7 @@
               size="mini"
               icon="el-icon-delete"
               type="text"
-              v-hasPermission="['system:student:delete']"
+              v-hasPermission="['user:student:delete']"
               @click="handleStudentDelete(scope.row)">
               删除
             </el-button>

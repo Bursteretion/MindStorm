@@ -38,7 +38,7 @@ public class MenuController {
 
     @GetMapping("/list")
     @ApiOperation("获取所有菜单（按钮）")
-    @PreAuthorize(hasPermission = "system:menu:list")
+    @PreAuthorize(hasPermission = "permission:menu:list")
     public CommonResult listMenus() {
         List<MenuDTO> menus = menuService.getMenus();
         return CommonResult.ok().data("menus", menus);
@@ -60,7 +60,7 @@ public class MenuController {
 
     @PostMapping("/search")
     @ApiOperation("多条件查询菜单信息")
-    @PreAuthorize(hasPermission = "system:menu:query")
+    @PreAuthorize(hasPermission = "permission:menu:query")
     public CommonResult search(@ApiParam("查询菜单信息") @RequestBody SearchMenuVO searchMenuVO) {
         List<MenuDTO> menus = menuService.searchMenus(searchMenuVO);
         return CommonResult.ok().data("searchMenus", menus);
@@ -68,7 +68,7 @@ public class MenuController {
 
     @PostMapping("/create")
     @ApiOperation("新增菜单（按钮）")
-    @PreAuthorize(hasPermission = "system:menu:add")
+    @PreAuthorize(hasPermission = "permission:menu:add")
     public CommonResult create(@ApiParam("菜单（按钮）信息") @RequestBody MenuVO menuVO) {
         Menu menu = menuService.insertMenu(menuVO);
         return CommonResult.ok().data("menu", menu);
@@ -84,7 +84,7 @@ public class MenuController {
 
     @PostMapping("/update")
     @ApiOperation("修改菜单信息")
-    @PreAuthorize(hasPermission = "system:menu:update")
+    @PreAuthorize(hasPermission = "permission:menu:update")
     public CommonResult update(@ApiParam("菜单信息") @RequestBody MenuVO menuVO) {
         Menu menu = menuService.updateMenu(menuVO);
         return CommonResult.ok().data("menu", menu);
@@ -92,7 +92,7 @@ public class MenuController {
 
     @DeleteMapping("/delete/{menuId}")
     @ApiOperation("删除菜单信息")
-    @PreAuthorize(hasPermission = "system:menu:delete")
+    @PreAuthorize(hasPermission = "permission:menu:delete")
     public CommonResult delete(@ApiParam("菜单Id") @PathVariable("menuId") String menuId) {
         boolean b = menuService.deleteById(menuId);
         return CommonResult.ok().data("delete", b);

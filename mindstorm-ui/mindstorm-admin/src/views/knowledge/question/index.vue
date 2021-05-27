@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    学科创编
+    题目列表
   </div>
 </template>
 
 <script>
 export default {
-  name: "SubjectEdit"
+  name: "Question"
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div v-hasPermission="['system:teacher:query']">
+    <div v-hasPermission="['user:teacher:query']">
       <el-form ref="searchTeacherForm" :inline="true" :model="searchTeacherVO">
         <el-form-item label="用户名" prop="username">
           <el-input size="small" v-model="searchTeacherVO.username" placeholder="用户名"></el-input>
@@ -33,7 +33,7 @@
         icon="el-icon-circle-plus-outline"
         size="mini"
         type="primary"
-        v-hasPermission="['system:teacher:add']"
+        v-hasPermission="['user:teacher:add']"
         @click="openTeacherAddDialog">
         添加
       </el-button>
@@ -78,7 +78,7 @@
         </el-table-column>
         <el-table-column
           prop="status"
-          v-hasPermission="['system:teacher:status']"
+          v-hasPermission="['user:teacher:status']"
           label="状态">
           <template slot-scope="scope">
             <el-switch
@@ -99,7 +99,7 @@
               size="mini"
               type="text"
               icon="el-icon-edit"
-              v-hasPermission="['system:teacher:update']"
+              v-hasPermission="['user:teacher:update']"
               @click="handleTeacherEdit(scope.row.id)">
               修改
             </el-button>
@@ -107,7 +107,7 @@
               size="mini"
               type="text"
               icon="el-icon-check"
-              v-hasPermission="['system:teacher:distribute']"
+              v-hasPermission="['user:teacher:distribute']"
               @click="handleTeacherAddRole(scope.row.id)">
               分配角色
             </el-button>
@@ -116,7 +116,7 @@
               size="mini"
               icon="el-icon-delete"
               type="text"
-              v-hasPermission="['system:teacher:delete']"
+              v-hasPermission="['user:teacher:delete']"
               @click="handleTeacherDelete(scope.row)">
               删除
             </el-button>

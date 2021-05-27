@@ -1,17 +1,12 @@
 <template>
   <div class="app-container">
-    知识点创编
+    知识点管理
   </div>
 </template>
 
 <script>
 export default {
-  name: "KnowledgeEdit",
-  data() {
-    return {
-
-    }
-  }
+  name: "Idea"
 }
 </script>
 

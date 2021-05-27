@@ -1,17 +1,12 @@
 <template>
   <div class="app-container">
-    知识点列表
+    学科管理
   </div>
 </template>
 
 <script>
 export default {
-  name: "KnowledgeList",
-  data() {
-    return {
-
-    }
-  }
+  name: "Subject"
 }
 </script>
 
