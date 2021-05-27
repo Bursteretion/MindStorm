@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.permission.model.entity;
+package cn.lwjppz.mindstorm.knowledge.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -19,35 +19,32 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 角色信息表
+ * 学科
  * </p>
  *
  * @author lwj
- * @since 2021-05-09
+ * @since 2021-05-27
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("msp_role")
-@ApiModel(value = "Role对象", description = "角色信息表")
-public class Role implements Serializable {
+@TableName("msk_subject")
+@ApiModel(value = "Subject对象", description = "学科表")
+public class Subject implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "角色Id")
+    @ApiModelProperty(value = "学科Id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
-    @ApiModelProperty(value = "角色名称")
-    private String roleName;
+    @ApiModelProperty(value = "学科名称（语文、英语、数学等）")
+    private String name;
 
-    @ApiModelProperty(value = "备注")
-    private String remark;
+    @ApiModelProperty(value = "所属年级(1-16)")
+    private Integer level;
 
-    @ApiModelProperty("排序")
-    private Integer sort;
-
-    @ApiModelProperty(value = "状态, 1 表示正常，0 表示已禁用")
-    private Integer status;
+    @ApiModelProperty(value = "学科描述")
+    private String description;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic
@@ -60,5 +57,6 @@ public class Role implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
+
 
 }

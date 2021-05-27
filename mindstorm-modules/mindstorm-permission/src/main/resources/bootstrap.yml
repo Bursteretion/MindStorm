@@ -1,0 +1,29 @@
+server:
+  port: 9000
+
+# Spring
+spring:
+  application:
+    # \u5E94\u7528\u540D\u79F0
+    name: mindstorm-permission
+  profiles:
+    # \u73AF\u5883\u914D\u7F6E
+    active: dev
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  cloud:
+    nacos:
+      discovery:
+        # \u670D\u52A1\u6CE8\u518C\u5730\u5740
+        server-addr: 127.0.0.1:8848
+      config:
+        # \u914D\u7F6E\u4E2D\u5FC3\u5730\u5740
+        server-addr: 127.0.0.1:8848
+        # \u914D\u7F6E\u6587\u4EF6\u683C\u5F0F
+        file-extension: yml
+        # \u5171\u4EAB\u914D\u7F6E
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

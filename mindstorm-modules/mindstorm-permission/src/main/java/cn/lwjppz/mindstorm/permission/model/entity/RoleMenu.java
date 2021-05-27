@@ -36,8 +36,10 @@ public class RoleMenu implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
+    @ApiModelProperty(value = "角色Id")
     private String roleId;
 
+    @ApiModelProperty(value = "菜单Id")
     private String menuId;
 
     @ApiModelProperty(value = "创建时间")

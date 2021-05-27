@@ -7,7 +7,6 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.io.Serializable;
@@ -33,7 +32,7 @@ public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "编号")
+    @ApiModelProperty(value = "菜单Id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 

@@ -7,10 +7,13 @@
 		<groupId>cn.lwjppz</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>mindstorm-permission</artifactId>
+	<artifactId>mindstorm-knowledge</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mindstorm-permission</name>
-	<description>Demo project for Spring Boot</description>
+	<name>mindstorm-knowledge</name>
+
+	<description>
+		mindstorm-knowledge 知识管理（包括学科。知识点。题库）
+	</description>
 
 	<dependencies>
 
@@ -43,21 +46,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -77,7 +65,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>2.3.7.RELEASE</version>
 				<configuration>
-					<mainClass>cn.lwjppz.mindstorm.permission.MindStormPermissionApplication</mainClass>
+					<mainClass>cn.lwjppz.mindstorm.knowledge.MindStormKnowledgeApplication</mainClass>
 				</configuration>
 				<executions>
 					<execution>

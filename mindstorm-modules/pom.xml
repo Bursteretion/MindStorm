@@ -15,5 +15,6 @@
 
 	<modules>
 		<module>mindstorm-permission</module>
+		<module>mindstorm-knowledge</module>
 	</modules>
 </project>

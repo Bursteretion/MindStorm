@@ -31,21 +31,19 @@ router.beforeEach(async (to, from, next) => {
       if (hasRoles) {
         next()
       } else {
-        try {
-          // get user info
-          store.dispatch('user/getInfo').then(roles => {
-            store.dispatch('permission/generateRoutes', roles).then(accessRoutes => {
-              router.addRoutes(accessRoutes)
-              next({...to, replace: true})
-            })
+        // get user info
+        store.dispatch('user/getInfo').then(roles => {
+          store.dispatch('permission/generateRoutes', roles).then(accessRoutes => {
+            router.addRoutes(accessRoutes)
+            next({...to, replace: true})
           })
-        } catch (error) {
+        }).catch(error => {
           // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
+          store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
-        }
+        })
       }
     }
   } else {

@@ -34,7 +34,7 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "id")
+    @ApiModelProperty(value = "用户Id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 

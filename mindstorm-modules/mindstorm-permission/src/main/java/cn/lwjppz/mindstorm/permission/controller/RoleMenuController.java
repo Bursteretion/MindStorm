@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.permission.controller;
 
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.roleMenu.RoleMenuDTO;
 import cn.lwjppz.mindstorm.permission.service.RoleMenuService;
 import io.swagger.annotations.Api;

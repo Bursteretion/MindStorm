@@ -7,7 +7,6 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.io.Serializable;
@@ -37,10 +36,10 @@ public class UserRole implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
-    @ApiModelProperty(value = "角色id")
+    @ApiModelProperty(value = "角色Id")
     private String roleId;
 
-    @ApiModelProperty(value = "用户id")
+    @ApiModelProperty(value = "用户Id")
     private String userId;
 
     @ApiModelProperty(value = "创建时间")
@@ -50,6 +49,5 @@ public class UserRole implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
-
 
 }

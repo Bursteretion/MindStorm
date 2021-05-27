@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.permission;
+package cn.lwjppz.mindstorm.knowledge;
 
 import cn.lwjppz.mindstorm.common.mybatis.annotation.EnableCustomMybatis;
 import cn.lwjppz.mindstorm.common.security.annotation.EnableCustomConfig;
@@ -8,16 +8,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author lwj
- * @since 2021-05-10
+ * @since 2021-05-27
  */
 @EnableCustomConfig
 @EnableCustomMybatis
 @EnableCustomSwagger2
 @SpringBootApplication
-public class MindStormPermissionApplication {
+public class MindStormKnowledgeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MindStormPermissionApplication.class, args);
+        SpringApplication.run(MindStormKnowledgeApplication.class, args);
     }
 
 }
