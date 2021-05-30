@@ -1,0 +1,23 @@
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: mindstorm-permission
+
+  datasource:
+    username: root
+    password: LWJLWJ20000829
+    url: jdbc:mysql://localhost:3306/mindstorm-permission?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
+      config:
+        # 配置中心地址
+        server-addr: 127.0.0.1:8848
+        namespace: bf93e65e-57b9-4ddd-ab06-f1b24d38d48d
+        group: dev

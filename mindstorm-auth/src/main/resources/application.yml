@@ -2,10 +2,7 @@
 spring:
   application:
     # 应用名称
-    name: mindstorm-gateway
-
-  main:
-    allow-bean-definition-overriding: true
+    name: mindstorm-auth
 
   cloud:
     nacos:

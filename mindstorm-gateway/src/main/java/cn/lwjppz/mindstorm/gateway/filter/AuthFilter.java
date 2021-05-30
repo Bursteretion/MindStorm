@@ -68,6 +68,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return setUnauthorizedResponse(exchange, "令牌不能为空");
         }
         String userStr = stringRedisTemplate.opsForValue().get(getTokenKey(token));
+
         if (StringUtils.isNull(userStr)) {
             return setUnauthorizedResponse(exchange, "登录状态已过期");
         }
