@@ -20,11 +20,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-pool2</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>cn.lwjppz</groupId>
 			<artifactId>mindstorm-common-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
