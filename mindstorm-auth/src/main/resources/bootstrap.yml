@@ -1,11 +1,11 @@
 server:
-  port: 9000
+  port: 8000
 
 # Spring
 spring:
   application:
     # 应用名称
-    name: mindstorm-knowledge
+    name: mindstorm-auth
   profiles:
     # 环境配置
     active: dev

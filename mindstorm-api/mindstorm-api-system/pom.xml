@@ -3,19 +3,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>mindstorm</artifactId>
+		<artifactId>mindstorm-api</artifactId>
 		<groupId>cn.lwjppz</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>mindstorm-api</artifactId>
+	<artifactId>mindstorm-api-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mindstorm-api</name>
-	<packaging>pom</packaging>
-	<description>Demo project for Spring Boot</description>
+	<name>mindstorm-api-system</name>
 
-	<modules>
-		<module>mindstorm-api-permission</module>
-		<module>mindstorm-api-system</module>
-	</modules>
+	<description>
+		mindstorm-api-system 系统接口模块
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>cn.lwjppz</groupId>
+			<artifactId>mindstorm-common-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
 </project>

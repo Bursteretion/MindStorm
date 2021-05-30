@@ -1,13 +1,13 @@
 server:
-  port: 9000
+  port: 10000
 
 # Spring
 spring:
   application:
-    # \u5E94\u7528\u540D\u79F0
+    # 应用名称
     name: mindstorm-permission
   profiles:
-    # \u73AF\u5883\u914D\u7F6E
+    # 环境配置
     active: dev
 
   jackson:
@@ -17,13 +17,13 @@ spring:
   cloud:
     nacos:
       discovery:
-        # \u670D\u52A1\u6CE8\u518C\u5730\u5740
+        # 服务注册地址
         server-addr: 127.0.0.1:8848
       config:
-        # \u914D\u7F6E\u4E2D\u5FC3\u5730\u5740
+        # 配置中心地址
         server-addr: 127.0.0.1:8848
-        # \u914D\u7F6E\u6587\u4EF6\u683C\u5F0F
+        # 配置文件格式
         file-extension: yml
-        # \u5171\u4EAB\u914D\u7F6E
+        # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
