@@ -1,10 +1,19 @@
 package cn.lwjppz.mindstorm.common.core.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.*;
+import java.net.*;
+import java.util.Enumeration;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * <p></p>
@@ -83,6 +92,7 @@ public class IpUtils {
                 switch (b1) {
                     case SECTION_6:
                         return true;
+                    default:
                 }
             default:
                 return false;
@@ -177,5 +187,219 @@ public class IpUtils {
         } catch (UnknownHostException ignored) {
         }
         return "未知";
+    }
+
+    /**
+     * @param ip 请求的参数 格式为：ip=""
+     */
+    public static String getAddresses(String ip) {
+        String urlStr = "http://whois.pconline.com.cn/ipJson.jsp?json=true";
+        ip = "ip=" + ip;
+        String returnStr = getResult(urlStr, ip);
+        if (returnStr != null) {
+            returnStr = decodeUnicode(returnStr);
+            String[] temp = returnStr.split(",");
+            if (temp.length < 3) {
+                return "0";
+            }
+            return returnStr;
+        }
+        return null;
+    }
+
+    /**
+     * @param urlStr  请求的地址
+     * @param content 请求的参数 格式为：name=xxx&pwd=xxx
+     */
+    private static String getResult(String urlStr, String content) {
+        URL url = null;
+        HttpURLConnection connection = null;
+        try {
+            url = new URL(urlStr);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(8000);
+            connection.setReadTimeout(8000);
+            connection.setRequestProperty("Charset", "utf-8");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("content-type", "text/json");
+            connection.setUseCaches(false);
+            connection.connect();
+            DataOutputStream out = new DataOutputStream(connection
+                    .getOutputStream());
+            out.writeBytes(content);
+            out.flush();
+            out.close();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(), "GBK"));
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+            reader.close();
+            return buffer.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * unicode 转换成 中文
+     *
+     * @param theString
+     * @return
+     */
+    public static String decodeUnicode(String theString) {
+        char aChar;
+        int len = theString.length();
+        StringBuffer outBuffer = new StringBuffer(len);
+        for (int x = 0; x < len; ) {
+            aChar = theString.charAt(x++);
+            if (aChar == '\\') {
+                aChar = theString.charAt(x++);
+                if (aChar == 'u') {
+                    int value = 0;
+                    for (int i = 0; i < 4; i++) {
+                        aChar = theString.charAt(x++);
+                        switch (aChar) {
+                            case '0':
+                            case '1':
+                            case '2':
+                            case '3':
+                            case '4':
+                            case '5':
+                            case '6':
+                            case '7':
+                            case '8':
+                            case '9':
+                                value = (value << 4) + aChar - '0';
+                                break;
+                            case 'a':
+                            case 'b':
+                            case 'c':
+                            case 'd':
+                            case 'e':
+                            case 'f':
+                                value = (value << 4) + 10 + aChar - 'a';
+                                break;
+                            case 'A':
+                            case 'B':
+                            case 'C':
+                            case 'D':
+                            case 'E':
+                            case 'F':
+                                value = (value << 4) + 10 + aChar - 'A';
+                                break;
+                            default:
+                                throw new IllegalArgumentException(
+                                        "Malformed      encoding.");
+                        }
+                    }
+                    outBuffer.append((char) value);
+                } else {
+                    if (aChar == 't') {
+                        aChar = '\t';
+                    } else if (aChar == 'r') {
+                        aChar = '\r';
+                    } else if (aChar == 'n') {
+                        aChar = '\n';
+                    } else if (aChar == 'f') {
+                        aChar = '\f';
+                    }
+                    outBuffer.append(aChar);
+                }
+            } else {
+                outBuffer.append(aChar);
+            }
+        }
+        return outBuffer.toString();
+    }
+
+    public static String getInterIP1() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
+
+        }
+        return "";
+    }
+
+    public static String getInterIP2() throws SocketException {
+        String localip = null;// 本地IP，如果没有配置外网IP则返回它
+        String netip = null;// 外网IP
+        Enumeration<NetworkInterface> netInterfaces;
+        netInterfaces = NetworkInterface.getNetworkInterfaces();
+        InetAddress ip = null;
+        boolean finded = false;// 是否找到外网IP
+        while (netInterfaces.hasMoreElements() && !finded) {
+            NetworkInterface ni = netInterfaces.nextElement();
+            Enumeration<InetAddress> address = ni.getInetAddresses();
+            while (address.hasMoreElements()) {
+                ip = address.nextElement();
+                if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {
+                    // 外网IP
+                    netip = ip.getHostAddress();
+                    finded = true;
+                    break;
+                } else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {// 内网IP
+                    localip = ip.getHostAddress();
+                }
+            }
+        }
+        if (netip != null && !"".equals(netip)) {
+            return netip;
+        } else {
+            return localip;
+        }
+    }
+
+    public static String getOutIPV4() {
+        String ip = "";
+        String chinaz = "http://ip.chinaz.com";
+
+        StringBuilder inputLine = new StringBuilder();
+        String read = "";
+        URL url = null;
+        HttpURLConnection urlConnection = null;
+        BufferedReader in = null;
+        try {
+            url = new URL(chinaz);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+            while ((read = in.readLine()) != null) {
+                inputLine.append(read + "\r\n");
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Pattern p = Pattern.compile("\\<dd class\\=\"fz24\">(.*?)\\<\\/dd>");
+        Matcher m = p.matcher(inputLine.toString());
+        if (m.find()) {
+            String ipstr = m.group(1);
+            ip = ipstr;
+        }
+        return ip;
+    }
+
+    public static UserAgent getUserAgent() {
+        String agent = Objects.requireNonNull(ServletUtils.getRequest()).getHeader("User-Agent");
+        return UserAgent.parseUserAgentString(agent);
     }
 }

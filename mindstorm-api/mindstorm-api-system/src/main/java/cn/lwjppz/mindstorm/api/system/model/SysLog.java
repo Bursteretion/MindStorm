@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -52,6 +53,11 @@ public class SysLog implements Serializable {
      * 操作用户
      */
     private String operateUser;
+
+    /**
+     * 操作时间
+     */
+    private Date operateTime;
 
     /**
      * 操作方法

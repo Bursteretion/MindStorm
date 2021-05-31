@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.auth.service;
 
 import cn.lwjppz.mindstorm.api.permission.feign.RemoteUserFeignService;
 import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
+import cn.lwjppz.mindstorm.api.system.feign.RemoteLogFeignService;
 import cn.lwjppz.mindstorm.common.core.constant.UserConstants;
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
@@ -22,9 +23,12 @@ import org.springframework.util.StringUtils;
 public class LoginService {
 
     private final RemoteUserFeignService remoteUserFeignService;
+    private final RemoteLogFeignService remoteLogFeignService;
 
-    public LoginService(RemoteUserFeignService remoteUserFeignService) {
+    public LoginService(RemoteUserFeignService remoteUserFeignService,
+                        RemoteLogFeignService remoteLogFeignService) {
         this.remoteUserFeignService = remoteUserFeignService;
+        this.remoteLogFeignService = remoteLogFeignService;
     }
 
     public Loginuser login(String username, String password) {

@@ -65,7 +65,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>2.3.7.RELEASE</version>
 				<configuration>
-					<mainClass>cn.lwjppz.mindstorm.system.MindstormSystemApplication</mainClass>
+					<mainClass>cn.lwjppz.mindstorm.system.MindStormSystemApplication</mainClass>
 				</configuration>
 				<executions>
 					<execution>

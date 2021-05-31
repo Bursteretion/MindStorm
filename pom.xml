@@ -15,7 +15,6 @@
 		<module>mindstorm-auth</module>
 		<module>mindstorm-gateway</module>
 		<module>mindstorm-modules</module>
-		<module>mindstorm-generator</module>
 	</modules>
 
 	<properties>

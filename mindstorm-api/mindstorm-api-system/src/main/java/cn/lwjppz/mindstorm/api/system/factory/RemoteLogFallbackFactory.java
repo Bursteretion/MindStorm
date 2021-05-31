@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.api.system.factory;
 
 import cn.lwjppz.mindstorm.api.system.feign.RemoteLogFeignService;
+import cn.lwjppz.mindstorm.api.system.model.SysLog;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  * </p>
  *
  * @author : lwj
- * @since : 2021-05-15
+ * @since : 2021-05-30
  */
 @Component
 public class RemoteLogFallbackFactory implements FallbackFactory<RemoteLogFeignService> {
@@ -22,7 +23,17 @@ public class RemoteLogFallbackFactory implements FallbackFactory<RemoteLogFeignS
 
     @Override
     public RemoteLogFeignService create(Throwable throwable) {
-        logger.error("用户服务调用失败:{}", throwable.getMessage());
-        return username -> CommonResult.error().message("日志服务调用失败:" + throwable.getMessage());
+        logger.error("日志服务调用失败:{}", throwable.getMessage());
+        return new RemoteLogFeignService() {
+            @Override
+            public CommonResult saveLog(SysLog sysLog) {
+                return null;
+            }
+
+            @Override
+            public CommonResult saveLoginVisit(String username, Integer status, String message) {
+                return null;
+            }
+        };
     }
 }
