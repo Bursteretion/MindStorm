@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.permission.service;
 
-import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
+import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserType;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
@@ -115,7 +115,7 @@ public interface UserService extends IService<User> {
      * @param username 用户名
      * @return 用户信息
      */
-    Loginuser selectUserByUserName(@NonNull String username);
+    LoginUser selectUserByUserName(@NonNull String username);
 
     /**
      * 通过用户Id获取用户信息

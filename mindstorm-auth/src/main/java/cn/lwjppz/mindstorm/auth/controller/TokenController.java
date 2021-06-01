@@ -1,11 +1,9 @@
 package cn.lwjppz.mindstorm.auth.controller;
 
-import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
+import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.auth.model.LoginBody;
 import cn.lwjppz.mindstorm.auth.service.LoginService;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
-import cn.lwjppz.mindstorm.common.core.utils.IpUtils;
-import cn.lwjppz.mindstorm.common.core.utils.ServletUtils;
 import cn.lwjppz.mindstorm.common.security.service.TokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,21 +39,21 @@ public class TokenController {
     @ApiOperation("用户登录")
     @PostMapping("/login")
     public CommonResult login(@ApiParam("登录信息") @RequestBody LoginBody loginBody) {
-        Loginuser userDTO = loginService.login(loginBody.getUsername(), loginBody.getPassword());
+        LoginUser userDTO = loginService.login(loginBody.getUsername(), loginBody.getPassword());
         return CommonResult.ok().data(tokenService.createToken(userDTO));
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping("/info")
-    public CommonResult info(HttpServletRequest request) {
-        Loginuser loginUser = tokenService.getLoginUser();
+    public CommonResult info() {
+        LoginUser loginUser = tokenService.getLoginUser();
         return CommonResult.ok().data("user", loginUser);
     }
 
     @ApiOperation("用户注销登录")
     @DeleteMapping("/logout")
     public CommonResult logout(HttpServletRequest request) {
-        Loginuser loginUser = tokenService.getLoginUser(request);
+        LoginUser loginUser = tokenService.getLoginUser(request);
         if (ObjectUtils.isNotEmpty(loginUser)) {
             String username = loginUser.getUsername();
             // 删除用户缓存记录

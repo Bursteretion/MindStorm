@@ -60,6 +60,11 @@ public class SysLog implements Serializable {
     private Date operateTime;
 
     /**
+     * 操作模块
+     */
+    private String operateModule;
+
+    /**
      * 操作方法
      */
     private String operateMethod;
@@ -67,7 +72,7 @@ public class SysLog implements Serializable {
     /**
      * 操作地址
      */
-    private String operateAddress;
+    private String operateLocation;
 
     /**
      * 请求执行时间

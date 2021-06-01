@@ -1,4 +1,6 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.lwjppz.mindstorm.common.security.service.TokenService,\
   cn.lwjppz.mindstorm.common.security.aspect.PreAuthorizeAspect,\
-  cn.lwjppz.mindstorm.common.security.handler.GlobalExceptionHandler
+  cn.lwjppz.mindstorm.common.security.handler.GlobalExceptionHandler,\
+  cn.lwjppz.mindstorm.common.security.feign.FeignAutoConfiguration,\
+  cn.lwjppz.mindstorm.common.security.config.ApplicationConfig

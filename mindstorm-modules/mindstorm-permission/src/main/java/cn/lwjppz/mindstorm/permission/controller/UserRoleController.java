@@ -1,7 +1,9 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
 
+import cn.lwjppz.mindstorm.common.core.enums.LogType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.common.log.annotation.Log;
 import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.userRole.UserRoleDTO;
 import cn.lwjppz.mindstorm.permission.service.UserRoleService;
@@ -40,6 +42,7 @@ public class UserRoleController {
 
     @ApiOperation("为用户分配角色")
     @PostMapping("/distribute/{userId}")
+    @Log(operateModule = "用户角色管理", logType = LogType.UPDATE)
     @PreAuthorize(hasAnyPermission = {"user:admin:distribute", "user:student:distribute", "user:teacher:distribute"})
     public CommonResult distributeRole(@ApiParam("用户Id") @PathVariable("userId") String userId,
                                        @ApiParam("菜单") @RequestBody List<String> roles) {
@@ -48,4 +51,3 @@ public class UserRoleController {
     }
 
 }
-

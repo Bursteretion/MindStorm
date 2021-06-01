@@ -14,6 +14,7 @@ import java.io.Serializable;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,6 +27,7 @@ import lombok.EqualsAndHashCode;
  * @since 2021-05-30
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @TableName("mss_log")
 @ApiModel(value = "Log对象", description = "系统日志对象")
@@ -55,11 +57,17 @@ public class Log implements Serializable {
     @ApiModelProperty(value = "操作用户")
     private String operateUser;
 
+    @ApiModelProperty(value = "操作时间")
+    private Date operateTime;
+
+    @ApiModelProperty(value = "操作模块")
+    private String operateModule;
+
     @ApiModelProperty(value = "操作方法")
     private String operateMethod;
 
     @ApiModelProperty(value = "操作地点")
-    private String operateAddress;
+    private String operateLocation;
 
     @ApiModelProperty(value = "请求执行时间")
     private String requestTime;
@@ -68,7 +76,7 @@ public class Log implements Serializable {
     private Boolean status;
 
     @ApiModelProperty(value = "操作信息")
-    private String message;
+    private String errorMessage;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic

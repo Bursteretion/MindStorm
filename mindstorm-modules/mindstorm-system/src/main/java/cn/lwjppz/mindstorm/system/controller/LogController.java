@@ -1,6 +1,5 @@
 package cn.lwjppz.mindstorm.system.controller;
 
-
 import cn.lwjppz.mindstorm.api.system.model.SysLog;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.system.model.entity.Log;
@@ -37,7 +36,7 @@ public class LogController {
     @PostMapping("/create")
     public CommonResult create(@ApiParam("日志信息") @RequestBody SysLog sysLog) {
         Log log = logService.saveLog(sysLog);
-        return CommonResult.ok().data("log", log);
+        return CommonResult.ok().data("saveLog", log);
     }
 
 }

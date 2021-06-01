@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.common.security.service;
 
-import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
+import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.common.core.constant.CacheConstants;
 import cn.lwjppz.mindstorm.common.core.constant.Constants;
 import cn.lwjppz.mindstorm.common.core.utils.IdUtils;
@@ -40,7 +40,7 @@ public class TokenService {
 
     protected static final long MILLIS_SECOND = 1000;
 
-    public Map<String, Object> createToken(Loginuser loginUserDTO) {
+    public Map<String, Object> createToken(LoginUser loginUserDTO) {
         // 生成token
         String token = IdUtils.fastUUID();
         loginUserDTO.setToken(token);
@@ -61,7 +61,7 @@ public class TokenService {
      *
      * @return 用户信息
      */
-    public Loginuser getLoginUser() {
+    public LoginUser getLoginUser() {
         return getLoginUser(ServletUtils.getRequest());
     }
 
@@ -70,10 +70,10 @@ public class TokenService {
      *
      * @return 用户信息
      */
-    public Loginuser getLoginUser(HttpServletRequest request) {
+    public LoginUser getLoginUser(HttpServletRequest request) {
         // 获取请求携带的令牌
         String token = SecurityUtils.getToken(request);
-        Loginuser user = null;
+        LoginUser user = null;
         if (StringUtils.isNotEmpty(token)) {
             String userKey = getTokenKey(token);
             user = redisService.getCacheObject(userKey);
@@ -94,7 +94,7 @@ public class TokenService {
      *
      * @param loginUserDTO 登录信息
      */
-    public void refreshToken(Loginuser loginUserDTO) {
+    public void refreshToken(LoginUser loginUserDTO) {
         loginUserDTO.setLoginTime(System.currentTimeMillis());
         loginUserDTO.setExpireTime(loginUserDTO.getLoginTime() + EXPIRE_TIME * MILLIS_SECOND);
         // 根据 uuid 将 loginUserDTO 缓存

@@ -1,7 +1,6 @@
 package cn.lwjppz.mindstorm.system.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.utils.IpUtils;
-import cn.lwjppz.mindstorm.common.core.utils.ServletUtils;
 import cn.lwjppz.mindstorm.system.mapper.VisitMapper;
 import cn.lwjppz.mindstorm.system.model.entity.Visit;
 import cn.lwjppz.mindstorm.system.service.VisitService;
@@ -32,16 +31,19 @@ public class VisitServiceImpl extends ServiceImpl<VisitMapper, Visit> implements
         Assert.notNull(status, "The status cannot be null, when saving system access records.");
         Assert.hasText(message, "The message cannot be empty, when saving system access records.");
 
+        // 获取访问用户客户端信息
         UserAgent userAgent = IpUtils.getUserAgent();
-        JSONObject parse = JSON.parseObject(IpUtils.getAddresses(IpUtils.getOutIPV4()));
+        // 获取访问用户所在地域信息
+        JSONObject configs = JSON.parseObject(IpUtils.getAddresses(IpUtils.getOutIPV4()));
         Visit visit = Visit.builder()
                 .username(username)
-                .ipAddress(IpUtils.getInterIP1())
+                .ipAddress(configs.getString("ip"))
                 .browser(userAgent.getBrowser().getName())
                 .os(userAgent.getOperatingSystem().getName())
-                .loginLocation(parse.getString("addr"))
+                .loginLocation(configs.getString("addr").split(" ")[0])
                 .loginTime(new Date())
                 .status(status)
+                .message(message)
                 .build();
 
         baseMapper.insert(visit);

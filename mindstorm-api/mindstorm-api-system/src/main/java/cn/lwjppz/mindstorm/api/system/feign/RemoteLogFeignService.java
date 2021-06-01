@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * <p>
- * 用户服务
+ * 系统日志记录服务
  * </p>
  *
  * @author : lwj

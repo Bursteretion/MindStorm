@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
-import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
+import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
 import cn.lwjppz.mindstorm.common.core.enums.UserType;
@@ -222,7 +222,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Loginuser selectUserByUserName(@NonNull String username) {
+    public LoginUser selectUserByUserName(@NonNull String username) {
         Assert.hasText(username, "Username must not be empty!");
 
         // 构造查询条件
@@ -231,7 +231,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         User user = baseMapper.selectOne(queryWrapper);
 
-        Loginuser loginUserDTO = new Loginuser();
+        LoginUser loginUserDTO = new LoginUser();
         BeanUtils.copyProperties(user, loginUserDTO);
 
         // 查询该用户所拥有的角色

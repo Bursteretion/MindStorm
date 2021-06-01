@@ -1,7 +1,9 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
 
+import cn.lwjppz.mindstorm.common.core.enums.LogType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.common.log.annotation.Log;
 import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.menu.MenuDetailDTO;
@@ -68,6 +70,7 @@ public class MenuController {
 
     @PostMapping("/create")
     @ApiOperation("新增菜单（按钮）")
+    @Log(operateModule = "菜单管理", logType = LogType.INSERT)
     @PreAuthorize(hasPermission = "permission:menu:add")
     public CommonResult create(@ApiParam("菜单（按钮）信息") @RequestBody MenuVO menuVO) {
         Menu menu = menuService.insertMenu(menuVO);
@@ -84,6 +87,7 @@ public class MenuController {
 
     @PostMapping("/update")
     @ApiOperation("修改菜单信息")
+    @Log(operateModule = "菜单管理", logType = LogType.UPDATE)
     @PreAuthorize(hasPermission = "permission:menu:update")
     public CommonResult update(@ApiParam("菜单信息") @RequestBody MenuVO menuVO) {
         Menu menu = menuService.updateMenu(menuVO);
@@ -92,6 +96,7 @@ public class MenuController {
 
     @DeleteMapping("/delete/{menuId}")
     @ApiOperation("删除菜单信息")
+    @Log(operateModule = "菜单管理", logType = LogType.DELETE)
     @PreAuthorize(hasPermission = "permission:menu:delete")
     public CommonResult delete(@ApiParam("菜单Id") @PathVariable("menuId") String menuId) {
         boolean b = menuService.deleteById(menuId);

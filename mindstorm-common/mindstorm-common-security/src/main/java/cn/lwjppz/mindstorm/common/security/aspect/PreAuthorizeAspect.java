@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.common.security.aspect;
 
-import cn.lwjppz.mindstorm.api.permission.model.Loginuser;
+import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.PreAuthorizeException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
@@ -100,7 +100,7 @@ public class PreAuthorizeAspect {
      * @return 用户是否有某权限
      */
     private boolean hasPermission(String permission) {
-        Loginuser loginUser = tokenService.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser();
         if (ObjectUtils.isEmpty(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
         }
@@ -114,7 +114,7 @@ public class PreAuthorizeAspect {
      * @return 用户是否具有以下任意一个权限
      */
     private boolean hasAnyPermission(String[] permissions) {
-        Loginuser loginUser = tokenService.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser();
 
         if (ObjectUtils.isEmpty(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
@@ -159,7 +159,7 @@ public class PreAuthorizeAspect {
      * @return 用户是否具备某角色
      */
     private boolean hasRole(String role) {
-        Loginuser loginUser = tokenService.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser();
         if (ObjectUtils.isEmpty(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
         }
@@ -190,7 +190,7 @@ public class PreAuthorizeAspect {
      * @return 用户是否具有以下任意一个角色
      */
     public boolean hasAnyRoles(String[] roles) {
-        Loginuser loginUser = tokenService.getLoginUser();
+        LoginUser loginUser = tokenService.getLoginUser();
         if (ObjectUtils.isEmpty(loginUser) || CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
         }

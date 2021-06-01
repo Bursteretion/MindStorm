@@ -1,7 +1,9 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
 
+import cn.lwjppz.mindstorm.common.core.enums.LogType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.common.log.annotation.Log;
 import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.role.RoleDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.role.SimpleRoleDTO;
@@ -70,6 +72,7 @@ public class RoleController {
 
     @ApiOperation("新增角色")
     @PostMapping("/create")
+    @Log(operateModule = "角色管理", logType = LogType.INSERT)
     @PreAuthorize(hasPermission = "permission:role:add")
     public CommonResult create(@ApiParam("角色信息") @RequestBody RoleVO roleVO) {
         RoleDTO roleDTO = roleService.convertToRoleDTO(roleService.insertRole(roleVO));
@@ -78,6 +81,7 @@ public class RoleController {
 
     @ApiOperation("修改角色信息")
     @PostMapping("/update")
+    @Log(operateModule = "角色管理", logType = LogType.UPDATE)
     @PreAuthorize(hasPermission = "permission:role:update")
     public CommonResult update(@ApiParam("角色信息") @RequestBody RoleVO roleVO) {
         RoleDTO roleDTO = roleService.convertToRoleDTO(roleService.updateRole(roleVO));
@@ -93,6 +97,7 @@ public class RoleController {
 
     @ApiOperation("根据角色Id删除角色")
     @DeleteMapping("/delete/{roleId}")
+    @Log(operateModule = "角色管理", logType = LogType.DELETE)
     @PreAuthorize(hasPermission = "permission:role:delete")
     public CommonResult delete(@ApiParam("roleId") @PathVariable("roleId") String roleId) {
         boolean b = roleService.deleteRoleById(roleId);
@@ -101,6 +106,7 @@ public class RoleController {
 
     @ApiOperation("批量删除角色")
     @PostMapping("/delete-batch")
+    @Log(operateModule = "角色管理", logType = LogType.DELETE)
     public CommonResult delete(@ApiParam("roleIds") @RequestBody List<String> roleIds) {
         boolean b = roleService.deleteBatchRoles(roleIds);
         return CommonResult.ok().data("delete", b);
@@ -108,6 +114,7 @@ public class RoleController {
 
     @ApiOperation("更改角色状态")
     @GetMapping("/change/{roleId}/{status}")
+    @Log(operateModule = "角色管理", logType = LogType.UPDATE)
     @PreAuthorize(hasPermission = "permission:role:status")
     public CommonResult disable(@ApiParam("roleId") @PathVariable("roleId") String roleId,
                                 @ApiParam("status") @PathVariable("status") Integer status) {

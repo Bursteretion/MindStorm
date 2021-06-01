@@ -1,9 +1,5 @@
 package cn.lwjppz.mindstorm.common.core.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import eu.bitwalker.useragentutils.Browser;
-import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.util.StringUtils;
 
@@ -322,44 +318,6 @@ public class IpUtils {
         return outBuffer.toString();
     }
 
-    public static String getInterIP1() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception e) {
-
-        }
-        return "";
-    }
-
-    public static String getInterIP2() throws SocketException {
-        String localip = null;// 本地IP，如果没有配置外网IP则返回它
-        String netip = null;// 外网IP
-        Enumeration<NetworkInterface> netInterfaces;
-        netInterfaces = NetworkInterface.getNetworkInterfaces();
-        InetAddress ip = null;
-        boolean finded = false;// 是否找到外网IP
-        while (netInterfaces.hasMoreElements() && !finded) {
-            NetworkInterface ni = netInterfaces.nextElement();
-            Enumeration<InetAddress> address = ni.getInetAddresses();
-            while (address.hasMoreElements()) {
-                ip = address.nextElement();
-                if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {
-                    // 外网IP
-                    netip = ip.getHostAddress();
-                    finded = true;
-                    break;
-                } else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {// 内网IP
-                    localip = ip.getHostAddress();
-                }
-            }
-        }
-        if (netip != null && !"".equals(netip)) {
-            return netip;
-        } else {
-            return localip;
-        }
-    }
-
     public static String getOutIPV4() {
         String ip = "";
         String chinaz = "http://ip.chinaz.com";
@@ -402,4 +360,6 @@ public class IpUtils {
         String agent = Objects.requireNonNull(ServletUtils.getRequest()).getHeader("User-Agent");
         return UserAgent.parseUserAgentString(agent);
     }
+
+
 }

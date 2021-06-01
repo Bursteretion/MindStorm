@@ -1,7 +1,9 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
 
+import cn.lwjppz.mindstorm.common.core.enums.LogType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.common.log.annotation.Log;
 import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.roleMenu.RoleMenuDTO;
 import cn.lwjppz.mindstorm.permission.service.RoleMenuService;
@@ -40,6 +42,7 @@ public class RoleMenuController {
 
     @ApiOperation("为角色分配菜单")
     @PostMapping("/distribute/{roleId}")
+    @Log(operateModule = "角色菜单管理", logType = LogType.UPDATE)
     @PreAuthorize(hasPermission = "permission:role:distribute")
     public CommonResult distributeMenu(@ApiParam("角色Id") @PathVariable("roleId") String roleId,
                                        @ApiParam("菜单") @RequestBody List<String> menus) {

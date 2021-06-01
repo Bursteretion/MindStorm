@@ -4,39 +4,28 @@ import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 
 /**
  * <p>
- * 系统日志类型枚举
+ * 登录状态枚举
  * </p>
  *
  * @author : lwj
- * @since : 2021-05-30
+ * @since : 2021-05-31
  */
-public enum LogType implements ValueEnum<Integer> {
+public enum LoginStatus implements ValueEnum<Integer> {
 
     /**
-     * 系统日志类型
+     * 登录成功
      */
-    OTHER(0, "其他"),
+    SUCCESS(1, "登录成功"),
 
-    QUERY(1, "查询"),
-
-    UPDATE(2, "修改"),
-
-    INSERT(3, "新增"),
-
-    DELETE(4, "删除"),
-
-    GRANT(5, "授权"),
-
-    EXPORT(6, "导出"),
-
-    IMPORT(7, "导入"),
-
-    CLEAN(8, "清空数据");
+    /**
+     * 登录失败
+     */
+    FAILED(0, "登录失败");
 
     private final Integer value;
     private final String name;
 
-    LogType(Integer value, String name) {
+    LoginStatus(Integer value, String name) {
         this.value = value;
         this.name = name;
     }

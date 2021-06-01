@@ -21,6 +21,14 @@ public class SecurityUtils {
     }
 
     /**
+     * 获取用户
+     */
+    public static String getUsername() {
+        String username = Objects.requireNonNull(ServletUtils.getRequest()).getHeader(CacheConstants.DETAILS_USERNAME);
+        return ServletUtils.urlDecode(username);
+    }
+
+    /**
      * 获取请求token
      */
     public static String getToken() {

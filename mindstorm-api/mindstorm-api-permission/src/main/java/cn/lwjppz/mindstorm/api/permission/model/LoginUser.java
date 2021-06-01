@@ -8,7 +8,9 @@ import lombok.ToString;
 import java.util.Set;
 
 /**
- * <p></p>
+ * <p>
+ * 登录用户信息
+ * </p>
  *
  * @author : lwj
  * @since : 2021-05-25
@@ -17,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Loginuser {
+public class LoginUser {
 
     private static final long serialVersionUID = 1L;
 

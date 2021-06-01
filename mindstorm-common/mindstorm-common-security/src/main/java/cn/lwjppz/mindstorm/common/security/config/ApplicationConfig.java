@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.common.security.config;
 
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.TimeZone;
 
@@ -13,6 +14,7 @@ import java.util.TimeZone;
  * @author : lwj
  * @since : 2021-05-25
  */
+@Configuration
 public class ApplicationConfig {
 
     /**
