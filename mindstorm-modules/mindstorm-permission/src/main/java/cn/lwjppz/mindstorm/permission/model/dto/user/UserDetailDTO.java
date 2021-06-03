@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.permission.model.dto.user;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,6 +37,8 @@ public class UserDetailDTO {
     private Date birthDay;
 
     private String phone;
+
+    private String email;
 
     private Integer userLevel;
 

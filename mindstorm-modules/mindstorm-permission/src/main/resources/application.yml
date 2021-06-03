@@ -3,6 +3,9 @@ spring:
   application:
     # 应用名称
     name: mindstorm-permission
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
   datasource:
     username: root

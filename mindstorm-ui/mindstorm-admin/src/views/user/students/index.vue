@@ -28,112 +28,94 @@
     </div>
 
     <div>
-      <el-button
-        plain
-        icon="el-icon-circle-plus-outline"
-        size="mini"
-        type="primary"
-        v-hasPermission="['user:student:add']"
-        @click="openStudentAddDialog">
-        添加
-      </el-button>
-    </div>
-
-    <div style="margin-top: 15px">
-      <el-table
-        :data="students"
-        style="width: 100%">
-        <el-table-column
-          type="index"
-          label="序号"
-          width="50">
-        </el-table-column>
-        <el-table-column
-          prop="username"
-          label="用户名"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="realName"
-          label="真实姓名">
-        </el-table-column>
-        <el-table-column
-          prop="userLevel"
-          label="年级">
-          <template slot-scope="scope">
-            <span>{{ getLevel(scope.row.userLevel) }}</span>
+      <vxe-toolbar
+        custom
+        print
+        ref="studentToolBar"
+        :refresh="{query: loadStudents}">
+        <template #buttons>
+          <vxe-button
+            size="small"
+            status="primary"
+            icon="el-icon-circle-plus-outline"
+            v-hasPermission="['user:student:add']"
+            @click="openStudentAddDialog">
+            添加
+          </vxe-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table
+        ref="studentTable"
+        round
+        show-overflow
+        height="200"
+        row-id="id"
+        size="small"
+        :loading="loading"
+        :print-config="{}"
+        :data="students">
+        <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+        <vxe-table-column type="seq" title="序号" width="60"></vxe-table-column>
+        <vxe-table-column field="username" title="用户名" width="100"></vxe-table-column>
+        <vxe-table-column field="realName" width="120" title="真实姓名"></vxe-table-column>
+        <vxe-table-column field="userLevel" title="年级">
+          <template #default="{ row }">
+            <span>{{ getLevel(row.userLevel) }}</span>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="sex"
-          label="性别">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.sex === 1" type="success">男</el-tag>
-            <el-tag v-if="scope.row.sex === 2" type="info">女</el-tag>
+        </vxe-table-column>
+        <vxe-table-column field="sex" title="性别">
+          <template #default="{ row }">
+            <el-tag v-if="row.sex === 1" size="mini" type="success">男</el-tag>
+            <el-tag v-if="row.sex === 2" size="mini" type="info">女</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="phone"
-          label="手机号">
-        </el-table-column>
-        <el-table-column
-          prop="gmtCreate"
-          width="180"
-          label="创建时间">
-        </el-table-column>
-        <el-table-column
-          prop="status"
+        </vxe-table-column>
+        <vxe-table-column width="13%" field="phone" title="手机号"></vxe-table-column>
+        <vxe-table-column width="13%" field="email" title="邮箱"></vxe-table-column>
+        <vxe-table-column
           v-hasPermission="['user:student:status']"
-          label="状态">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.status"
-              :active-value="0"
-              :inactive-value="1"
-              @click.native="changeStudentStatus(scope.row)"
-              active-color="#ff4949"
-              inactive-color="#13ce66"
-              active-text="禁用"
-              inactive-text="正常">
-            </el-switch>
+          field="status" width="100" title="状态">
+          <template #default="{ row }">
+            <vxe-switch
+              v-model="row.status"
+              :open-value="1"
+              :close-value="0"
+              @click.native="changeStudentStatus(row)">
+            </vxe-switch>
           </template>
-        </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
+        </vxe-table-column>
+        <vxe-table-column width="15%" field="gmtCreate" title="创建时间"></vxe-table-column>
+        <vxe-table-column width="15%">
+          <template #default="{ row }" title="操作">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               v-hasPermission="['user:student:update']"
-              @click="handleStudentEdit(scope.row.id)">
-              修改
+              @click="handleStudentEdit(row.id)">修改
             </el-button>
             <el-button
-              slot="reference"
               size="mini"
               icon="el-icon-delete"
               type="text"
               v-hasPermission="['user:student:delete']"
-              @click="handleStudentDelete(scope.row)">
+              @click="handleStudentDelete(row)">
               删除
             </el-button>
           </template>
-        </el-table-column>
-      </el-table>
-    </div>
+        </vxe-table-column>
+      </vxe-table>
 
-    <div class="pagination">
-      <el-pagination
+      <vxe-pager
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        size="small"
+        :loading="loading"
         :current-page="pagination.currentPage"
-        :page-sizes="[1, 2, 5, 10, 20]"
         :page-size="pagination.pageSize"
-        :page-count="pagination.pageCount"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total">
-      </el-pagination>
+        :total="pagination.total"
+        :page-sizes="[2, 5, 10, {label: '大量数据', value: 100}, {label: '全量数据', value: -1}]"
+        :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
+        @page-change="handlePageChange">
+      </vxe-pager>
     </div>
 
     <div>
@@ -141,6 +123,7 @@
         :title="studentDialogTitle"
         :visible.sync="studentAddDialogVisible"
         @close="resetStudentForm"
+        destroy-on-close
         width="40%"
         top="10vh"
         append-to-body>
@@ -169,6 +152,11 @@
             <el-col :span="12">
               <el-form-item label="手机">
                 <el-input v-model="studentForm.phone" autocomplete="off" placeholder="请输入手机号"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="邮箱">
+                <el-input v-model="studentForm.email" autocomplete="off" placeholder="请输入邮箱"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -246,6 +234,7 @@ export default {
   name: 'StudentsList',
   data() {
     return {
+      loading: false,
       // 用户状态
       UserStatus,
       // 学生年级
@@ -272,7 +261,20 @@ export default {
       // 对话框添加（修改）按钮标题
       dialogBtnTitle: '添加',
       // 学生表单
-      studentForm: {},
+      studentForm: {
+        id: '',
+        username: '',
+        realName: '',
+        sno: '',
+        password: '',
+        phone: '',
+        email: '',
+        age: 0,
+        userLevel: 1,
+        birthDay: '',
+        status: 1,
+        sex: ''
+      },
       rules: {
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -296,9 +298,11 @@ export default {
     }
   },
   created() {
+    this.$nextTick(() => {
+      this.$refs.studentTable.connect(this.$refs.studentToolBar)
+    })
     this.loadStudents()
   },
-  computed: {},
   methods: {
     getLevel(userLevel) {
       const level = userLevel
@@ -306,16 +310,21 @@ export default {
     },
     // 加载学生
     loadStudents() {
-      listUsers(this.pagination.currentPage, this.pagination.pageSize, 1).then((res) => {
-        if (res && res.code === 20000) {
-          this.students = res.data.page.records
-          this.pagination.total = res.data.page.total
-        }
-      })
+      this.loading = true
+      setTimeout(() => {
+        listUsers(this.pagination.currentPage, this.pagination.pageSize, 1).then((res) => {
+          if (res && res.code === 20000) {
+            this.students = res.data.page.records
+            this.pagination.total = res.data.page.total
+            this.loading = false
+          }
+        })
+      }, 300)
     },
     // 点击添加按钮
     openStudentAddDialog() {
       this.studentDialogTitle = '添加学生'
+      this.dialogBtnTitle = '添加'
       this.studentAddDialogVisible = true
     },
     // 更改学生状态
@@ -328,9 +337,9 @@ export default {
       }).then(() => {
         changeUserStatus(student.id, student.status).then((res) => {
           if (res && res.code === 20000 && res.data.change) {
-            this.$message({
-              type: 'success',
-              message: `${text}成功!`
+            this.$XModal.message({
+              status: 'success',
+              content: `${text}成功!`
             });
           }
         })
@@ -356,9 +365,9 @@ export default {
       }).then(() => {
         deleteUser(student.id).then((res) => {
           if (res && res.code === 20000) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
+            this.$XModal.message({
+              status: 'success',
+              content: '删除成功!'
             })
             this.loadStudents()
           }
@@ -377,7 +386,10 @@ export default {
           if (this.studentForm.id === undefined || this.studentForm.id === '') {
             createStudent(this.studentForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success("添加学生成功！")
+                this.$XModal.message({
+                  status: 'success',
+                  content: '添加学生成功！'
+                })
                 this.studentAddDialogVisible = false
                 this.loadStudents()
               }
@@ -385,7 +397,10 @@ export default {
           } else {
             updateUser(this.studentForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success('修改学生信息成功');
+                this.$XModal.message({
+                  status: 'success',
+                  content: '修改学生信息成功！'
+                })
                 this.studentAddDialogVisible = false
                 this.loadStudents()
               }
@@ -395,12 +410,9 @@ export default {
       })
     },
     // 分页大小改变
-    handleSizeChange(val) {
-      this.pagination.pageSize = val
-      this.loadStudents()
-    },
-    handleCurrentChange(val) {
-      this.pagination.currentPage = val;
+    handlePageChange({currentPage, pageSize}) {
+      this.pagination.currentPage = currentPage
+      this.pagination.pageSize = pageSize
       this.loadStudents()
     },
     // 多条件查询学生信息
@@ -422,12 +434,25 @@ export default {
       })
     },
     resetStudentForm() {
-      this.studentForm = {}
       this.$nextTick(() => {
         if (this.$refs['studentForm'] !== undefined) {
           this.$refs['studentForm'].resetFields()
         }
       })
+      this.studentForm = {
+        id: '',
+        username: '',
+        realName: '',
+        sno: '',
+        password: '',
+        phone: '',
+        email: '',
+        age: 0,
+        userLevel: 1,
+        birthDay: '',
+        status: 1,
+        sex: ''
+      }
     }
   }
 }

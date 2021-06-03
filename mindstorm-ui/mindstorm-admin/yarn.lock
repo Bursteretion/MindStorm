@@ -10851,7 +10851,7 @@
   "resolved" "https://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2 || ^3.0.0-0", "vue@^2.2.0", "vue@^2.5.17", "vue@^2.x", "vue@2.6.10", "vue@2.x":
+"vue@^2 || ^3.0.0-0", "vue@^2.2.0", "vue@^2.5.17", "vue@^2.6.0", "vue@^2.x", "vue@2.6.10", "vue@2.x":
   "integrity" "sha1-pysaQqTYKnIepDjRtr9V5mGVxjc="
   "resolved" "https://registry.npm.taobao.org/vue/download/vue-2.6.10.tgz"
   "version" "2.6.10"
@@ -10860,6 +10860,11 @@
   "integrity" "sha1-Y0uBUVzwz+l2vR/+lgF1XlH4Q7k="
   "resolved" "https://registry.nlark.com/vuex/download/vuex-3.1.0.tgz"
   "version" "3.1.0"
+
+"vxe-table@^3.3.6":
+  "integrity" "sha1-EwDIKoC7hUoRyFcP1JWTG3W9frg="
+  "resolved" "https://registry.nlark.com/vxe-table/download/vxe-table-3.3.6.tgz?cache=0&sync_timestamp=1622602924003&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvxe-table%2Fdownload%2Fvxe-table-3.3.6.tgz"
+  "version" "3.3.6"
 
 "w3c-hr-time@^1.0.1":
   "integrity" "sha1-ConN9cwVgi35w2BUNnaWPgzDCM0="
@@ -11207,6 +11212,11 @@
   "integrity" "sha1-pITdhR6b62/bQgAn44hejOSJhsE="
   "resolved" "https://registry.nlark.com/ws/download/ws-7.4.5.tgz"
   "version" "7.4.5"
+
+"xe-utils@^3.2.0", "xe-utils@^3.2.1":
+  "integrity" "sha1-xnnoKVGbAW7zULzplTo5Q2BMW8I="
+  "resolved" "https://registry.nlark.com/xe-utils/download/xe-utils-3.2.1.tgz"
+  "version" "3.2.1"
 
 "xml-name-validator@^3.0.0":
   "integrity" "sha1-auc+Bt5NjG5H+fsYH3jWSK1FfGo="

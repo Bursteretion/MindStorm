@@ -28,115 +28,95 @@
     </div>
 
     <div>
-      <el-button
-        plain
-        icon="el-icon-circle-plus-outline"
-        size="mini"
-        type="primary"
-        v-hasPermission="['user:teacher:add']"
-        @click="openTeacherAddDialog">
-        添加
-      </el-button>
-    </div>
-
-    <div style="margin-top: 15px">
-      <el-table
-        :data="teachers"
-        style="width: 100%">
-        <el-table-column
-          type="index"
-          label="序号"
-          width="50">
-        </el-table-column>
-        <el-table-column
-          prop="username"
-          label="用户名"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="realName"
-          width="120"
-          label="真实姓名">
-        </el-table-column>
-        <el-table-column
-          prop="sex"
-          width="100"
-          label="性别">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.sex === 1" type="success">男</el-tag>
-            <el-tag v-if="scope.row.sex === 2" type="info">女</el-tag>
+      <vxe-toolbar
+        custom
+        print
+        ref="teacherToolBar"
+        :refresh="{query: loadTeachers}">
+        <template #buttons>
+          <vxe-button
+            size="small"
+            status="primary"
+            icon="el-icon-circle-plus-outline"
+            v-hasPermission="['user:teacher:add']"
+            @click="openTeacherAddDialog">
+            添加
+          </vxe-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table
+        ref="teacherTable"
+        round
+        show-overflow
+        height="200"
+        row-id="id"
+        size="small"
+        :loading="loading"
+        :print-config="{}"
+        :data="teachers">
+        <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+        <vxe-table-column type="seq" title="序号" width="60"></vxe-table-column>
+        <vxe-table-column field="username" title="用户名" width="100"></vxe-table-column>
+        <vxe-table-column field="realName" width="120" title="真实姓名"></vxe-table-column>
+        <vxe-table-column field="sex" title="性别">
+          <template #default="{ row }">
+            <el-tag v-if="row.sex === 1" size="mini" type="success">男</el-tag>
+            <el-tag v-if="row.sex === 2" size="mini" type="info">女</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="phone"
-          label="手机号">
-        </el-table-column>
-        <el-table-column
-          prop="gmtCreate"
-          width="180"
-          label="创建时间">
-        </el-table-column>
-        <el-table-column
-          prop="status"
-          v-hasPermission="['user:teacher:status']"
-          label="状态">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.status"
-              :active-value="0"
-              :inactive-value="1"
-              @click.native="changeTeacherStatus(scope.row)"
-              active-color="#ff4949"
-              inactive-color="#13ce66"
-              active-text="禁用"
-              inactive-text="正常">
-            </el-switch>
+        </vxe-table-column>
+        <vxe-table-column field="phone" title="手机号"></vxe-table-column>
+        <vxe-table-column width="15%" field="email" title="邮箱"></vxe-table-column>
+        <vxe-table-column field="status" width="100" title="状态">
+          <template #default="{ row }">
+            <vxe-switch
+              v-hasPermission="['user:teacher:status']"
+              v-model="row.status"
+              :open-value="1"
+              :close-value="0"
+              @click.native="changeTeacherStatus(row)">
+            </vxe-switch>
           </template>
-        </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
+        </vxe-table-column>
+        <vxe-table-column width="15%" field="gmtCreate" title="创建时间"></vxe-table-column>
+        <vxe-table-column width="20%" title="操作">
+          <template #default="{ row }">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
-              v-hasPermission="['user:teacher:update']"
-              @click="handleTeacherEdit(scope.row.id)">
-              修改
+              v-hasPermission="['user:admin:update']"
+              @click="handleTeacherEdit(row.id)">修改
             </el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-check"
-              v-hasPermission="['user:teacher:distribute']"
-              @click="handleTeacherAddRole(scope.row.id)">
-              分配角色
+              v-hasPermission="['user:admin:distribute']"
+              @click="handleTeacherAddRole(row.id)">分配角色
             </el-button>
             <el-button
-              slot="reference"
               size="mini"
               icon="el-icon-delete"
               type="text"
               v-hasPermission="['user:teacher:delete']"
-              @click="handleTeacherDelete(scope.row)">
+              @click="handleTeacherDelete(row)">
               删除
             </el-button>
           </template>
-        </el-table-column>
-      </el-table>
-    </div>
+        </vxe-table-column>
+      </vxe-table>
 
-    <div class="pagination">
-      <el-pagination
+      <vxe-pager
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        size="small"
+        :loading="loading"
         :current-page="pagination.currentPage"
-        :page-sizes="[1, 2, 5, 10, 20]"
         :page-size="pagination.pageSize"
-        :page-count="pagination.pageCount"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total">
-      </el-pagination>
+        :total="pagination.total"
+        :page-sizes="[2, 5, 10, {label: '大量数据', value: 100}, {label: '全量数据', value: -1}]"
+        :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
+        @page-change="handlePageChange">
+      </vxe-pager>
     </div>
 
     <div>
@@ -167,6 +147,11 @@
             <el-col :span="12">
               <el-form-item label="手机">
                 <el-input v-model="teacherForm.phone" autocomplete="off" placeholder="请输入手机号"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="邮箱">
+                <el-input v-model="teacherForm.email" autocomplete="off" placeholder="请输入邮箱"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -274,6 +259,7 @@ export default {
   name: 'TeachersList',
   data() {
     return {
+      loading: false,
       // 用户状态
       UserStatus,
       // 搜索表单
@@ -300,7 +286,18 @@ export default {
       // 对话框添加（修改）按钮标题
       dialogBtnTitle: '添加',
       // 学生表单
-      teacherForm: {},
+      teacherForm: {
+        id: '',
+        username: '',
+        realName: '',
+        password: '',
+        phone: '',
+        email: '',
+        age: 0,
+        birthDay: '',
+        status: 1,
+        sex: ''
+      },
       rules: {
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -325,22 +322,30 @@ export default {
     }
   },
   created() {
+    this.$nextTick(() => {
+      this.$refs.teacherTable.connect(this.$refs.teacherToolBar)
+    })
     this.loadTeachers()
   },
   computed: {},
   methods: {
     // 加载教师
     loadTeachers() {
-      listUsers(this.pagination.currentPage, this.pagination.pageSize, 2).then((res) => {
-        if (res && res.code === 20000) {
-          this.teachers = res.data.page.records
-          this.pagination.total = res.data.page.total
-        }
-      })
+      this.loading = true
+      setTimeout(() => {
+        listUsers(this.pagination.currentPage, this.pagination.pageSize, 2).then((res) => {
+          if (res && res.code === 20000) {
+            this.teachers = res.data.page.records
+            this.pagination.total = res.data.page.total
+            this.loading = false
+          }
+        })
+      }, 300)
     },
     // 点击添加按钮
     openTeacherAddDialog() {
       this.teacherDialogTitle = '添加教师'
+      this.dialogBtnTitle = '添加'
       this.teacherAddDialogVisible = true
     },
     // 更改学生状态
@@ -353,9 +358,9 @@ export default {
       }).then(() => {
         changeUserStatus(teacher.id, teacher.status).then((res) => {
           if (res && res.code === 20000 && res.data.change) {
-            this.$message({
-              type: 'success',
-              message: `${text}成功!`
+            this.$XModal.message({
+              status: 'success',
+              content: `${text}成功!`
             });
           }
         })
@@ -396,7 +401,10 @@ export default {
     handleAddUserRole() {
       distributeRole(this.userRoleForm.userId, this.userRoleForm.roles).then((res) => {
         if (res && res.code === 20000) {
-          this.$message.success('为' + this.userRoleForm.username + '分配角色成功')
+          this.$XModal.message({
+            status: 'success',
+            content: '为' + this.userRoleForm.username + '分配角色成功'
+          })
           this.handleCancelAddUserRole()
         }
       })
@@ -418,9 +426,9 @@ export default {
       }).then(() => {
         deleteUser(teacher.id).then((res) => {
           if (res && res.code === 20000) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
+            this.$XModal.message({
+              status: 'success',
+              content: '删除成功!'
             })
             this.loadTeachers()
           }
@@ -439,7 +447,10 @@ export default {
           if (this.teacherForm.id === undefined || this.teacherForm.id === '') {
             createTeacher(this.teacherForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success("添加教师成功！")
+                this.$XModal.message({
+                  status: 'success',
+                  content: '添加教师成功！'
+                })
                 this.teacherAddDialogVisible = false
                 this.loadTeachers()
               }
@@ -447,7 +458,10 @@ export default {
           } else {
             updateUser(this.teacherForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success('修改教师信息成功');
+                this.$XModal.message({
+                  status: 'success',
+                  content: '修改教师信息成功！'
+                })
                 this.teacherAddDialogVisible = false
                 this.loadTeachers()
               }
@@ -457,13 +471,10 @@ export default {
       })
     },
     // 分页大小改变
-    handleSizeChange(val) {
-      this.pagination.pageSize = val
-      this.loadTeachers()
-    },
-    handleCurrentChange(val) {
-      this.pagination.currentPage = val;
-      this.loadTeachers()
+    handlePageChange({currentPage, pageSize}) {
+      this.pagination.currentPage = currentPage
+      this.pagination.pageSize = pageSize
+      this.loadAdmins()
     },
     // 多条件查询教师信息
     handleTeacherSearch() {
@@ -484,12 +495,23 @@ export default {
       })
     },
     resetTeacherForm() {
-      this.teacherForm = {}
       this.$nextTick(() => {
         if (this.$refs['teacherForm'] !== undefined) {
           this.$refs['teacherForm'].resetFields()
         }
       })
+      this.teacherForm = {
+        id: '',
+        username: '',
+        realName: '',
+        password: '',
+        phone: '',
+        email: '',
+        age: 0,
+        birthDay: '',
+        status: 1,
+        sex: ''
+      }
     }
   }
 }

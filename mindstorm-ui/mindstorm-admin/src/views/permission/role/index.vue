@@ -25,71 +25,66 @@
     </div>
 
     <div>
-      <el-button
-        plain
-        icon="el-icon-circle-plus-outline"
-        size="mini"
-        type="primary"
-        v-hasPermission="['permission:role:add']"
-        @click="openDialogRoleAdd">
-        添加
-      </el-button>
-    </div>
-
-    <div style="margin-top: 15px">
-      <el-table
-        :data="roles"
-        style="width: 100%">
-        <el-table-column
-          type="index"
-          label="序号"
-          width="50">
-        </el-table-column>
-        <el-table-column
-          prop="roleName"
-          label="名称"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="remark"
-          label="备注">
-        </el-table-column>
-        <el-table-column
-          prop="sort"
-          label="排序">
-        </el-table-column>
-        <el-table-column
-          prop="status"
+      <vxe-toolbar
+        custom
+        print
+        ref="roleToolBar"
+        :refresh="{query: loadRoles}">
+        <template #buttons>
+          <vxe-button
+            size="small"
+            status="primary"
+            icon="el-icon-circle-plus-outline"
+            v-hasPermission="['permission:role:add']"
+            @click="openDialogRoleAdd">
+            添加
+          </vxe-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table
+        ref="roleTable"
+        round
+        show-overflow
+        height="200"
+        row-id="id"
+        size="small"
+        :loading="loading"
+        :print-config="{}"
+        :data="roles">
+        <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+        <vxe-table-column type="seq" title="序号" width="60"></vxe-table-column>
+        <vxe-table-column width="10%" field="roleName" title="名称"></vxe-table-column>
+        <vxe-table-column width="20%" field="remark" title="备注"></vxe-table-column>
+        <vxe-table-column width="10%" field="sort" title="排序"></vxe-table-column>
+        <vxe-table-column
           v-hasPermission="['permission:role:status']"
-          label="状态">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.status"
-              :active-value="0"
-              :inactive-value="1"
-              @click.native="changeRoleStatus(scope.row)"
-              active-color="#ff4949"
-              inactive-color="#13ce66"
-              active-text="禁用"
-              inactive-text="正常">
-            </el-switch>
+          width="10%"
+          field="status" title="状态">
+          <template #default="{ row }">
+            <vxe-switch
+              v-model="row.status"
+              :open-value="1"
+              :close-value="0"
+              @click.native="changeRoleStatus(row)">
+            </vxe-switch>
           </template>
-        </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
+        </vxe-table-column>
+        <vxe-table-column width="20%" field="gmtCreate" title="创建时间"></vxe-table-column>
+        <vxe-table-column width="20%" title="操作">
+          <template #default="{ row }">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               v-hasPermission="['permission:role:update']"
-              @click="handleEdit(scope.row)">修改
+              @click="handleEdit(row)">修改
             </el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-check"
               v-hasPermission="['permission:role:distribute']"
-              @click="handleSetPermission(scope.row)">设置权限
+              @click="handleSetPermission(row)">设置权限
             </el-button>
             <el-popconfirm
               class="delete_btn"
@@ -99,7 +94,7 @@
               icon-color="red"
               title="你确定要删除这个角色吗？"
               v-hasPermission="['permission:role:delete']"
-              @onConfirm="handleDelete(scope.row.id)"
+              @onConfirm="handleDelete(row.id)"
             >
               <el-button
                 slot="reference"
@@ -109,22 +104,20 @@
               </el-button>
             </el-popconfirm>
           </template>
-        </el-table-column>
-      </el-table>
-    </div>
+        </vxe-table-column>
+      </vxe-table>
 
-    <div class="pagination">
-      <el-pagination
+      <vxe-pager
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        size="small"
+        :loading="loading"
         :current-page="pagination.currentPage"
-        :page-sizes="[1, 2, 5, 10, 20]"
         :page-size="pagination.pageSize"
-        :page-count="pagination.pageCount"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total">
-      </el-pagination>
+        :total="pagination.total"
+        :page-sizes="[2, 5, 10, {label: '大量数据', value: 100}, {label: '全量数据', value: -1}]"
+        :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
+        @page-change="handlePageChange">
+      </vxe-pager>
     </div>
 
     <div>
@@ -212,6 +205,7 @@ export default {
   name: "RoleList",
   data() {
     return {
+      loading: false,
       searchRoleVO: {
         name: '',
         status: ''
@@ -261,17 +255,24 @@ export default {
     }
   },
   created() {
+    this.$nextTick(() => {
+      this.$refs.roleTable.connect(this.$refs.roleToolBar)
+    })
     this.loadRoles()
   },
   methods: {
     loadRoles() {
-      pageByRoles(this.pagination.currentPage, this.pagination.pageSize).then((res) => {
-        if (res && res.code === 20000) {
-          const {pageRoles} = res.data
-          this.roles = pageRoles.records
-          this.pagination.total = pageRoles.total
-        }
-      })
+      this.loading = true
+      setTimeout(() => {
+        pageByRoles(this.pagination.currentPage, this.pagination.pageSize).then((res) => {
+          if (res && res.code === 20000) {
+            const {pageRoles} = res.data
+            this.roles = pageRoles.records
+            this.pagination.total = pageRoles.total
+            this.loading = false
+          }
+        })
+      }, 300)
     },
     roleSearchSubmit() {
       this.searchRoleVO.pageIndex = this.pagination.currentPage
@@ -293,17 +294,17 @@ export default {
       }).then(() => {
         changeRoleStatus(role.id, role.status).then((res) => {
           if (res && res.code === 20000 && res.data.change) {
-            this.$message({
-              type: 'success',
-              message: `${text}成功!`
+            this.$XModal.message({
+              status: 'success',
+              content: `${text}成功!`
             });
           }
         })
       }).catch(() => {
         this.loadRoles()
-        this.$message({
-          type: 'info',
-          message: '已取消更改'
+        this.$XModal.message({
+          status: 'info',
+          content: '已取消更改'
         });
       });
     },
@@ -327,9 +328,9 @@ export default {
       deleteRole(roleId).then((res) => {
         if (res && res.code === 20000 && res.data.delete) {
           this.loadRoles()
-          this.$message({
-            message: '删除成功！',
-            type: 'success'
+          this.$XModal.message({
+            content: '删除成功！',
+            status: 'success'
           })
         }
       })
@@ -376,7 +377,10 @@ export default {
       const menus = [...this.$refs.menu.getCheckedKeys(), ...this.$refs.menu.getHalfCheckedKeys()]
       distributeMenu(this.roleMenuForm.roleId, menus).then((res) => {
         if (res && res.code === 20000) {
-          this.$message.success('为' + this.roleMenuForm.roleName + '分配菜单成功！')
+          this.$XModal.message({
+            content: '为' + this.roleMenuForm.roleName + '分配菜单成功！',
+            status: 'success'
+          })
           this.handleCancelAddRoleMenu()
         }
       })
@@ -395,12 +399,9 @@ export default {
       this.reset()
       this.loadRoles()
     },
-    handleSizeChange(val) {
-      this.pagination.pageSize = val
-      this.loadRoles()
-    },
-    handleCurrentChange(val) {
-      this.pagination.currentPage = val;
+    handlePageChange({currentPage, pageSize}) {
+      this.pagination.currentPage = currentPage
+      this.pagination.pageSize = pageSize
       this.loadRoles()
     },
     handleRole() {
@@ -411,9 +412,9 @@ export default {
               if (res && res.code === 20000) {
                 this.addRoleDialogVisible = false;
                 this.loadRoles()
-                this.$message({
-                  message: '添加角色成功!',
-                  type: 'success'
+                this.$XModal.message({
+                  content: '添加角色成功!',
+                  status: 'success'
                 });
               }
             })
@@ -422,9 +423,9 @@ export default {
               if (res && res.code === 20000) {
                 this.addRoleDialogVisible = false;
                 this.loadRoles()
-                this.$message({
-                  message: '角色信息修改成功!',
-                  type: 'success'
+                this.$XModal.message({
+                  content: '角色信息修改成功!',
+                  status: 'success'
                 });
               }
             })

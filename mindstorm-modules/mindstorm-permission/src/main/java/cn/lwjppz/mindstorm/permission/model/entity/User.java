@@ -65,6 +65,9 @@ public class User implements Serializable {
     @ApiModelProperty(value = "电话")
     private String phone;
 
+    @ApiModelProperty(value = "邮箱")
+    private String email;
+
     @ApiModelProperty(value = "状态(0:禁止,1:正常)")
     private Integer status;
 

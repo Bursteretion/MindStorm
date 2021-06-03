@@ -28,115 +28,105 @@
     </div>
 
     <div>
-      <el-button
-        plain
-        icon="el-icon-circle-plus-outline"
-        size="mini"
-        type="primary"
-        v-hasPermission="['user:admin:add']"
-        @click="openAdminAddDialog">
-        添加
-      </el-button>
-    </div>
-
-    <div style="margin-top: 15px">
-      <el-table
-        :data="admins"
-        style="width: 100%">
-        <el-table-column
-          type="index"
-          label="序号"
-          width="50">
-        </el-table-column>
-        <el-table-column
-          prop="username"
-          label="用户名"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          prop="realName"
-          width="120"
-          label="真实姓名">
-        </el-table-column>
-        <el-table-column
-          prop="sex"
-          width="120"
-          label="性别">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.sex === 1" type="success">男</el-tag>
-            <el-tag v-if="scope.row.sex === 2" type="info">女</el-tag>
+      <vxe-toolbar
+        custom
+        print
+        ref="adminToolBar"
+        :refresh="{query: loadAdmins}">
+        <template #buttons>
+          <vxe-button
+            size="small"
+            status="primary"
+            icon="el-icon-circle-plus-outline"
+            v-hasPermission="['user:admin:add']"
+            @click="openAdminAddDialog">
+            添加
+          </vxe-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table
+        ref="adminTable"
+        round
+        show-overflow
+        height="200"
+        row-id="id"
+        size="small"
+        :loading="loading"
+        :print-config="{}"
+        :data="admins">
+        <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+        <vxe-table-column type="seq" title="序号" width="60"></vxe-table-column>
+        <vxe-table-column field="username" title="用户名" width="100"></vxe-table-column>
+        <vxe-table-column field="realName" width="120" title="真实姓名"></vxe-table-column>
+        <vxe-table-column field="sex" title="性别">
+          <template #default="{ row }">
+            <el-tag v-if="row.sex === 1" size="mini" type="success">男</el-tag>
+            <el-tag v-if="row.sex === 2" size="mini" type="info">女</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="phone"
-          label="手机号">
-        </el-table-column>
-        <el-table-column
-          prop="gmtCreate"
-          width="180"
-          label="创建时间">
-        </el-table-column>
-        <el-table-column
-          prop="status"
+        </vxe-table-column>
+        <vxe-table-column field="phone" title="手机号"></vxe-table-column>
+        <vxe-table-column width="15%" field="email" title="邮箱"></vxe-table-column>
+        <vxe-table-column
           v-hasPermission="['user:admin:status']"
-          label="状态">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.status"
-              :active-value="0"
-              :inactive-value="1"
-              @click.native="changeAdminStatus(scope.row)"
-              active-color="#ff4949"
-              inactive-color="#13ce66"
-              active-text="禁用"
-              inactive-text="正常">
-            </el-switch>
+          field="status" width="100" title="状态">
+          <template #default="{ row }">
+            <vxe-switch
+              v-model="row.status"
+              :open-value="1"
+              :close-value="0"
+              @click.native="changeAdminStatus(row)">
+            </vxe-switch>
           </template>
-        </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
+        </vxe-table-column>
+        <vxe-table-column width="15%" field="gmtCreate" title="创建时间"></vxe-table-column>
+        <vxe-table-column width="20%"  title="操作">
+          <template #default="{ row }">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               v-hasPermission="['user:admin:update']"
-              @click="handleAdminEdit(scope.row.id)">
-              修改
+              @click="handleAdminEdit(row.id)">修改
             </el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-check"
               v-hasPermission="['user:admin:distribute']"
-              @click="handleAdminAddRole(scope.row.id)">
-              分配角色
+              @click="handleAdminAddRole(row.id)">分配角色
             </el-button>
-            <el-button
-              slot="reference"
-              size="mini"
-              icon="el-icon-delete"
-              type="text"
+            <el-popconfirm
+              class="delete_btn"
+              confirm-button-text='确认'
+              cancel-button-text='取消'
+              icon="el-icon-info"
+              icon-color="red"
+              title="你确定要删除这个角色吗？"
               v-hasPermission="['user:admin:delete']"
-              @click="handleAdminDelete(scope.row)">
-              删除
-            </el-button>
+              @onConfirm="handleAdminDelete(row.id)"
+            >
+              <el-button
+                slot="reference"
+                size="mini"
+                icon="el-icon-delete"
+                type="text">删除
+              </el-button>
+            </el-popconfirm>
           </template>
-        </el-table-column>
-      </el-table>
-    </div>
+        </vxe-table-column>
+      </vxe-table>
 
-    <div class="pagination">
-      <el-pagination
+      <vxe-pager
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        size="small"
+        :loading="loading"
         :current-page="pagination.currentPage"
-        :page-sizes="[1, 2, 5, 10, 20]"
         :page-size="pagination.pageSize"
-        :page-count="pagination.pageCount"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total">
-      </el-pagination>
+        :total="pagination.total"
+        :page-sizes="[2, 5, 10, {label: '大量数据', value: 100}, {label: '全量数据', value: -1}]"
+        :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
+        @page-change="handlePageChange">
+      </vxe-pager>
     </div>
 
     <div>
@@ -167,6 +157,11 @@
             <el-col :span="12">
               <el-form-item label="手机">
                 <el-input v-model="adminForm.phone" autocomplete="off" placeholder="请输入手机号"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="邮箱">
+                <el-input v-model="adminForm.email" autocomplete="off" placeholder="请输入邮箱"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -272,6 +267,7 @@ export default {
   name: 'AdminsList',
   data() {
     return {
+      loading: false,
       // 用户状态
       UserStatus,
       // 搜索表单
@@ -281,7 +277,7 @@ export default {
         status: '',
         userType: 1
       },
-      // 学生列表
+      // 管理员列表
       admins: [],
       // 分页信息
       pagination: {
@@ -298,7 +294,18 @@ export default {
       // 对话框添加（修改）按钮标题
       dialogBtnTitle: '添加',
       // 管理员表单
-      adminForm: {},
+      adminForm: {
+        id: '',
+        username: '',
+        realName: '',
+        password: '',
+        phone: '',
+        email: '',
+        age: 0,
+        birthDay: '',
+        status: 1,
+        sex: ''
+      },
       rules: {
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -323,21 +330,29 @@ export default {
     }
   },
   created() {
+    this.$nextTick(() => {
+      this.$refs.adminTable.connect(this.$refs.adminToolBar)
+    })
     this.loadAdmins()
   },
   methods: {
     // 加载管理员
     loadAdmins() {
-      listUsers(this.pagination.currentPage, this.pagination.pageSize, 3).then((res) => {
-        if (res && res.code === 20000) {
-          this.admins = res.data.page.records
-          this.pagination.total = res.data.page.total
-        }
-      })
+      this.loading = true
+      setTimeout(() => {
+        listUsers(this.pagination.currentPage, this.pagination.pageSize, 3).then((res) => {
+          if (res && res.code === 20000) {
+            this.admins = res.data.page.records
+            this.pagination.total = res.data.page.total
+            this.loading = false
+          }
+        })
+      }, 300)
     },
     // 点击添加按钮
     openAdminAddDialog() {
       this.adminDialogTitle = '添加管理员'
+      this.dialogBtnTitle = '添加'
       this.adminAddDialogVisible = true
     },
     // 更改管理员状态
@@ -350,9 +365,9 @@ export default {
       }).then(() => {
         changeUserStatus(admin.id, admin.status).then((res) => {
           if (res && res.code === 20000 && res.data.change) {
-            this.$message({
-              type: 'success',
-              message: `${text}成功!`
+            this.$XModal.message({
+              status: 'success',
+              content: `${text}成功!`
             });
           }
         })
@@ -378,9 +393,9 @@ export default {
       }).then(() => {
         deleteUser(admin.id).then((res) => {
           if (res && res.code === 20000) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
+            this.$XModal.message({
+              status: 'success',
+              content: '删除成功!'
             })
             this.loadAdmins()
           }
@@ -414,7 +429,10 @@ export default {
     handleAddUserRole() {
       distributeRole(this.userRoleForm.userId, this.userRoleForm.roles).then((res) => {
         if (res && res.code === 20000) {
-          this.$message.success('为' + this.userRoleForm.username + '分配角色成功')
+          this.$XModal.message({
+            status: 'success',
+            content: '为' + this.userRoleForm.username + '分配角色成功'
+          })
           this.handleCancelAddUserRole()
         }
       })
@@ -432,11 +450,14 @@ export default {
     handleDialogSubmitBtn() {
       this.$refs['adminForm'].validate((valid) => {
         if (valid) {
-          // 添加学生
+          // 添加管理员
           if (this.adminForm.id === undefined || this.adminForm.id === '') {
             createAdmin(this.adminForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success("添加管理员成功！")
+                this.$XModal.message({
+                  status: 'success',
+                  content: '添加管理员成功！'
+                })
                 this.adminAddDialogVisible = false
                 this.loadAdmins()
               }
@@ -444,7 +465,10 @@ export default {
           } else {
             updateUser(this.adminForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success('修改管理员信息成功');
+                this.$XModal.message({
+                  status: 'success',
+                  content: '修改管理员信息成功！'
+                })
                 this.adminAddDialogVisible = false
                 this.loadAdmins()
               }
@@ -454,12 +478,9 @@ export default {
       })
     },
     // 分页大小改变
-    handleSizeChange(val) {
-      this.pagination.pageSize = val
-      this.loadAdmins()
-    },
-    handleCurrentChange(val) {
-      this.pagination.currentPage = val;
+    handlePageChange({currentPage, pageSize}) {
+      this.pagination.currentPage = currentPage
+      this.pagination.pageSize = pageSize
       this.loadAdmins()
     },
     // 多条件查询管理员信息
@@ -481,17 +502,31 @@ export default {
       })
     },
     resetAdminForm() {
-      this.adminForm = {}
       this.$nextTick(() => {
         if (this.$refs['adminForm'] !== undefined) {
           this.$refs['adminForm'].resetFields()
         }
       })
+      this.adminForm = {
+        id: '',
+        username: '',
+        realName: '',
+        password: '',
+        phone: '',
+        email: '',
+        age: 0,
+        birthDay: '',
+        status: 1,
+        sex: ''
+      }
     }
   }
 }
 </script>
 
 <style>
-
+.delete_btn {
+  margin-left: 13px;
+  margin-right: 10px;
+}
 </style>

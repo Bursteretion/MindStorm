@@ -68,6 +68,10 @@
 		}
 	}
 	.el-table__body-wrapper {
+    font-size: 13px;
+    .el-table__row {
+      height: 20px;
+    }
 		.el-button [class*="el-icon-"] + span {
 			margin-left: 1px;
 		}

@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.common.core.utils;
 
-import cn.hutool.crypto.digest.BCrypt;
 import cn.lwjppz.mindstorm.common.core.constant.CacheConstants;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,16 +54,6 @@ public class SecurityUtils {
      */
     public static boolean isAdmin(Long userId) {
         return userId != null && 1L == userId;
-    }
-
-    /**
-     * 生成BCrypt密码
-     *
-     * @param password 密码
-     * @return 加密字符串
-     */
-    public static String encryptPassword(String password) {
-        return BCrypt.hashpw(password);
     }
 
     /**

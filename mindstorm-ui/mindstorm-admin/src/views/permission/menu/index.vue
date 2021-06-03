@@ -25,93 +25,73 @@
     </div>
 
     <div>
-      <el-button
-        plain
-        icon="el-icon-circle-plus-outline"
-        size="mini"
-        type="primary"
-        v-hasPermission="['permission:menu:add']"
-        @click="openDialogMenuAdd">
-        添加
-      </el-button>
-    </div>
-
-    <div style="margin-top: 20px">
-      <el-table
-        :data="menus"
-        row-key="id"
-        :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-        <el-table-column
-          prop="name"
-          label="菜单名称"
-          :show-overflow-tooltip="true"
-          width="130">
-        </el-table-column>
-        <el-table-column
-          prop="icon"
-          label="图标"
-          align="center" width="100">
-          <template slot-scope="scope">
-            <svg-icon :icon-class="scope.row.icon"/>
+      <vxe-toolbar
+        custom
+        print
+        ref="adminToolBar"
+        :refresh="{query: listMenus}">
+        <template #buttons>
+          <vxe-button
+            size="small"
+            status="primary"
+            icon="el-icon-circle-plus-outline"
+            v-hasPermission="['permission:menu:add']"
+            @click="openDialogMenuAdd">
+            添加
+          </vxe-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table
+        ref="menuTable"
+        round
+        show-overflow
+        height="200"
+        row-id="id"
+        size="small"
+        :tree-config="{children: 'children'}"
+        :loading="loading"
+        :print-config="{}"
+        :data="menus">
+        <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+        <vxe-table-column field="name" title="菜单名称" width="15%" tree-node></vxe-table-column>
+        <vxe-table-column field="icon" width="60" title="图标">
+          <template #default="{ row }">
+            <svg-icon :icon-class="row.icon"/>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="sort"
-          label="排序"
-          width="60">
-        </el-table-column>
-        <el-table-column
-          prop="permissionValue"
-          width="200"
-          :show-overflow-tooltip="true"
-          label="权限标识">
-        </el-table-column>
-        <el-table-column
-          prop="component"
-          width="220"
-          :show-overflow-tooltip="true"
-          label="组件路径">
-        </el-table-column>
-        <el-table-column
-          prop="status"
-          width="100"
-          label="状态">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.status === 1" size="medium">正常</el-tag>
-            <el-tag v-if="scope.row.status === 0" type="danger" size="medium">禁用</el-tag>
+        </vxe-table-column>
+        <vxe-table-column width="60" field="sort" title="排序"></vxe-table-column>
+        <vxe-table-column field="permissionValue" title="权限标识"></vxe-table-column>
+        <vxe-table-column width="15%" field="component" title="组件路径"></vxe-table-column>
+        <vxe-table-column width="5%" field="status" title="状态">
+          <template #default="{ row }">
+            <el-tag v-if="row.status === 1" size="mini">正常</el-tag>
+            <el-tag v-if="row.status === 0" type="danger" size="mini">禁用</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="type"
-          width="100"
-          label="类型">
-          <template slot-scope="scope">
-            <el-tag effect="plain" v-if="scope.row.type === 0" size="medium">目录</el-tag>
-            <el-tag effect="plain" v-if="scope.row.type === 1" size="medium" type="info">菜单</el-tag>
-            <el-tag effect="plain" v-if="scope.row.type === 2" size="medium" type="warning">按钮</el-tag>
+        </vxe-table-column>
+        <vxe-table-column width="5%" field="type" title="类型">
+          <template #default="{ row }">
+            <el-tag effect="plain" v-if="row.type === 0" size="mini">目录</el-tag>
+            <el-tag effect="plain" v-if="row.type === 1" size="mini" type="info">菜单</el-tag>
+            <el-tag effect="plain" v-if="row.type === 2" size="mini" type="warning">按钮</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column
-          prop="gmtCreate"
-          width="170"
-          label="创建时间">
-        </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-          <template slot-scope="scope">
+        </vxe-table-column>
+        <vxe-table-column field="gmtCreate" title="创建时间"></vxe-table-column>
+        <vxe-table-column width="15%" title="操作">
+          <template #default="{ row }">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               v-hasPermission="['permission:menu:update']"
-              @click="handleEdit(scope.row.id)">修改
+              @click="handleEdit(row.id)">修改
             </el-button>
             <el-button
-              v-if="scope.row.type !== 2"
+              v-if="row.type !== 2"
               size="mini"
               type="text"
               icon="el-icon-plus"
               v-hasPermission="['permission:menu:add']"
-              @click="handleAddMenu(scope.row.id)">新增
+              @click="handleAddMenu(row.id)">新增
             </el-button>
             <el-popconfirm
               style="margin-left: 13px"
@@ -121,7 +101,7 @@
               icon-color="red"
               title="你确定要删除这个菜单吗？"
               v-hasPermission="['permission:menu:delete']"
-              @onConfirm="handleDelete(scope.row.id)"
+              @onConfirm="handleDelete(row.id)"
             >
               <el-button
                 slot="reference"
@@ -131,8 +111,8 @@
               </el-button>
             </el-popconfirm>
           </template>
-        </el-table-column>
-      </el-table>
+        </vxe-table-column>
+      </vxe-table>
     </div>
 
     <el-dialog
@@ -267,6 +247,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       // 菜单搜索表单
       searchMenuVO: {
         name: '',
@@ -296,7 +277,6 @@ export default {
     }
   },
   created() {
-    this.listFatherMenus()
     this.listMenus()
   },
   methods: {
@@ -344,7 +324,9 @@ export default {
       this.menuForm.icon = name;
     },
     openDialogMenuAdd() {
+      this.listFatherMenus()
       this.dialogMenuTitle = '添加菜单'
+      this.dialogMenuTitle = '添加'
       this.dialogMenuVisible = true
     },
     menuSearchSubmit() {
