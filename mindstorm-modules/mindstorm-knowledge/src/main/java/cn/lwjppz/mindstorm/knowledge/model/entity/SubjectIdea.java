@@ -26,8 +26,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("msk_subject_knowledge")
-@ApiModel(value = "SubjectKnowledge对象", description = "学科知识点表")
+@TableName("msk_subject_idea")
+@ApiModel(value = "SubjectIdea对象", description = "学科知识点表")
 public class SubjectIdea implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,7 +40,7 @@ public class SubjectIdea implements Serializable {
     private String subjectId;
 
     @ApiModelProperty(value = "知识点Id")
-    private String knowledgeId;
+    private String ideaId;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)

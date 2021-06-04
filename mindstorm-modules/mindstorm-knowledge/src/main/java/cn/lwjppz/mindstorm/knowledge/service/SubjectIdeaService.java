@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author lwj
  * @since 2021-05-27
  */
-public interface SubjectKnowledgeService extends IService<SubjectIdea> {
+public interface SubjectIdeaService extends IService<SubjectIdea> {
 
 }
