@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,7 +81,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         Set<Map.Entry<String, List<Router>>> entries = hash.entrySet();
         for (Map.Entry<String, List<Router>> v : entries) {
             if (menuIdSet.contains(v.getKey())) {
-                Router currentRouter = idHash.get(v.getKey());
+                var currentRouter = idHash.get(v.getKey());
                 if (StringUtils.isNotEmpty(currentRouter.getPid())) {
                     List<Router> routers = hash.get(currentRouter.getPid());
                     routers.add(currentRouter);
@@ -104,7 +105,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public Menu insertMenu(@NonNull MenuVO menuVO) {
-        Menu menu = new Menu();
+        var menu = new Menu();
         BeanUtils.copyProperties(menuVO, menu);
 
         baseMapper.insert(menu);
@@ -114,7 +115,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public Menu updateMenu(@NonNull MenuVO menuVO) {
-        Menu menu = new Menu();
+        var menu = new Menu();
         BeanUtils.copyProperties(menuVO, menu);
 
         baseMapper.updateById(menu);
@@ -126,7 +127,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public Menu getMenuById(@NonNull String menuId) {
         Assert.hasText(menuId, "Menu Id must not be empty!");
 
-        Menu menu = baseMapper.selectById(menuId);
+        var menu = baseMapper.selectById(menuId);
         if (null == menu) {
             throw new EntityNotFoundException("Menu Id：" + menuId + "， 此菜单不存在。");
         }
@@ -136,17 +137,22 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public boolean deleteById(@NonNull String menuId) {
-        Assert.hasText(menuId, "Menu Id must not be empty!");
+        if (StringUtils.isNotEmpty(menuId)) {
+            LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
+            queryWrapper.eq(Menu::getId, menuId).or().eq(Menu::getPid, menuId);
 
-        LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Menu::getId, menuId).or().eq(Menu::getPid, menuId);
+            List<Menu> menus = baseMapper.selectList(queryWrapper);
 
-        List<Menu> menus = baseMapper.selectList(queryWrapper);
-
-        baseMapper.delete(queryWrapper);
-
-        menus.forEach(v -> roleMenuService.deleteRoleMenuByMenuId(v.getId()));
-
+            if (!CollectionUtils.isEmpty(menus)) {
+                menus.forEach(v -> {
+                    // 删除菜单
+                    baseMapper.deleteById(v.getId());
+                    // 删除角色菜单关联
+                    roleMenuService.deleteRoleMenuByMenuId(v.getId());
+                    deleteById(v.getId());
+                });
+            }
+        }
         return true;
     }
 
