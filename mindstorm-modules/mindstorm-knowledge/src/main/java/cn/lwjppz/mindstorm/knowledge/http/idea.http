@@ -1,0 +1,17 @@
+### 获取知识点树
+GET {{ideaBaseUrl}}/tree
+Accept: application/json
+Cache-Control: no-cache
+
+### 新增知识点
+POST {{ideaBaseUrl}}/create
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "pid": "1401371653541519361",
+  "name": "文言文子知识点的子知识点",
+  "description": "测试子知识点的子知识点",
+  "sort": 1
+}

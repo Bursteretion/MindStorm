@@ -50,7 +50,10 @@ public class SubjectIdeaServiceImpl extends ServiceImpl<SubjectIdeaMapper, Subje
 
         // 根据知识点Id集合获取对应的知识点列表
         var ideas = new HashSet<Idea>();
-        ideaIds.forEach(v -> ideas.add(ideaService.getIdea(v)));
+        ideaIds.forEach(v -> {
+            ideas.add(ideaService.getIdea(v));
+            ideas.addAll(ideaService.getIdeaByPid(v));
+        });
         var ideasList = new ArrayList<>(ideas);
 
         return ideaService.getTreeIdeas(ideasList);
@@ -60,9 +63,9 @@ public class SubjectIdeaServiceImpl extends ServiceImpl<SubjectIdeaMapper, Subje
     public boolean insertSubjectIdea(SubjectIdeaVO subjectIdeaVO) {
         var ideaIds = subjectIdeaVO.getIdeaIds();
         if (!CollectionUtils.isEmpty(ideaIds) && !ObjectUtils.isEmpty(ideaIds)) {
+            // 新增学科知识点关联之前先将之前的关联删除
+            deleteSubjectIdeaBySubjectId(subjectIdeaVO.getSubjectId());
             ideaIds.forEach(v -> {
-                // 新增学科知识点关联之前先将之前的关联删除
-                deleteSubjectIdeaBySubjectId(subjectIdeaVO.getSubjectId());
                 // 新增关联
                 var subjectIdea = new SubjectIdea();
                 subjectIdea.setIdeaId(v);

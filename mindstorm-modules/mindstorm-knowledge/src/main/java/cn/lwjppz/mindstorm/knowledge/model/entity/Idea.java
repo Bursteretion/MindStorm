@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("msk_knowledge")
+@TableName("msk_idea")
 @ApiModel(value = "Knowledge对象", description = "知识点信息表")
 public class Idea implements Serializable {
 

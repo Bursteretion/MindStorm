@@ -1,0 +1,15 @@
+### 通过学科Id获取该学科的知识点树
+GET {{subjectIdeaBaseUrl}}/treeSubjectIdea/1400819775363739650
+Accept: application/json
+Cache-Control: no-cache
+
+### 新增学科知识点关联信息
+POST {{subjectIdeaBaseUrl}}/create
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "subjectId": "1400819775363739650",
+  "ideaIds": ["1401370854522368001" ,"1401371653541519361", "1401373337680363522", "1401374927590117378"]
+}

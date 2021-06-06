@@ -57,6 +57,16 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
     }
 
     @Override
+    public List<Idea> getIdeaByPid(String pid) {
+        if (StringUtils.isNotEmpty(pid)) {
+            LambdaQueryWrapper<Idea> queryWrapper = Wrappers.lambdaQuery();
+            queryWrapper.eq(Idea::getPid, pid);
+            return baseMapper.selectList(queryWrapper);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
     public Idea insertIdea(IdeaVO ideaVO) {
         var idea = new Idea();
         BeanUtils.copyProperties(ideaVO, idea);

@@ -41,6 +41,14 @@ public interface IdeaService extends IService<Idea> {
     Idea getIdea(String ideaId);
 
     /**
+     * 根据Pid获取知识点
+     *
+     * @param pid 知识点上级知识点Id
+     * @return 知识点集合
+     */
+    List<Idea> getIdeaByPid(String pid);
+
+    /**
      * 新增知识点
      *
      * @param ideaVO 知识点信息

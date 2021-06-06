@@ -32,9 +32,9 @@ public class SubjectIdeaController {
         this.subjectIdeaService = subjectIdeaService;
     }
 
-    @GetMapping("/treeSubjectIdea")
+    @GetMapping("/treeSubjectIdea/{subjectId}")
     @ApiOperation("通过学科Id获取该学科的知识点树")
-    public CommonResult treeSubjectIdea(@ApiParam("学科Id") @RequestParam("subjectId") String subjectId) {
+    public CommonResult treeSubjectIdea(@ApiParam("学科Id") @PathVariable("subjectId") String subjectId) {
         List<IdeaDTO> treeIdeas = subjectIdeaService.getTreeIdeas(subjectId);
         return CommonResult.ok().data("treeIdeas", treeIdeas);
     }
