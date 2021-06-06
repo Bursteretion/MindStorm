@@ -18,11 +18,19 @@ import java.util.List;
 public interface IdeaService extends IService<Idea> {
 
     /**
-     * 获取所有知识点
+     * 获取知识点树
      *
-     * @return 知识点列表
+     * @return 知识点树
      */
-    List<IdeaDTO> getIdeas();
+    List<IdeaDTO> getTreeIdeas();
+
+    /**
+     * 根据所给的知识点列表生成对应的知识点树
+     *
+     * @param ideas 知识点列表
+     * @return 知识点树
+     */
+    List<IdeaDTO> getTreeIdeas(List<Idea> ideas);
 
     /**
      * 根据知识点Id获取知识点信息
@@ -31,14 +39,6 @@ public interface IdeaService extends IService<Idea> {
      * @return 该Id对应的知识点
      */
     Idea getIdea(String ideaId);
-
-    /**
-     * 根据pid获取知识点信息
-     *
-     * @param ideaPid pid
-     * @return 知识点信息（包含所有pid等于该pid的知识点）
-     */
-    IdeaDTO getIdeaByPid(String ideaPid);
 
     /**
      * 新增知识点
