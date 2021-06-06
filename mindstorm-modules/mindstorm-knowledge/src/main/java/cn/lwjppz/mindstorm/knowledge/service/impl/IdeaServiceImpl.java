@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.knowledge.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
+import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.knowledge.mapper.IdeaMapper;
 import cn.lwjppz.mindstorm.knowledge.model.dto.idea.IdeaDTO;
@@ -14,6 +15,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -90,14 +92,20 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
     @Override
     public boolean deleteIdea(String ideaId) {
         if (StringUtils.isNotEmpty(ideaId)) {
-            var idea = getIdea(ideaId);
-            if (null == idea) {
-                throw new EntityNotFoundException(ResultStatus.NOT_FOUND);
-            }
             // 删除知识点
-            baseMapper.deleteById(ideaId);
-            // 删除学科知识点关联
-            subjectIdeaService.deleteSubjectIdeaByIdeaId(ideaId);
+            LambdaQueryWrapper<Idea> queryWrapper = Wrappers.lambdaQuery();
+            queryWrapper.eq(Idea::getId, ideaId).or().eq(Idea::getPid, ideaId);
+            var ideas = baseMapper.selectList(queryWrapper);
+            if (!CollectionUtils.isEmpty(ideas)) {
+               ideas.forEach(v -> {
+                   // 删除知识点
+                   baseMapper.deleteById(v.getId());
+                   // 删除学科知识点关联
+                   subjectIdeaService.deleteSubjectIdeaByIdeaId(v.getId());
+                   // 递归删除子知识点
+                   deleteIdea(v.getId());
+               });
+            }
         }
         return true;
     }
