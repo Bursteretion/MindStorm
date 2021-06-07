@@ -1,0 +1,21 @@
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: mindstorm-education
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  datasource:
+    username: root
+    password: LWJLWJ20000829
+    url: jdbc:mysql://localhost:3306/mindstorm-education?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 127.0.0.1:8848
