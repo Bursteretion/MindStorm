@@ -1,18 +1,14 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
-import cn.lwjppz.mindstorm.common.core.enums.UserType;
-import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.permission.mapper.UserRoleMapper;
 import cn.lwjppz.mindstorm.permission.model.dto.userRole.UserRoleDTO;
-import cn.lwjppz.mindstorm.permission.model.entity.User;
 import cn.lwjppz.mindstorm.permission.model.entity.UserRole;
 import cn.lwjppz.mindstorm.permission.service.UserRoleService;
 import cn.lwjppz.mindstorm.permission.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -49,13 +45,10 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         // 提取角色Id
         List<String> roles = ServiceUtils.fetchProperty(userRoles, UserRole::getRoleId);
 
-        UserRoleDTO userRoleDTO = new UserRoleDTO();
-        User user = userService.selectUserByUserId(userId);
-        // 转换用户状态
-        String userType = ValueEnum.valueToEnum(UserType.class, user.getUserType()).getName();
+        var userRoleDTO = new UserRoleDTO();
+        var user = userService.selectUserByUserId(userId);
 
         userRoleDTO.setUserId(userId);
-        userRoleDTO.setUserType(userType);
         userRoleDTO.setUsername(user.getUsername());
         userRoleDTO.setRoles(roles);
 

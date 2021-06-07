@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div v-hasPermission="['user:admin:query']">
+    <div v-hasPermission="['permission:user:query']">
       <el-form ref="searchAdminForm" :inline="true" :model="searchAdminVO">
         <el-form-item label="用户名" prop="username">
           <el-input size="small" v-model="searchAdminVO.username" placeholder="用户名"></el-input>
@@ -38,7 +38,7 @@
             size="small"
             status="primary"
             icon="el-icon-circle-plus-outline"
-            v-hasPermission="['user:admin:add']"
+            v-hasPermission="['permission:user:add']"
             @click="openAdminAddDialog">
             添加
           </vxe-button>
@@ -48,7 +48,7 @@
         ref="adminTable"
         round
         show-overflow
-        height="200"
+        max-height="100%"
         row-id="id"
         size="small"
         :loading="loading"
@@ -67,7 +67,7 @@
         <vxe-table-column field="phone" title="手机号"></vxe-table-column>
         <vxe-table-column width="15%" field="email" title="邮箱"></vxe-table-column>
         <vxe-table-column
-          v-hasPermission="['user:admin:status']"
+          v-hasPermission="['permission:user:status']"
           field="status" width="100" title="状态">
           <template #default="{ row }">
             <vxe-switch
@@ -79,39 +79,31 @@
           </template>
         </vxe-table-column>
         <vxe-table-column width="15%" field="gmtCreate" title="创建时间"></vxe-table-column>
-        <vxe-table-column width="20%"  title="操作">
+        <vxe-table-column width="20%" title="操作">
           <template #default="{ row }">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
-              v-hasPermission="['user:admin:update']"
+              v-hasPermission="['permission:user:update']"
               @click="handleAdminEdit(row.id)">修改
             </el-button>
             <el-button
               size="mini"
               type="text"
               icon="el-icon-check"
-              v-hasPermission="['user:admin:distribute']"
+              v-hasPermission="['permission:user:distribute']"
               @click="handleAdminAddRole(row.id)">分配角色
             </el-button>
-            <el-popconfirm
+            <el-button
+              v-hasPermission="['permission:user:delete']"
+              @click="handleAdminDelete(row)"
+              slot="reference"
+              size="mini"
               class="delete_btn"
-              confirm-button-text='确认'
-              cancel-button-text='取消'
-              icon="el-icon-info"
-              icon-color="red"
-              title="你确定要删除这个角色吗？"
-              v-hasPermission="['user:admin:delete']"
-              @onConfirm="handleAdminDelete(row.id)"
-            >
-              <el-button
-                slot="reference"
-                size="mini"
-                icon="el-icon-delete"
-                type="text">删除
-              </el-button>
-            </el-popconfirm>
+              icon="el-icon-delete"
+              type="text">删除
+            </el-button>
           </template>
         </vxe-table-column>
       </vxe-table>
@@ -215,9 +207,6 @@
           <el-form-item label="用户名称">
             <el-input v-model="userRoleForm.username" :disabled="true"/>
           </el-form-item>
-          <el-form-item label="用户类型">
-            <el-input v-model="userRoleForm.userType" :disabled="true"/>
-          </el-form-item>
           <el-form-item label="所有角色">
             <el-select
               v-model="userRoleForm.roles"
@@ -274,8 +263,7 @@ export default {
       searchAdminVO: {
         username: '',
         realName: '',
-        status: '',
-        userType: 1
+        status: ''
       },
       // 管理员列表
       admins: [],
@@ -323,7 +311,6 @@ export default {
       userRoleForm: {
         userId: '',
         username: '',
-        userType: '',
         roles: []
       },
       roleOptions: []
@@ -415,10 +402,9 @@ export default {
           this.$nextTick(() => {
             userRole(adminId).then((res) => {
               if (res && res.code === 20000) {
-                const {userId, username, userType, roles} = res.data.userRoleDTO
+                const {userId, username, roles} = res.data.userRoleDTO
                 this.userRoleForm.userId = userId
                 this.userRoleForm.username = username
-                this.userRoleForm.userType = userType
                 this.userRoleForm.roles = roles
               }
             })
@@ -441,7 +427,6 @@ export default {
       this.userRoleForm = {
         userId: '',
         username: '',
-        userType: '',
         roles: []
       }
       this.addUserRoleDialogVisible = false

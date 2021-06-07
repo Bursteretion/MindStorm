@@ -23,5 +23,4 @@ public class SearchUserVO {
 
     private Integer status;
 
-    private Integer userType;
 }

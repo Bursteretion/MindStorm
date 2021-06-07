@@ -23,8 +23,6 @@ public class UserRoleDTO {
 
     private String username;
 
-    private String userType;
-
     List<String> roles;
 
 }

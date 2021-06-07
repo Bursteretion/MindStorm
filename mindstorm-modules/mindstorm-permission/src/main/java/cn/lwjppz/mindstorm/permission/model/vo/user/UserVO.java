@@ -56,9 +56,6 @@ public class UserVO {
     @ApiModelProperty(value = "邮箱")
     private String email;
 
-    @ApiModelProperty("学生年级")
-    private Integer userLevel;
-
     @ApiModelProperty("用户状态")
     private Integer status;
 }

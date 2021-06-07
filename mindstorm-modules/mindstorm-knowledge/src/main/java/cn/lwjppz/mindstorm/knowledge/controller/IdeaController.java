@@ -1,6 +1,5 @@
 package cn.lwjppz.mindstorm.knowledge.controller;
 
-
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.knowledge.model.vo.idea.IdeaVO;
 import cn.lwjppz.mindstorm.knowledge.service.IdeaService;

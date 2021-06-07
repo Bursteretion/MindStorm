@@ -43,7 +43,7 @@ public class UserRoleController {
     @ApiOperation("为用户分配角色")
     @PostMapping("/distribute/{userId}")
     @Log(operateModule = "用户角色管理", logType = LogType.UPDATE)
-    @PreAuthorize(hasAnyPermission = {"user:admin:distribute", "user:student:distribute", "user:teacher:distribute"})
+    @PreAuthorize(hasPermission = "permission:user:distribute")
     public CommonResult distributeRole(@ApiParam("用户Id") @PathVariable("userId") String userId,
                                        @ApiParam("菜单") @RequestBody List<String> roles) {
         boolean b = userRoleService.insertUserRole(userId, roles);

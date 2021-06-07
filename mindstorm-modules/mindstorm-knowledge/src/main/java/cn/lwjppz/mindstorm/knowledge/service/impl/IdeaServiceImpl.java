@@ -1,8 +1,5 @@
 package cn.lwjppz.mindstorm.knowledge.service.impl;
 
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
-import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
-import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.knowledge.mapper.IdeaMapper;
 import cn.lwjppz.mindstorm.knowledge.model.dto.idea.IdeaDTO;

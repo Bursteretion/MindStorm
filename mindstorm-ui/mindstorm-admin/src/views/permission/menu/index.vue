@@ -45,7 +45,6 @@
         ref="menuTable"
         round
         show-overflow
-        height="200"
         row-id="id"
         size="small"
         :tree-config="{children: 'children'}"
@@ -326,7 +325,6 @@ export default {
     openDialogMenuAdd() {
       this.listFatherMenus()
       this.dialogMenuTitle = '添加菜单'
-      this.dialogMenuTitle = '添加'
       this.dialogMenuVisible = true
     },
     menuSearchSubmit() {
@@ -410,7 +408,6 @@ export default {
     },
     handleAddMenu(menuId) {
       this.resetMenuForm()
-      this.listFatherMenus()
       this.menuForm.pid = menuId
       this.openDialogMenuAdd()
     },

@@ -74,11 +74,6 @@ public class User implements Serializable {
     @ApiModelProperty(value = "头像地址")
     private String avatar;
 
-    @ApiModelProperty(value = "用户类型")
-    private Integer userType;
-
-    @ApiModelProperty(value = "学生年级(1-16)")
-    private Integer userLevel;
 
     @ApiModelProperty(value = "微信openId")
     private String wxOpenId;

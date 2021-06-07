@@ -38,8 +38,6 @@ public class UserDTO {
 
     private String email;
 
-    private Integer userLevel;
-
     private Integer status;
 
     private Date gmtCreate;

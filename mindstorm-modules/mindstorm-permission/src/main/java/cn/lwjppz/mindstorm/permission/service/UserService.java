@@ -2,7 +2,6 @@ package cn.lwjppz.mindstorm.permission.service;
 
 import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
-import cn.lwjppz.mindstorm.common.core.enums.UserType;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
@@ -25,22 +24,13 @@ import java.util.List;
 public interface UserService extends IService<User> {
 
     /**
-     * 通过用户类型获取用户
-     *
-     * @param userType 用户类型
-     * @return 用户集合
-     */
-    List<User> getUsersByType(@NonNull UserType userType);
-
-    /**
-     * 通过用户类型分页查询用户信息
+     * 分页查询用户信息
      *
      * @param pageIndex 某一页
      * @param pageSize  每页条数
-     * @param userType  用户类型
      * @return 分页数据
      */
-    IPage<UserDTO> pageByUsersByType(int pageIndex, int pageSize, UserType userType);
+    IPage<UserDTO> pageByUsers(int pageIndex, int pageSize);
 
     /**
      * 多条件查询用户信息
@@ -53,28 +43,12 @@ public interface UserService extends IService<User> {
     IPage<UserDTO> pageBySearchUser(int pageIndex, int pageSize, SearchUserVO searchUserVO);
 
     /**
-     * 新增一个学生
-     *
-     * @param userVO 学生信息
-     * @return 学生信息
-     */
-    User insertStudent(@NonNull UserVO userVO);
-
-    /**
-     * 新增一个教师
-     *
-     * @param userVO 教师信息
-     * @return 教师信息
-     */
-    User insertTeacher(@NonNull UserVO userVO);
-
-    /**
      * 新增一个管理员
      *
      * @param userVO 管理员信息
      * @return User 管理员信息
      */
-    User insertAdmin(@NonNull UserVO userVO);
+    User insertUser(@NonNull UserVO userVO);
 
     /**
      * 修改用户信息

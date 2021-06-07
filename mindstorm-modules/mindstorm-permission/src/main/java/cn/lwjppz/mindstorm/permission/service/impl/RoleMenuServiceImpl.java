@@ -48,9 +48,9 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
         // 提取菜单Id
         List<String> checkedKeys = ServiceUtils.fetchProperty(roleMenus, RoleMenu::getMenuId);
 
-        Role role = roleService.selectRoleById(roleId);
+        var role = roleService.selectRoleById(roleId);
 
-        RoleMenuDTO roleMenuDTO = new RoleMenuDTO();
+        var roleMenuDTO = new RoleMenuDTO();
         roleMenuDTO.setRoleId(roleId);
         roleMenuDTO.setRoleName(role.getRoleName());
         roleMenuDTO.setRemark(role.getRemark());
@@ -65,7 +65,7 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
         deleteRoleMenu(roleId);
 
         menus.forEach(v -> {
-            RoleMenu roleMenu = new RoleMenu();
+            var roleMenu = new RoleMenu();
             roleMenu.setRoleId(roleId);
             roleMenu.setMenuId(v);
             baseMapper.insert(roleMenu);

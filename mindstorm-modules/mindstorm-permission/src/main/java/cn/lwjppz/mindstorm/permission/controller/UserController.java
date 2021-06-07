@@ -1,16 +1,13 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
-import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.common.core.enums.LogType;
 import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
-import cn.lwjppz.mindstorm.common.core.enums.UserType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.log.annotation.Log;
 import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
-import cn.lwjppz.mindstorm.permission.model.entity.User;
 import cn.lwjppz.mindstorm.permission.model.vo.user.SearchUserVO;
 import cn.lwjppz.mindstorm.permission.model.vo.user.UserVO;
 import cn.lwjppz.mindstorm.permission.service.UserService;
@@ -39,26 +36,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @ApiOperation("测试方法")
-    @GetMapping("/test")
-    public CommonResult test() {
-        return CommonResult.ok();
-    }
-
-    @ApiOperation("根据用户类型获取用户信息")
-    @GetMapping("/list/{pageIndex}/{pageSize}/{userType}")
-    @PreAuthorize(hasAnyPermission = {"user:admin:list", "user:student:list", "user:teacher:list"})
+    @ApiOperation("分页获取用户信息")
+    @GetMapping("/list/{pageIndex}/{pageSize}")
+    @PreAuthorize(hasPermission = "permission:user:list")
     public CommonResult pageBy(@ApiParam("第几页") @PathVariable("pageIndex") Integer pageIndex,
-                               @ApiParam("每页条数") @PathVariable("pageSize") Integer pageSize,
-                               @ApiParam("用户类型") @PathVariable("userType") Integer userType) {
-        UserType value = ValueEnum.valueToEnum(UserType.class, userType);
-        IPage<UserDTO> page = userService.pageByUsersByType(pageIndex, pageSize, value);
+                               @ApiParam("每页条数") @PathVariable("pageSize") Integer pageSize) {
+        IPage<UserDTO> page = userService.pageByUsers(pageIndex, pageSize);
         return CommonResult.ok().data("page", page);
     }
 
     @ApiOperation("多条件查询用户信息")
     @PostMapping("/search/{pageIndex}/{pageSize}")
-    @PreAuthorize(hasAnyPermission = {"user:admin:query", "user:student:query", "user:teacher:query"})
+    @PreAuthorize(hasPermission = "permission:user:query")
     public CommonResult pageBySearch(@ApiParam("第几页") @PathVariable("pageIndex") Integer pageIndex,
                                      @ApiParam("每页条数") @PathVariable("pageSize") Integer pageSize,
                                      @ApiParam("查询表单信息") @RequestBody SearchUserVO searchUserVO) {
@@ -69,7 +58,7 @@ public class UserController {
     @ApiOperation("获取用户信息")
     @GetMapping("/info/{username}")
     public CommonResult infoByUserName(@ApiParam("用户名") @PathVariable("username") String username) {
-        LoginUser loginUserDTO = userService.selectUserByUserName(username);
+        var loginUserDTO = userService.selectUserByUserName(username);
         return CommonResult.ok().data("user", loginUserDTO);
     }
 
@@ -80,46 +69,28 @@ public class UserController {
         return CommonResult.ok().data("user", user);
     }
 
-    @ApiOperation("新增学生")
-    @PostMapping("/create/student")
-    @PreAuthorize(hasPermission = "user:student:add")
-    @Log(operateModule = "用户管理", logType = LogType.INSERT)
-    public CommonResult createStudent(@ApiParam("学生信息") @RequestBody UserVO userVO) {
-        User student = userService.insertStudent(userVO);
-        return CommonResult.ok().data("student", student);
-    }
-
-    @ApiOperation("新增教师")
-    @PostMapping("/create/teacher")
-    @PreAuthorize(hasPermission = "user:teacher:add")
-    @Log(operateModule = "用户管理", logType = LogType.INSERT)
-    public CommonResult createTeacher(@ApiParam("教师信息") @RequestBody UserVO userVO) {
-        User teacher = userService.insertTeacher(userVO);
-        return CommonResult.ok().data("teacher", teacher);
-    }
-
     @ApiOperation("新增管理员")
     @PostMapping("/create/admin")
-    @PreAuthorize(hasPermission = "user:admin:add")
+    @PreAuthorize(hasPermission = "permission:user:add")
     @Log(operateModule = "用户管理", logType = LogType.INSERT)
     public CommonResult createAdmin(@ApiParam("管理员信息") @RequestBody UserVO userVO) {
-        User admin = userService.insertAdmin(userVO);
+        var admin = userService.insertUser(userVO);
         return CommonResult.ok().data("admin", admin);
     }
 
     @ApiOperation("修改用户信息")
     @PostMapping("/update")
     @Log(operateModule = "用户管理", logType = LogType.UPDATE)
-    @PreAuthorize(hasAnyPermission = {"user:admin:update", "user:student:update", "user:teacher:update"})
+    @PreAuthorize(hasPermission = "permission:user:update")
     public CommonResult update(@ApiParam("用户信息") @RequestBody UserVO userVO) {
-        User user = userService.updateUser(userVO);
+        var user = userService.updateUser(userVO);
         return CommonResult.ok().data("user", user);
     }
 
     @ApiOperation("删除用户")
     @DeleteMapping("/delete/{userId}")
     @Log(operateModule = "用户管理", logType = LogType.DELETE)
-    @PreAuthorize(hasAnyPermission = {"user:admin:delete", "user:student:delete", "user:teacher:delete"})
+    @PreAuthorize(hasPermission = "permission:user:delete")
     public CommonResult delete(@ApiParam("用户Id") @PathVariable("userId") String userId) {
         boolean b = userService.deleteUser(userId);
         return CommonResult.ok().data("delete", b);
@@ -128,10 +99,10 @@ public class UserController {
     @ApiOperation("更改用户状态")
     @GetMapping("/change")
     @Log(operateModule = "用户管理", logType = LogType.UPDATE)
-    @PreAuthorize(hasAnyPermission = {"user:admin:status", "user:student:status", "user:teacher:status"})
+    @PreAuthorize(hasPermission = "permission:user:status")
     public CommonResult change(@ApiParam("用户Id") @RequestParam("userId") String userId,
                                @ApiParam("用户状态") @RequestParam("status") Integer status) {
-        UserStatus userStatus = ValueEnum.valueToEnum(UserStatus.class, status);
+        var userStatus = ValueEnum.valueToEnum(UserStatus.class, status);
         boolean b = userService.changeUserStatus(userId, userStatus);
         return CommonResult.ok().data("change", b);
     }

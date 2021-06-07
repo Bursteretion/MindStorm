@@ -40,7 +40,5 @@ public class UserDetailDTO {
 
     private String email;
 
-    private Integer userLevel;
-
     private Integer status;
 }
