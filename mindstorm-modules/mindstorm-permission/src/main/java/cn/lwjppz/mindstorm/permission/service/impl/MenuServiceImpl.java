@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
-import cn.lwjppz.mindstorm.common.core.enums.MenuType;
+import cn.lwjppz.mindstorm.common.core.enums.type.MenuType;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.permission.mapper.MenuMapper;

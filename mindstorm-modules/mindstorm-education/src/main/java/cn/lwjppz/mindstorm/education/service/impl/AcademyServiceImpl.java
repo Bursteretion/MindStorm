@@ -1,14 +1,18 @@
 package cn.lwjppz.mindstorm.education.service.impl;
 
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.AcademyStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
-import cn.lwjppz.mindstorm.education.model.dto.AcademyDTO;
+import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.mapper.AcademyMapper;
+import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyVO;
 import cn.lwjppz.mindstorm.education.service.AcademyService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -29,28 +33,42 @@ import java.util.stream.Collectors;
  * @since 2021-06-07
  */
 @Service
-public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> implements AcademyService {
+public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> implements AcademyService,
+        BaseInterface<Academy> {
 
     @Override
     public List<Academy> getAcademies() {
-        LambdaQueryWrapper<Academy> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.orderByAsc(Academy::getSort);
+        var queryWrapper = getCommonQueryWrapper();
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Academy> getUnDisableAcademies() {
+        var queryWrapper = getCommonQueryWrapper();
+        queryWrapper.ne(Academy::getStatus, AcademyStatus.FORBIDDEN.getValue());
         return baseMapper.selectList(queryWrapper);
     }
 
     @Override
     public IPage<AcademyDTO> pageAcademies(int pageNum, int pageSize) {
-        return queryAcademies(pageNum, pageSize, null);
+        return queryAcademies(new AcademyQueryVO(pageNum, pageSize, null, null, null, null));
     }
 
     @Override
-    public IPage<AcademyDTO> queryAcademies(int pageNum, int pageSize, String academyName) {
-        IPage<Academy> iPage = new Page<>(pageNum, pageSize);
-        LambdaQueryWrapper<Academy> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.orderByAsc(Academy::getSort);
+    public IPage<AcademyDTO> queryAcademies(AcademyQueryVO academyQueryVO) {
+        IPage<Academy> iPage = new Page<>(academyQueryVO.getPageNum(), academyQueryVO.getPageSize());
+        var queryWrapper = getCommonQueryWrapper();
 
-        if (StringUtils.isNotEmpty(academyName)) {
-            queryWrapper.like(Academy::getName, academyName);
+        if (StringUtils.isNotEmpty(academyQueryVO.getAcademyName())) {
+            queryWrapper.like(Academy::getName, academyQueryVO.getAcademyName());
+        }
+
+        if (null != academyQueryVO.getStatus()) {
+            queryWrapper.eq(Academy::getStatus, academyQueryVO.getStatus());
+        }
+
+        if (null != academyQueryVO.getStartTime() && null != academyQueryVO.getEndTime()) {
+            queryWrapper.in(Academy::getGmtCreate, academyQueryVO.getStartTime(), academyQueryVO.getEndTime());
         }
 
         iPage = baseMapper.selectPage(iPage, queryWrapper);
@@ -92,7 +110,7 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
         if (StringUtils.isNotEmpty(academyId)) {
             var academy = baseMapper.selectById(academyId);
             if (null == academy) {
-                throw new EntityNotFoundException(ResultStatus.NOT_FOUND);
+                throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
             }
             return academy;
         }
@@ -102,9 +120,9 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
     @Override
     public boolean deleteAcademy(String academyId) {
         if (StringUtils.isNotEmpty(academyId)) {
-            baseMapper.deleteById(academyId);
+            return baseMapper.deleteById(academyId) > 0;
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -127,5 +145,12 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
         return academies.stream()
                 .map(this::convertToAcademyDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public LambdaQueryWrapper<Academy> getCommonQueryWrapper() {
+        LambdaQueryWrapper<Academy> wrapper = Wrappers.lambdaQuery();
+        wrapper.orderByAsc(Academy::getSort);
+        return wrapper;
     }
 }

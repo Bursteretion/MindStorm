@@ -40,6 +40,12 @@ public class Profession implements Serializable {
     @ApiModelProperty(value = "专业名称")
     private String name;
 
+    @ApiModelProperty(value = "专业状态（1 正常，0 禁用）")
+    private Integer status;
+
+    @ApiModelProperty(value = "排序")
+    private Integer sort;
+
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic
     private Boolean isDeleted;

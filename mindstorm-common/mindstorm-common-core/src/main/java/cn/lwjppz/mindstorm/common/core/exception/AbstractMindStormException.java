@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.common.core.exception;
 
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import lombok.Getter;
 
 /**

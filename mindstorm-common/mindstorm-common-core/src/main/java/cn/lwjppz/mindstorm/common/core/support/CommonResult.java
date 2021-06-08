@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.common.core.support;
 
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

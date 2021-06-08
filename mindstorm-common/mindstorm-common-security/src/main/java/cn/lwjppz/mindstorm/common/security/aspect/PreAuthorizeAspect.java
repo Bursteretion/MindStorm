@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.common.security.aspect;
 
 import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.PreAuthorizeException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;

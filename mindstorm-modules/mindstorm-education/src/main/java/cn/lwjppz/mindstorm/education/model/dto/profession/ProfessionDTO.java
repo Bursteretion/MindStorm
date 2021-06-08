@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.education.model.dto;
+package cn.lwjppz.mindstorm.education.model.dto.profession;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,17 +11,19 @@ import java.util.Date;
  * <p></p>
  *
  * @author : lwj
- * @since : 2021-06-07
+ * @since : 2021-06-08
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class AcademyDTO {
+public class ProfessionDTO {
 
     private String id;
 
     private String name;
+
+    private Integer status;
 
     private Integer sort;
 

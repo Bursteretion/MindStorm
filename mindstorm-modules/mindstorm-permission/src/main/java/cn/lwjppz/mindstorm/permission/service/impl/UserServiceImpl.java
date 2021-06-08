@@ -1,8 +1,8 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
 import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
-import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.UserStatus;
 import cn.lwjppz.mindstorm.common.core.exception.AlreadyExistsException;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.permission.mapper.UserMapper;
@@ -125,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.hasText(userId) && !StringUtils.isEmpty(userId)) {
             var user = baseMapper.selectById(userId);
             if (null == user) {
-                throw new EntityNotFoundException(ResultStatus.NOT_FOUND);
+                throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
             }
             // 删除该用户
             baseMapper.deleteById(userId);

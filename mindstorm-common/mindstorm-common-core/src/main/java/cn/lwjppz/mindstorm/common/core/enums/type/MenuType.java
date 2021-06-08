@@ -1,35 +1,42 @@
-package cn.lwjppz.mindstorm.common.core.enums;
+package cn.lwjppz.mindstorm.common.core.enums.type;
 
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 
 /**
- * <p></p>
+ * <p>
+ * 菜单类型枚举
+ * </p>
  *
  * @author : lwj
- * @since : 2021-05-15
+ * @since : 2021-05-18
  */
-public enum UserStatus implements ValueEnum<Integer> {
+public enum MenuType implements ValueEnum<Integer> {
 
     /**
-     * 正常状态
+     * 目录
      */
-    NORMAL(1, "正常"),
+    CATALOG(0, "目录"),
 
     /**
-     * 禁止状态
+     * 菜单
      */
-    DISABLE(0, "禁止");
+    MENU(1, "菜单"),
+
+    /**
+     * 按钮
+     */
+    BUTTON(2, "按钮");
 
     private final Integer value;
     private final String name;
 
-    UserStatus(Integer value, String name) {
+    MenuType(Integer value, String name) {
         this.value = value;
         this.name = name;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     @Override

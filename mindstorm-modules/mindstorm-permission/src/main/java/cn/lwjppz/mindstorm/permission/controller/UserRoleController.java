@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.permission.controller;
 
 
-import cn.lwjppz.mindstorm.common.core.enums.LogType;
+import cn.lwjppz.mindstorm.common.core.enums.type.LogType;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.log.annotation.Log;
 import cn.lwjppz.mindstorm.common.security.annotation.PreAuthorize;

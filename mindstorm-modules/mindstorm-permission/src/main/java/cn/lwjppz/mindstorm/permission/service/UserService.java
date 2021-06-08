@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.permission.service;
 
 import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
-import cn.lwjppz.mindstorm.common.core.enums.UserStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.UserStatus;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;

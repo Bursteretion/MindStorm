@@ -40,6 +40,9 @@ public class Academy implements Serializable {
     @ApiModelProperty(value = "院系名称")
     private String name;
 
+    @ApiModelProperty(value = "院系状态（1 正常，0 禁用）")
+    private Integer status;
+
     @ApiModelProperty(value = "排序")
     private Integer sort;
 

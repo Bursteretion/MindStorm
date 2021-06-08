@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.common.core.enums;
+package cn.lwjppz.mindstorm.common.core.enums.type;
 
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 

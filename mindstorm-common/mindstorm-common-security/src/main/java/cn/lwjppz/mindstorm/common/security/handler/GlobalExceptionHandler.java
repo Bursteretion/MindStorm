@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.common.security.handler;
 
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.AbstractMindStormException;
 import cn.lwjppz.mindstorm.common.core.exception.PreAuthorizeException;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;

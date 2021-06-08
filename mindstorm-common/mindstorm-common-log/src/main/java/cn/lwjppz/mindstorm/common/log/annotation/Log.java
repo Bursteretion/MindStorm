@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.common.log.annotation;
 
-import cn.lwjppz.mindstorm.common.core.enums.LogType;
+import cn.lwjppz.mindstorm.common.core.enums.type.LogType;
 
 import java.lang.annotation.*;
 

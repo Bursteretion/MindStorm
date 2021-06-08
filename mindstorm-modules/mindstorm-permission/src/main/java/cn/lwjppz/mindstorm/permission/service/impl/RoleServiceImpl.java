@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
-import cn.lwjppz.mindstorm.common.core.enums.RoleStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.RoleStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.permission.mapper.RoleMapper;

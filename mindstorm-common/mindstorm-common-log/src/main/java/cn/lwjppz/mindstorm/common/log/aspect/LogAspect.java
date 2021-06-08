@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.common.log.aspect;
 
 import cn.lwjppz.mindstorm.api.system.model.SysLog;
-import cn.lwjppz.mindstorm.common.core.enums.LogStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.LogStatus;
 import cn.lwjppz.mindstorm.common.core.utils.IpUtils;
 import cn.lwjppz.mindstorm.common.core.utils.SecurityUtils;
 import cn.lwjppz.mindstorm.common.core.utils.ServletUtils;

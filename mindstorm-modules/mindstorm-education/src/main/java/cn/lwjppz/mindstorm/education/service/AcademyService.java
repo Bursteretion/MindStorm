@@ -1,7 +1,8 @@
 package cn.lwjppz.mindstorm.education.service;
 
-import cn.lwjppz.mindstorm.education.model.dto.AcademyDTO;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
+import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -26,6 +27,13 @@ public interface AcademyService extends IService<Academy> {
     List<Academy> getAcademies();
 
     /**
+     * 获取所有未禁用的院系信息
+     *
+     * @return 未经用院系列表
+     */
+    List<Academy> getUnDisableAcademies();
+
+    /**
      * 分页查询院系信息
      *
      * @param pageNum  页码
@@ -35,14 +43,12 @@ public interface AcademyService extends IService<Academy> {
     IPage<AcademyDTO> pageAcademies(int pageNum, int pageSize);
 
     /**
-     * 根据学院名称模糊查询学院
+     * 根据院系信息查询学院
      *
-     * @param pageNum     页码
-     * @param pageSize    每页条数
-     * @param academyName 学院名称
+     * @param academyQueryVO 院系查询信息
      * @return 分页信息
      */
-    IPage<AcademyDTO> queryAcademies(int pageNum, int pageSize, String academyName);
+    IPage<AcademyDTO> queryAcademies(AcademyQueryVO academyQueryVO);
 
     /**
      * 新增学院

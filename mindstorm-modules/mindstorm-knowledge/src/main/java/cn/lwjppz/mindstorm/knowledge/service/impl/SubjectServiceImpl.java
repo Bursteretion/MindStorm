@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.knowledge.service.impl;
 
-import cn.lwjppz.mindstorm.common.core.enums.ResultStatus;
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.knowledge.model.dto.subject.SubjectDTO;
@@ -85,9 +85,10 @@ public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> impl
     @Override
     public Subject updateSubject(SubjectVO subjectVO) {
         if (StringUtils.isNotEmpty(subjectVO.getId()) && null == getSubject(subjectVO.getId())) {
-            throw new EntityNotFoundException(ResultStatus.NOT_FOUND);
+            throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
         }
-        Subject subject = new Subject();
+
+        var subject = new Subject();
         BeanUtils.copyProperties(subjectVO, subject);
 
         baseMapper.updateById(subject);

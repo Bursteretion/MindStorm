@@ -1,4 +1,4 @@
-package cn.lwjppz.mindstorm.common.core.enums;
+package cn.lwjppz.mindstorm.common.core.enums.status;
 
 import cn.lwjppz.mindstorm.common.core.support.IResultStatus;
 import lombok.AllArgsConstructor;
@@ -49,7 +49,7 @@ public enum ResultStatus implements IResultStatus {
 
     FETCH_USERINFO_ERROR(20014, "获取用户信息失败！"),
 
-    NOT_FOUND(20015, "未找到该实体"),
+    ENTITY_NOT_FOUND(20015, "未找到该实体"),
 
     BAD_REQUEST(20016, "系统繁忙！"),
 
