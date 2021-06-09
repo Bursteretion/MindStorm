@@ -34,6 +34,14 @@ public interface ProfessionService extends IService<Profession> {
     List<Profession> getUnDisableProfessions();
 
     /**
+     * 根据院系Id获取该院系开设的所有专业
+     *
+     * @param academyId 院系Id
+     * @return 该院系的开设的所有专业
+     */
+    List<Profession> getProfessionsByAcademyId(String academyId);
+
+    /**
      * 分页查询专业信息
      *
      * @param pageNum  页码

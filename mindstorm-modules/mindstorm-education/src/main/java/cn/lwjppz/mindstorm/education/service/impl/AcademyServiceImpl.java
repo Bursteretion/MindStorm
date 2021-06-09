@@ -10,9 +10,9 @@ import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.mapper.AcademyMapper;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyVO;
+import cn.lwjppz.mindstorm.education.service.AcademyProfessionService;
 import cn.lwjppz.mindstorm.education.service.AcademyService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -35,6 +35,12 @@ import java.util.stream.Collectors;
 @Service
 public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> implements AcademyService,
         BaseInterface<Academy> {
+
+    private final AcademyProfessionService academyProfessionServicea;
+
+    public AcademyServiceImpl(AcademyProfessionService academyProfessionService) {
+        this.academyProfessionServicea = academyProfessionService;
+    }
 
     @Override
     public List<Academy> getAcademies() {
@@ -120,7 +126,9 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
     @Override
     public boolean deleteAcademy(String academyId) {
         if (StringUtils.isNotEmpty(academyId)) {
-            return baseMapper.deleteById(academyId) > 0;
+            // 删除院系专业关联信息
+            var deleted = academyProfessionServicea.deleteAcademyProfessionByAcademyId(academyId);
+            return baseMapper.deleteById(academyId) > 0 && deleted;
         }
         return false;
     }

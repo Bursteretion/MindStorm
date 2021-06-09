@@ -64,7 +64,7 @@ public class MenuController {
     @ApiOperation("多条件查询菜单信息")
     @PreAuthorize(hasPermission = "permission:menu:query")
     public CommonResult search(@ApiParam("查询菜单信息") @RequestBody SearchMenuVO searchMenuVO) {
-        List<MenuDTO> menus = menuService.searchMenus(searchMenuVO);
+        var menus = menuService.searchMenus(searchMenuVO);
         return CommonResult.ok().data("searchMenus", menus);
     }
 
@@ -73,7 +73,7 @@ public class MenuController {
     @Log(operateModule = "菜单管理", logType = LogType.INSERT)
     @PreAuthorize(hasPermission = "permission:menu:add")
     public CommonResult create(@ApiParam("菜单（按钮）信息") @RequestBody MenuVO menuVO) {
-        Menu menu = menuService.insertMenu(menuVO);
+        var menu = menuService.insertMenu(menuVO);
         return CommonResult.ok().data("menu", menu);
     }
 

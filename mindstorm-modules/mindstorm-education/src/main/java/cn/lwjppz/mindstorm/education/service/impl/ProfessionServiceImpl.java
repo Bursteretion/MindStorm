@@ -3,15 +3,18 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.common.core.enums.status.ProfessionStatus;
 import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
+import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
 import cn.lwjppz.mindstorm.education.model.dto.profession.ProfessionDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
+import cn.lwjppz.mindstorm.education.model.entity.AcademyProfession;
 import cn.lwjppz.mindstorm.education.model.entity.Profession;
 import cn.lwjppz.mindstorm.education.mapper.ProfessionMapper;
 import cn.lwjppz.mindstorm.education.model.vo.profession.ProfessionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.profession.ProfessionVO;
+import cn.lwjppz.mindstorm.education.service.AcademyProfessionService;
 import cn.lwjppz.mindstorm.education.service.ProfessionService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -36,6 +39,12 @@ import java.util.stream.Collectors;
 public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profession> implements ProfessionService,
         BaseInterface<Profession> {
 
+    private final AcademyProfessionService academyProfessionService;
+
+    public ProfessionServiceImpl(AcademyProfessionService academyProfessionService) {
+        this.academyProfessionService = academyProfessionService;
+    }
+
     @Override
     public List<Profession> getProfessions() {
         var queryWrapper = getCommonQueryWrapper();
@@ -47,6 +56,22 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         var queryWrapper = getCommonQueryWrapper();
         queryWrapper.ne(Profession::getStatus, ProfessionStatus.FORBIDDEN.getValue());
         return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Profession> getProfessionsByAcademyId(String academyId) {
+        List<Profession> professions = null;
+        if (StringUtils.isNotEmpty(academyId)) {
+            // 根据院系Id获取该院所有院系专业关联信息
+            var academyProfessions = academyProfessionService.getAcademyProfessionsByAcademyId(academyId);
+            // 提取所有专业Id
+            var professionIds = ServiceUtils.fetchProperty(academyProfessions, AcademyProfession::getProfessionId);
+            // 根据Id集合查询所有专业信息
+            professions = professionIds.stream()
+                    .map(baseMapper::selectById)
+                    .collect(Collectors.toList());
+        }
+        return professions;
     }
 
     @Override
@@ -116,7 +141,9 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
     @Override
     public boolean deleteProfession(String professionId) {
         if (StringUtils.isNotEmpty(professionId)) {
-            return baseMapper.deleteById(professionId) > 0;
+            // 删除院系专业关联信息
+            var deleted = academyProfessionService.deleteAcademyProfessionByProfessionId(professionId);
+            return baseMapper.deleteById(professionId) > 0 && deleted;
         }
         return false;
     }
@@ -130,7 +157,7 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
 
     @Override
     public ProfessionDTO convertToProfessionDTO(Profession profession) {
-        ProfessionDTO professionDTO = new ProfessionDTO();
+        var professionDTO = new ProfessionDTO();
         BeanUtils.copyProperties(profession, professionDTO);
 
         return professionDTO;

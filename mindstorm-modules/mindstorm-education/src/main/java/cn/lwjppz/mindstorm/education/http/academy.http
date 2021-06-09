@@ -1,0 +1,73 @@
+### 获取所有院系信息
+GET {{academyBaseUrl}}/list
+Accept: application/json
+Cache-Control: no-cache
+
+### 获取所有未禁用的院系信息
+GET {{academyBaseUrl}}/list-unDisable
+Accept: application/json
+Cache-Control: no-cache
+
+### 分页查询院系信息
+GET {{academyBaseUrl}}/page/1/5
+Accept: application/json
+Cache-Control: no-cache
+
+### 根据院系信息查询学院
+POST {{academyBaseUrl}}/query
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "pageNum": 1,
+  "pageSize": 5,
+  "academyName": "",
+  "status": 1,
+  "startTime": "",
+  "endTime": ""
+}
+
+### 新增学院
+POST {{academyBaseUrl}}/create
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "id": "",
+  "name": "",
+  "sort": 1
+}
+
+### 更新学院信息
+POST {{academyBaseUrl}}/update
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "id": "",
+  "name": "",
+  "sort": 1
+}
+
+### 根据学院Id删除学院信息
+GET {{academyBaseUrl}}/info/xxxxx
+Accept: application/json
+Cache-Control: no-cache
+
+### 根据学院Id删除学院信息
+DELETE {{academyBaseUrl}}/delete/xxxxx
+Accept: application/json
+Cache-Control: no-cache
+
+### 批量删除学院信息
+DELETE {{academyBaseUrl}}/batchDelete
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "academyIds": []
+}
