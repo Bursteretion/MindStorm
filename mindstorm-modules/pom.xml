@@ -19,7 +19,6 @@
 	<modules>
 		<module>mindstorm-education</module>
 		<module>mindstorm-permission</module>
-		<module>mindstorm-knowledge</module>
 		<module>mindstorm-system</module>
 	</modules>
 </project>

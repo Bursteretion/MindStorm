@@ -1,6 +1,5 @@
 package cn.lwjppz.mindstorm.education.controller;
 
-
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.education.model.vo.profession.ProfessionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.profession.ProfessionVO;

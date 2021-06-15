@@ -39,4 +39,5 @@ public class ProfessionQueryVO {
 
     @ApiModelProperty("创建的时间范围：结束时间")
     private Date endTime;
+
 }

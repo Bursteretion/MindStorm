@@ -1,2 +1,80 @@
-###
+### 获取所有专业信息
+GET {{professionBaseUrl}}/list
+Accept: application/json
+Cache-Control: no-cache
 
+### 获取所有未禁用的专业信息
+GET {{professionBaseUrl}}/list-unDisable
+Accept: application/json
+Cache-Control: no-cache
+
+### 根据院系Id获取该院系开设的所有专业
+GET {{professionBaseUrl}}/list/院系Id
+Accept: application/json
+Cache-Control: no-cache
+
+### 分页查询专业信息
+GET {{professionBaseUrl}}/page/1/5
+Accept: application/json
+Cache-Control: no-cache
+
+### 根据查询条件查询专业信息
+POST {{professionBaseUrl}}/query
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "pageNum": 1,
+  "pageSize": 5,
+  "professionName": "",
+  "status": 1,
+  "startTime": "",
+  "endTime": ""
+}
+
+### 新增专业
+POST {{professionBaseUrl}}/create
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "id": "",
+  "name": "",
+  "status": 1,
+  "sort": 1
+}
+
+### 更新专业信息
+POST {{professionBaseUrl}}/update
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "id": "",
+  "name": "",
+  "status": 1,
+  "sort": 1
+}
+
+### 根据专业Id获取专业信息
+PUT {{professionBaseUrl}}/info/专业Id
+Accept: application/json
+Cache-Control: no-cache
+
+### 根据专业Id删除该专业
+DELETE {{professionBaseUrl}}/delete/专业Id
+Accept: application/json
+Cache-Control: no-cache
+
+### 批量删除专业信息
+DELETE {{professionBaseUrl}}/batchDelete
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "professionIds": []
+}
