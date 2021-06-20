@@ -344,7 +344,10 @@ export default {
           if (this.dialogMenuTitle === '添加菜单') {
             insertMenu(this.menuForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success("菜单添加成功！")
+                this.$XModal.message({
+                  content: '菜单添加成功!',
+                  status: 'success'
+                })
                 this.listFatherMenus()
                 this.listMenus()
               }
@@ -352,7 +355,10 @@ export default {
           } else if (this.dialogMenuTitle === '修改菜单') {
             updateMenu(this.menuForm).then((res) => {
               if (res && res.code === 20000) {
-                this.$message.success("菜单信息修改成功！")
+                this.$XModal.message({
+                  content: '菜单信息修改成功!',
+                  status: 'success'
+                })
                 this.listFatherMenus()
                 this.listMenus()
               }
@@ -414,7 +420,10 @@ export default {
     handleDelete(menuId) {
       deleteBeId(menuId).then((res) => {
         if (res && res.code === 20000) {
-          this.$message.success("菜单删除成功！")
+          this.$XModal.message({
+            content: '菜单删除成功!',
+            status: 'success'
+          })
           this.listFatherMenus()
           this.listMenus()
         }

@@ -24,7 +24,7 @@ const actions = {
           const routes = res.data.routes
           const accessedRoutes = filterAsyncRoutes(routes)
           // 需要在动态路由生成之后加入404，否则会出现刷新404
-          accessedRoutes.push({path: '*', redirect: '/404', hidden: true})
+          accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)
         }
@@ -42,7 +42,7 @@ export function filterAsyncRoutes(asyncRouterMap) {
       // 路由名称，建议唯一
       name: route.alias || route.id || '',
       // meta: 页面标题, 菜单图标
-      meta: {title: route.name, icon: route.icon || undefined}
+      meta: { title: route.name, icon: route.icon || undefined }
     }
 
     if (route.component === 'Layout') {

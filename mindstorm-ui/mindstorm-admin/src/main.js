@@ -42,7 +42,6 @@ Vue.use(ElementUI)
 Vue.use(permission)
 Vue.use(VXETable)
 Vue.prototype.$XModal = VXETable.modal
-
 Vue.config.productionTip = false
 
 new Vue({

@@ -78,12 +78,12 @@ public class LoginService {
             throw new LoginException(ResultStatus.USER_PASSWORD_NO_MATCH);
         }
 
-        remoteLogFeignService.saveLoginVisit(username, LoginStatus.SUCCESS.getValue(), LoginStatus.SUCCESS.getName());
+//        remoteLogFeignService.saveLoginVisit(username, LoginStatus.SUCCESS.getValue(), LoginStatus.SUCCESS.getName());
         return user;
     }
 
     public void logout(String loginName) {
-        remoteLogFeignService.saveLoginVisit(loginName, LoginStatus.SUCCESS.getValue(), "退出成功");
+//        remoteLogFeignService.saveLoginVisit(loginName, LoginStatus.SUCCESS.getValue(), "退出成功");
     }
 
 }
