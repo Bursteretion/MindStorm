@@ -45,7 +45,6 @@
         ref="roleTable"
         round
         show-overflow
-        height="200"
         row-id="id"
         size="small"
         :loading="loading"
@@ -302,10 +301,6 @@ export default {
         })
       }).catch(() => {
         this.loadRoles()
-        this.$XModal.message({
-          status: 'info',
-          content: '已取消更改'
-        });
       });
     },
     handleEdit(role) {
