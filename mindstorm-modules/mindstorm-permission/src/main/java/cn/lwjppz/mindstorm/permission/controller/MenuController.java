@@ -94,6 +94,15 @@ public class MenuController {
         return CommonResult.ok().data("menu", menu);
     }
 
+    @PutMapping("/change/{menuId}")
+    @ApiOperation("修改菜单状态")
+    @Log(operateModule = "菜单管理", logType = LogType.UPDATE)
+//    @PreAuthorize(hasPermission = "permission:menu:change")
+    public CommonResult change(@ApiParam("菜单Id") @PathVariable("menuId") String menuId) {
+        var b = menuService.changeMenuById(menuId);
+        return CommonResult.ok().data("changed", b);
+    }
+
     @DeleteMapping("/delete/{menuId}")
     @ApiOperation("删除菜单信息")
     @Log(operateModule = "菜单管理", logType = LogType.DELETE)

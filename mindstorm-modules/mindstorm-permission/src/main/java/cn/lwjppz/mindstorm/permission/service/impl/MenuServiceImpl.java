@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
+import cn.lwjppz.mindstorm.common.core.enums.status.MenuStatus;
 import cn.lwjppz.mindstorm.common.core.enums.type.MenuType;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
@@ -66,6 +67,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
         LambdaQueryWrapper<Menu> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.ne(Menu::getType, MenuType.BUTTON.getValue());
+        queryWrapper.eq(Menu::getStatus, MenuStatus.NORMAL.getValue());
         queryWrapper.orderByAsc(Menu::getSort);
         List<Router> menus = convertToRouter(baseMapper.selectList(queryWrapper));
 
@@ -157,6 +159,21 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
+    public boolean changeMenuById(@NonNull String menuId) {
+        if (StringUtils.isNotEmpty(menuId)) {
+            Menu menu = baseMapper.selectById(menuId);
+            if (MenuStatus.NORMAL.getValue().equals(menu.getStatus())) {
+                menu.setStatus(MenuStatus.FORBIDDEN.getValue());
+            } else {
+                menu.setStatus(MenuStatus.NORMAL.getValue());
+            }
+            baseMapper.updateById(menu);
+        }
+
+        return false;
+    }
+
+    @Override
     public List<MenuDTO> searchMenus(@NonNull SearchMenuVO searchMenuVO) {
         Assert.notNull(searchMenuVO, "SearchMenuVO must not be null!");
 
@@ -167,6 +184,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
         if (null != searchMenuVO.getStatus()) {
             queryWrapper.eq(Menu::getStatus, searchMenuVO.getStatus());
+        }
+
+        if (null != searchMenuVO.getType()) {
+            queryWrapper.eq(Menu::getType, searchMenuVO.getType());
+        }
+
+        if (null != searchMenuVO.getStartTime() && null != searchMenuVO.getEndTime()) {
+            queryWrapper.between(Menu::getGmtCreate, searchMenuVO.getStartTime(), searchMenuVO.getEndTime());
         }
 
         return generateTreeMenus(queryWrapper);

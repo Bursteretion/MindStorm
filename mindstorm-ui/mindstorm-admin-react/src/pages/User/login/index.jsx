@@ -246,7 +246,7 @@ const Login = (props) => {
   );
 };
 
-export default connect(({ login, loading }) => ({
-  userLogin: login,
+export default connect(({ auth, loading }) => ({
+  userLogin: auth,
   submitting: loading.effects['auth/login']
 }))(Login);

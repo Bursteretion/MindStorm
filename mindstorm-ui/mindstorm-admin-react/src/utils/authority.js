@@ -33,7 +33,7 @@ export function getToken(str) {
 }
 
 export function setToken(token) {
-  setItem(TokenKey, token, 1000 * 60 * 60 * 24 * 7)
+  setItem(TokenKey, token, 1000 * 60 * 60 * 24)
 
   reloadAuthorized()
 }

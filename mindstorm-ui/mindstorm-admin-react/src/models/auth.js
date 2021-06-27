@@ -5,7 +5,7 @@ import { removeToken, setToken } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { message } from 'antd';
 
-const Model = {
+const AuthModel = {
   namespace: 'auth',
   state: {
     status: undefined,
@@ -58,11 +58,11 @@ const Model = {
             pathname: '/user/login',
             search: stringify({
               redirect: window.location.href,
-            }),
-          });
+            })
+          })
         }
       }
-    },
+    }
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
@@ -73,6 +73,7 @@ const Model = {
       removeToken()
       return { ...state, status: payload.status, type: payload.type };
     }
-  },
-};
-export default Model;
+  }
+}
+
+export default AuthModel

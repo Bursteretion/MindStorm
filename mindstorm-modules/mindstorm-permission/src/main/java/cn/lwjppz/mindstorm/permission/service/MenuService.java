@@ -78,6 +78,14 @@ public interface MenuService extends IService<Menu> {
     boolean deleteById(@NonNull String menuId);
 
     /**
+     * 改变某菜单状态
+     *
+     * @param menuId 菜单Id
+     * @return 是否改变成功
+     */
+    boolean changeMenuById(@NonNull String menuId);
+
+    /**
      * 多条件查询菜单
      *
      * @param searchMenuVO 查询菜单信息

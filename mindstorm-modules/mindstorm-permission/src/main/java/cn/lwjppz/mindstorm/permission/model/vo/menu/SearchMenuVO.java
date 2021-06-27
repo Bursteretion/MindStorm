@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Date;
+
 /**
  * <p></p>
  *
@@ -23,6 +25,16 @@ public class SearchMenuVO {
     @ApiModelProperty("菜单名称")
     private String name;
 
+    @ApiModelProperty("菜单类型")
+    private Integer type;
+
     @ApiModelProperty("菜单状态")
     private Integer status;
+
+    @ApiModelProperty("创建时间（起始时间）")
+    private Date startTime;
+
+    @ApiModelProperty("创建时间（结束时间）")
+    private Date endTime;
+
 }

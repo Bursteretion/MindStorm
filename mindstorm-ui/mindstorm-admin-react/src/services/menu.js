@@ -18,6 +18,13 @@ export async function listMenusByType(types) {
   })
 }
 
+export async function querySearchMenus(searchMenuVO) {
+  return request(`/api/mindstorm-permission/permission/menu/search`, {
+    method: 'POST',
+    data: { ...searchMenuVO }
+  })
+}
+
 export async function insertMenu(menuVO) {
   return request('/api/mindstorm-permission/permission/menu/create', {
     method: 'POST',
@@ -36,9 +43,15 @@ export async function getMenuById(menuId) {
   return request(`/api/mindstorm-permission/permission/menu/info/${menuId}`)
 }
 
-export async function deleteBeId(menuId) {
+export async function deleteMenuBeId(menuId) {
   return request(`/api/mindstorm-permission/permission/menu/delete/${menuId}`, {
     method: 'DELETE'
+  })
+}
+
+export async function changeMenuStatus(menuId) {
+  return request(`/api/mindstorm-permission/permission/menu/change/${menuId}`, {
+    method: 'PUT'
   })
 }
 
@@ -56,14 +69,17 @@ export const MenuStatus = [
 export const MenuType = {
   0: {
     color: 'blue',
-    text: '目录'
+    text: '目录',
+    value: 0
   },
   1: {
     color: 'red',
-    text: '菜单'
+    text: '菜单',
+    value: 1
   },
   2: {
     color: 'volcano',
-    text: '按钮'
+    text: '按钮',
+    value: 2
   }
 }
