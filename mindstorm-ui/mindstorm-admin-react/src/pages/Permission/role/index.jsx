@@ -1,18 +1,23 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout'
+import RoleTable from "./components/RoleTable";
 
-export default () => {
+const RoleList = () => {
   return (
     <div>
       <PageContainer
         header={
           {
+            ghost: true,
             title: ''
           }
         }
       >
-        角色管理
+        <RoleTable/>
       </PageContainer>
     </div>
   )
 }
+
+export default RoleList
+

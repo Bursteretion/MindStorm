@@ -76,11 +76,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         // 构造搜索角色条件
         LambdaQueryWrapper<Role> queryWrapper = Wrappers.lambdaQuery();
-        if (!StringUtils.isEmpty(searchRoleVO.getName()) && StringUtils.hasText(searchRoleVO.getName())) {
-            queryWrapper.like(Role::getRoleName, searchRoleVO.getName());
+        if (!StringUtils.isEmpty(searchRoleVO.getRoleName()) && StringUtils.hasText(searchRoleVO.getRoleName())) {
+            queryWrapper.like(Role::getRoleName, searchRoleVO.getRoleName());
         }
         if (null != searchRoleVO.getStatus()) {
             queryWrapper.eq(Role::getStatus, searchRoleVO.getStatus());
+        }
+        if (null != searchRoleVO.getStartTime() && null != searchRoleVO.getEndTime()) {
+            queryWrapper.between(Role::getGmtCreate, searchRoleVO.getStartTime(), searchRoleVO.getEndTime());
         }
 
         return getPageDTO(searchRoleVO.getPageIndex(), searchRoleVO.getPageSize(), queryWrapper);

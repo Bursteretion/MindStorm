@@ -4,6 +4,7 @@ import { Form, message, TreeSelect, Radio, Input, InputNumber } from "antd";
 import { insertMenu, listMenusByType, MenuType, updateMenu } from "@/services/menu";
 import IconSelector from "@/components/IconSelector";
 import { MenuOutlined } from "@ant-design/icons";
+import * as Icons from "@ant-design/icons"
 import '../index.less'
 
 const convertFatherMenu = (menus = []) => {
@@ -24,6 +25,7 @@ const MenuForm = props => {
   const { menuFormSetting, handleMenuFormSetting, currentMenu, handleChangeCurrentMenu, tableActionRef } = props
   const [menuForm] = Form.useForm()
   const [fatherMenus, handleChangeFatherMenus] = useState([])
+
   const [iconSelectSetting, handleChangeIconSelectSetting] = useState({
     visible: false,
     iconName: currentMenu.icon,
@@ -62,6 +64,12 @@ const MenuForm = props => {
         menu.children = menus
         handleChangeFatherMenus([menu])
       })
+
+      let icon
+      if (currentMenu.icon !== undefined && currentMenu.icon !== '') {
+        icon = React.createElement(Icons[currentMenu.icon])
+        handleChangeIconSelectSetting({ ...iconSelectSetting, icon })
+      }
     }
   }
 

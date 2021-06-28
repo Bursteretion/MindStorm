@@ -158,6 +158,7 @@ const BasicLayout = (props) => {
           </Authorized>
         </ProLayout>
         <SettingDrawer
+          disableUrlParams={ true }
           settings={settings}
           onSettingChange={(config) =>
             dispatch({
