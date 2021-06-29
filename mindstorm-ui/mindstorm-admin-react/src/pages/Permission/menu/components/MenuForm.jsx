@@ -22,11 +22,11 @@ const convertFatherMenu = (menus = []) => {
 }
 
 const MenuForm = props => {
-  const { menuFormSetting, handleMenuFormSetting, currentMenu, handleChangeCurrentMenu, tableActionRef } = props
+  const { menuFormSetting, setMenuFormSetting, currentMenu, setCurrentMenu, tableActionRef } = props
   const [menuForm] = Form.useForm()
-  const [fatherMenus, handleChangeFatherMenus] = useState([])
+  const [fatherMenus, setFatherMenus] = useState([])
 
-  const [iconSelectSetting, handleChangeIconSelectSetting] = useState({
+  const [iconSelectSetting, setIconSelectSetting] = useState({
     visible: false,
     iconName: currentMenu.icon,
     icon: <MenuOutlined/>
@@ -55,20 +55,20 @@ const MenuForm = props => {
 
   // 当对话框visible属性改变时
   const visibleChange = visible => {
-    handleMenuFormSetting({ ...menuFormSetting, visible })
+    setMenuFormSetting({ ...menuFormSetting, visible })
     if (visible) {
       listMenusByType([MenuType["0"].value, MenuType["1"].value]).then(res => {
         const menu = { value: '0', title: '主类目', children: [] }
         const menus = res.data.treeMenus
         convertFatherMenu(menus)
         menu.children = menus
-        handleChangeFatherMenus([menu])
+        setFatherMenus([menu])
       })
 
       let icon
       if (currentMenu.icon !== undefined && currentMenu.icon !== '') {
         icon = React.createElement(Icons[currentMenu.icon])
-        handleChangeIconSelectSetting({ ...iconSelectSetting, icon })
+        setIconSelectSetting({ ...iconSelectSetting, icon })
       }
     }
   }
@@ -104,8 +104,8 @@ const MenuForm = props => {
           component: currentMenu.component,
           redirect: currentMenu.redirect,
           path: currentMenu.path,
-          sort: currentMenu.sort || 0,
-          status: currentMenu.status || 1,
+          sort: currentMenu.sort === undefined ? 0 : currentMenu.sort,
+          status: currentMenu.status === undefined ? 1 : currentMenu.status
         }
       }
     >
@@ -120,7 +120,7 @@ const MenuForm = props => {
       </Form.Item>
       <Form.Item name="type" label="菜单类型" rules={ [{ required: true, message: '菜单类型必选！' }] }>
         <Radio.Group
-          onChange={ e => handleChangeCurrentMenu({ ...currentMenu, type: e.target.value }) }
+          onChange={ e => setCurrentMenu({ ...currentMenu, type: e.target.value }) }
           value={ currentMenu.type }>
           <Radio value={ 0 }>目录</Radio>
           <Radio value={ 1 }>菜单</Radio>
@@ -134,7 +134,7 @@ const MenuForm = props => {
               <Input allowClear
                      placeholder="选择图标"
                      prefix={ iconSelectSetting.icon && iconSelectSetting.icon }
-                     onClick={ () => handleChangeIconSelectSetting({ ...iconSelectSetting, visible: true }) }
+                     onClick={ () => setIconSelectSetting({ ...iconSelectSetting, visible: true }) }
               />
             </Form.Item>,
             <Form.Item key="alias" label="菜单别名" name="alias" rules={ [{ required: true, message: '菜单别名不能为空！' }] }>
@@ -181,7 +181,7 @@ const MenuForm = props => {
       <IconSelector
         menuForm={ menuForm }
         iconSelectSetting={ iconSelectSetting }
-        handleChangeIconSelectSetting={ handleChangeIconSelectSetting }/>
+        setIconSelectSetting={ setIconSelectSetting }/>
     </ModalForm>
   )
 }

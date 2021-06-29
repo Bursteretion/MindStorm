@@ -7,12 +7,12 @@ import './index.less'
 const { TabPane } = Tabs
 
 const IconSelector = props => {
-  const { menuForm, iconSelectSetting, handleChangeIconSelectSetting } = props
+  const { menuForm, iconSelectSetting, setIconSelectSetting } = props
 
   return (
     <Modal
       visible={ iconSelectSetting.visible }
-      onCancel={ () => handleChangeIconSelectSetting({ ...iconSelectSetting, visible: false }) }
+      onCancel={ () => setIconSelectSetting({ ...iconSelectSetting, visible: false }) }
       title="选择图标"
       width={ 800 }
       destroyOnClose={ true }
@@ -30,7 +30,7 @@ const IconSelector = props => {
                             onClick={
                               () => {
                                 menuForm.setFieldsValue({ icon })
-                                handleChangeIconSelectSetting({
+                                setIconSelectSetting({
                                   visible: false,
                                   iconName: icon,
                                   icon: React.createElement(Icons[icon])

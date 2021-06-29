@@ -37,4 +37,7 @@ public class RoleVO {
     @ApiModelProperty("排序")
     private Integer sort;
 
+    @ApiModelProperty("状态")
+    private Integer status;
+
 }

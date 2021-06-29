@@ -95,7 +95,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         Role role = new Role();
         BeanUtils.copyProperties(roleVO, role);
-        role.setStatus(RoleStatus.NORMAL.getValue());
+
+        if (null == roleVO.getStatus()) {
+            role.setStatus(RoleStatus.NORMAL.getValue());
+        }
 
         baseMapper.insert(role);
 

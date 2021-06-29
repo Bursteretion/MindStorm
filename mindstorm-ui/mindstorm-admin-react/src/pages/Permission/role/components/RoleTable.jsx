@@ -2,12 +2,29 @@ import React, { useRef, useState } from 'react';
 import ProTable from "@ant-design/pro-table";
 import { Button, message, Popconfirm, Space, Switch, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { changeRoleStatus, searchRolesPage, RoleStatus } from "@/services/role";
+import { changeRoleStatus, searchRolesPage, RoleStatus, deleteRole } from "@/services/role";
+import RoleForm from "@/pages/Permission/role/components/RoleForm";
 
 const RoleTable = () => {
   const actionRef = useRef()
-  const [currentRole, handleChangeRole] = useState({})
+  const [isModalVisible, setModalVisible] = useState(false)
+  const [currentRole, setChangeRole] = useState({})
   const [selectedRowsState, setSelectedRows] = useState([])
+
+  /**
+   * 查询角色列表信息
+   * @param params
+   * @returns {Promise<{total: number, data: *[], success}>}
+   */
+  const handleQueryRoles = async params => {
+    const res = await searchRolesPage({ ...params, pageIndex: params.current, pageSize: params.pageSize })
+    const { records = [] } = res.data.searchRoles
+    return {
+      data: records,
+      total: records.length,
+      success: res.success
+    }
+  }
 
   const handleChangeRoleStatus = async (checked, role) => {
     const tip = checked ? '启用' : '禁用'
@@ -24,8 +41,24 @@ const RoleTable = () => {
       return false
     }
   }
-  const handleDeleteRole = async role => {
 
+  const handleDeleteRole = async role => {
+    const hide = message.loading(`正在删除角色【${ role.roleName }】`)
+    try {
+      await deleteRole(role.id)
+      hide()
+      message.success(`删除成功！`)
+      actionRef?.current.reset()
+      return true
+    } catch (error) {
+      hide()
+      message.error(`删除失败请重试！`)
+      return false
+    }
+  }
+
+  const handleChangeModalVisible = visible => {
+    setModalVisible(visible)
   }
 
   const columns = [
@@ -85,22 +118,19 @@ const RoleTable = () => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a key="edit" onClick={
-          () => {
-            // handleFormSetting('编辑菜单')
-            // handleChangeCurrentMenu(record)
-          }
-        }>编辑</a>,
-        <a key="distribute" onClick={
-          () => {
-            // handleFormSetting('编辑菜单')
-            // handleChangeCurrentMenu(record)
-          }
+        <a key="edit" onClick={ () => {
+          setModalVisible(true)
+          setChangeRole(record)
+        } }>编辑</a>,
+        <a key="distribute" onClick={ () => {
+          // handleFormSetting('编辑菜单')
+          // handleChangeCurrentMenu(record)
+        }
         }>分配权限</a>,
         <Popconfirm
           key="delete"
           title={ `你确定要删除【${ record.roleName }】这个角色吗？` }
-          onConfirm={ () => handleDeleteRole(record.id) }
+          onConfirm={ () => handleDeleteRole(record) }
           okText="确定"
           cancelText="取消"
         >
@@ -122,31 +152,8 @@ const RoleTable = () => {
             onChange: (_, selectedRows) => setSelectedRows(selectedRows)
           }
         }
-        request={
-          params => searchRolesPage({ ...params, pageIndex: params.current, pageSize: params.pageSize }).then(res => {
-            const { records = [] } = res.data.searchRoles
-            return {
-              data: records,
-              total: records.length,
-              success: res.success
-            }
-          })
-        }
+        request={ params => handleQueryRoles(params) }
         rowKey={ record => record.id }
-        form={
-          {
-            ignoreRules: false,
-            syncToUrl: (values, type) => {
-              if (type === 'get') {
-                return {
-                  ...values,
-                  gmtCreate: [values.startTime, values.endTime]
-                }
-              }
-              return values
-            }
-          }
-        }
         dateFormatter="string"
         headerTitle="系统菜单"
         pagination={ { defaultCurrent: 1, defaultPageSize: 5 } }
@@ -180,18 +187,22 @@ const RoleTable = () => {
               key="button"
               icon={ <PlusOutlined/> }
               type="primary"
-              onClick={
-                () => {
-                  // handleFormSetting('新增菜单')
-                  // handleChangeCurrentMenu({ type: 0 })
-                }
-              }>
+              onClick={ () => {
+                handleChangeModalVisible(true)
+              } }>
               新增
             </Button>
           ]
         }
       />
+      <RoleForm
+        isModalVisible={ isModalVisible }
+        setModalVisible={ setModalVisible }
+        currentRole={ currentRole }
+        actionRef={ actionRef }
+      />
     </>
   )
 }
+
 export default RoleTable

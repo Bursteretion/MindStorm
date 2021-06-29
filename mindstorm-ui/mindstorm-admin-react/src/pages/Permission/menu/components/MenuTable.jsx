@@ -21,14 +21,14 @@ function processingMenus(menus = []) {
 const MenuTable = () => {
   const actionRef = useRef()
   const [selectedRowsState, setSelectedRows] = useState([])
-  const [currentMenu, handleChangeCurrentMenu] = useState({})
-  const [menuFormSetting, handleMenuFormSetting] = useState({
+  const [currentMenu, setCurrentMenu] = useState({})
+  const [menuFormSetting, setMenuFormSetting] = useState({
     visible: false,
     title: '添加菜单'
   })
 
   const handleFormSetting = title => {
-    handleMenuFormSetting({ ...menuFormSetting, visible: true, title })
+    setMenuFormSetting({ ...menuFormSetting, visible: true, title })
   }
 
   const columns = [
@@ -124,13 +124,13 @@ const MenuTable = () => {
         <a key="edit" onClick={
           () => {
             handleFormSetting('编辑菜单')
-            handleChangeCurrentMenu(record)
+            setCurrentMenu(record)
           }
         }>编辑</a>,
         <a key="create" onClick={
           () => {
             handleFormSetting('新增菜单')
-            handleChangeCurrentMenu({ pid: record.id, type: 0 })
+            setCurrentMenu({ pid: record.id, type: 0 })
           }
         }>新增</a>,
         <RecordDropDown tableActionRef={ actionRef } menu={ record } key="dropOperate"/>
@@ -162,20 +162,6 @@ const MenuTable = () => {
           })
         }
         rowKey={ record => record.id }
-        form={
-          {
-            ignoreRules: false,
-            syncToUrl: (values, type) => {
-              if (type === 'get') {
-                return {
-                  ...values,
-                  gmtCreate: [values.startTime, values.endTime]
-                }
-              }
-              return values
-            }
-          }
-        }
         dateFormatter="string"
         headerTitle="系统菜单"
         pagination={ false }
@@ -189,7 +175,7 @@ const MenuTable = () => {
               onClick={
                 () => {
                   handleFormSetting('新增菜单')
-                  handleChangeCurrentMenu({ type: 0 })
+                  setCurrentMenu({ type: 0 })
                 }
               }>
               新增
@@ -227,9 +213,9 @@ const MenuTable = () => {
       <MenuForm
         tableActionRef={ actionRef }
         currentMenu={ currentMenu }
-        handleChangeCurrentMenu={ handleChangeCurrentMenu }
+        setCurrentMenu={ setCurrentMenu }
         menuFormSetting={ menuFormSetting }
-        handleMenuFormSetting={ handleMenuFormSetting }/>
+        setMenuFormSetting={ setMenuFormSetting }/>
     </>
   )
 }
