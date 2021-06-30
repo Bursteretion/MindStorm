@@ -1,29 +1,42 @@
-import React from 'react';
-import { Form, message } from "antd";
-import { ModalForm, ProFormDigit, ProFormText, ProFormTextArea, ProFormRadio } from "@ant-design/pro-form";
-import { createRole, updateRole } from "@/services/role";
+import React, { useEffect, useState } from 'react';
+import { Form, message, Skeleton } from "antd";
+import { ProFormDigit, ProFormText, ProFormTextArea, ProFormRadio } from "@ant-design/pro-form";
+import { createRole, updateRole, infoRole } from "@/services/role";
+import Modal from "antd/es/modal/Modal";
 
 const RoleForm = props => {
-  const { isModalVisible, setModalVisible, currentRole, actionRef } = props
+  const { isModalVisible, setModalVisible, roleId, actionRef } = props
   const [roleForm] = Form.useForm()
+  const [initialValues, setInitialValues] = useState(undefined)
 
-  const visibleChange = visible => {
-    if (!visible) {
-      setModalVisible(false)
+  useEffect(() => {
+    async function fetchData() {
+      if (roleId !== undefined) {
+        const res = await infoRole(roleId)
+        const { role } = res.data
+        setInitialValues({
+          roleName: role.roleName,
+          status: role.status,
+          remark: role.remark,
+          sort: role.sort
+        })
+      }
     }
-  }
+    fetchData()
+  }, [])
 
   const handleSubmitForm = async roleVO => {
-    const tip = currentRole.id === undefined ? '添加' : '更新'
+    const tip = roleId === undefined ? '添加' : '更新'
     const hide = message.loading(`正在${ tip }角色【${ roleVO.roleName }】`);
     try {
-      if (currentRole.id === undefined) {
+      if (roleId === undefined) {
         await createRole(roleVO)
       } else {
-        await updateRole({ ...roleVO, id: currentRole.id })
+        await updateRole({ ...roleVO, id: roleId })
       }
       hide()
       message.success(`${ tip }成功！`)
+      setInitialValues(undefined)
       actionRef.current.reset()
       return true
     } catch (error) {
@@ -33,67 +46,74 @@ const RoleForm = props => {
     }
   }
 
+  const modalTitle = roleId === undefined ? '添加角色' : '编辑角色'
+  const modalOkText = roleId === undefined ? '添加' : '提交'
+
   return (
-    <ModalForm
-      modalProps={
-        {
-          style: { top: 40 },
-          okText: currentRole.id === '' || currentRole.id === undefined ? '添加' : '提交',
-          destroyOnClose: true,
-          maskClosable: false,
-          afterClose: () => roleForm.resetFields()
-        }
-      }
-      form={ roleForm }
-      preserve={ false }
-      layout="horizontal"
-      labelCol={ { span: 4 } }
+    <Modal
+      style={ { top: 40 } }
+      okText={ modalOkText }
+      destroyOnClose={ true }
+      maskClosable={ false }
       width={ 500 }
-      title={ currentRole.id === undefined ? '添加角色' : '编辑角色' }
+      title={ modalTitle }
       visible={ isModalVisible }
-      onVisibleChange={ visibleChange }
-      onFinish={ handleSubmitForm }
-      initialValues={
-        {
-          roleName: currentRole.roleName,
-          status: currentRole.status === undefined ? 1 : currentRole.status,
-          remark: currentRole.remark,
-          sort: currentRole.sort === undefined ? 0 : currentRole.sort,
-        }
-      }
+      onCancel={ () => setModalVisible(false) }
+      onOk={ () => {
+        roleForm
+        .validateFields()
+        .then(async values => {
+          await handleSubmitForm(values)
+          roleForm.resetFields()
+          setModalVisible(false)
+        })
+      } }
     >
-      <ProFormText
-        name="roleName"
-        label="角色名称"
-        placeholder="请输入角色名称"
-        rules={ [{ required: true, message: '角色名称不能为空！' }] }/>
-      <ProFormDigit
-        label="角色排序"
-        name="sort"
-        width="sm"
-        min={ 0 }
-      />
-      <ProFormRadio.Group
-        name="status"
-        label="角色状态"
-        options={ [
-          {
-            label: '正常',
-            value: 1,
-          },
-          {
-            label: '禁用',
-            value: 0,
-          }
-        ] }
-        rules={ [{ required: true, message: '角色状态必选！' }] }
-      />
-      <ProFormTextArea
-        name="remark"
-        label="角色备注"
-        placeholder="请输入角色备注"
-      />
-    </ModalForm>
+      {
+        initialValues === undefined && roleId !== undefined ? <Skeleton active/> :
+          (
+            <Form
+              form={ roleForm }
+              preserve={ false }
+              layout="horizontal"
+              labelCol={ { span: 4 } }
+              initialValues={ initialValues }
+            >
+              <ProFormText
+                name="roleName"
+                label="角色名称"
+                placeholder="请输入角色名称"
+                rules={ [{ required: true, message: '角色名称不能为空！' }] }/>
+              <ProFormDigit
+                label="角色排序"
+                name="sort"
+                width="sm"
+                min={ 0 }
+              />
+              <ProFormRadio.Group
+                name="status"
+                label="角色状态"
+                options={ [
+                  {
+                    label: '正常',
+                    value: 1,
+                  },
+                  {
+                    label: '禁用',
+                    value: 0,
+                  }
+                ] }
+                rules={ [{ required: true, message: '角色状态必选！' }] }
+              />
+              <ProFormTextArea
+                name="remark"
+                label="角色备注"
+                placeholder="请输入角色备注"
+              />
+            </Form>
+          )
+      }
+    </Modal>
   )
 }
 

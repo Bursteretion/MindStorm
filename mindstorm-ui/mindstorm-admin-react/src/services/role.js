@@ -25,6 +25,12 @@ export async function createRole(role) {
   })
 }
 
+export async function infoRole(roleId) {
+  return request(`/api/mindstorm-permission/permission/role/info/${ roleId }`, {
+    method: 'GET'
+  })
+}
+
 export async function deleteRole(roleId) {
   return request(`/api/mindstorm-permission/permission/role/delete/${ roleId }`, {
     method: 'DELETE'
