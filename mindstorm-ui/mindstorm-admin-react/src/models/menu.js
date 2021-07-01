@@ -1,4 +1,4 @@
-import {listMenusByType, querySearchMenus } from "@/services/menu";
+import { listMenus, listMenusByType, querySearchMenus } from "@/services/menu";
 
 const MenuModel = {
   namespace: 'menu',
@@ -7,6 +7,13 @@ const MenuModel = {
     fatherMenus: []
   },
   effects: {
+    *listMenus(_, { call, put }) {
+      const response = yield call(listMenus)
+      yield put({
+        type: 'setMenus',
+        payload: response.data
+      })
+    },
     *listMenusByTypes({ payload }, { call, put }) {
       const response = yield call(listMenusByType, payload)
       yield put({

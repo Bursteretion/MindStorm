@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 import { Redirect } from 'umi'
-import { getToken } from '@/utils/authority';
+import { getToken } from '@/utils/authority'
 
 export default (props) => {
   const isLogin = !!getToken()
   if (isLogin) {
-    return <div>{ props.children }</div>;
+    return <div>{ props.children }</div>
   }
-  return <Redirect to="/user/login" />;
+  return <Redirect to="/user/login" />
 }

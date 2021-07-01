@@ -215,7 +215,7 @@ const RoleTable = () => {
           />
       }
       {
-        !isRoleMenuFormModalVisible ? '':
+        !isRoleMenuFormModalVisible ? '' :
           <RoleMenuForm
             isModalVisible={ isRoleMenuFormModalVisible }
             setModalVisible={ setRoleMenuFormModalVisible }

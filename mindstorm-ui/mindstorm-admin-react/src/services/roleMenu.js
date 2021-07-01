@@ -6,7 +6,7 @@ export async function roleMenu(roleId) {
   })
 }
 
-export function distributeMenu(roleId, menus) {
+export async function distributeMenu(roleId, menus) {
   return request(`/api/mindstorm-permission/permission/role-menu/distribute/${roleId}`, {
     method: 'POST',
     data: menus

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Form, message, Skeleton } from "antd";
+import { Modal, Form, message, Skeleton } from "antd";
 import { ProFormDigit, ProFormText, ProFormTextArea, ProFormRadio } from "@ant-design/pro-form";
 import { createRole, updateRole, infoRole } from "@/services/role";
-import Modal from "antd/es/modal/Modal";
 
 const RoleForm = props => {
   const { isModalVisible, setModalVisible, roleId, actionRef } = props
@@ -73,6 +72,7 @@ const RoleForm = props => {
         initialValues === undefined && roleId !== undefined ? <Skeleton active/> :
           (
             <Form
+              key="form"
               form={ roleForm }
               preserve={ false }
               layout="horizontal"

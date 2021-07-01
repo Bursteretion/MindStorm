@@ -15,6 +15,7 @@ export default {
   'menu.permission.menu': '菜单管理',
   'menu.permission.role': '角色管理',
   'menu.permission.user': '用户管理',
+  'menu.shop': '购物车',
   'menu.exception.403': '403',
   'menu.exception.404': '404',
   'menu.exception.500': '500',

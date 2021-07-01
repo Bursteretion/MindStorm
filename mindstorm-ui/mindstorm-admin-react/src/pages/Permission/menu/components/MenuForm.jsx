@@ -5,21 +5,9 @@ import { insertMenu, listMenusByType, MenuType, updateMenu } from "@/services/me
 import IconSelector from "@/components/IconSelector";
 import { MenuOutlined } from "@ant-design/icons";
 import * as Icons from "@ant-design/icons"
+import convertToTreeMenus from '@/utils/treeSelect'
 import '../index.less'
 
-const convertFatherMenu = (menus = []) => {
-  if (menus.length <= 0) return
-  menus.forEach(v => {
-    const menu = v
-    menu.title = v.name
-    menu.value = v.id
-    if (menu.children.length <= 0) {
-      menu.children = undefined
-    } else {
-      convertFatherMenu(menu.children)
-    }
-  })
-}
 
 const MenuForm = props => {
   const { menuFormSetting, setMenuFormSetting, currentMenu, setCurrentMenu, tableActionRef } = props
@@ -60,7 +48,7 @@ const MenuForm = props => {
       listMenusByType([MenuType["0"].value, MenuType["1"].value]).then(res => {
         const menu = { value: '0', title: '主类目', children: [] }
         const menus = res.data.treeMenus
-        convertFatherMenu(menus)
+        convertToTreeMenus(menus)
         menu.children = menus
         setFatherMenus([menu])
       })
