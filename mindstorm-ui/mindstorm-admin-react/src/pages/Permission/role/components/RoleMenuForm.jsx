@@ -3,8 +3,6 @@ import { listMenus } from "@/services/menu";
 import convertToTreeMenus from '@/utils/treeSelect'
 import { message, Modal, Skeleton, Tree } from "antd";
 import { distributeMenu, roleMenu } from "@/services/roleMenu";
-import { createRole, updateRole } from "@/services/role";
-import { raw } from "express";
 
 const RoleMenuForm = props => {
   const { isModalVisible, setModalVisible, roleId } = props
@@ -38,21 +36,26 @@ const RoleMenuForm = props => {
     fetchData()
   }, [])
 
+  /**
+   * 树形控件相关设置
+   */
   const onExpand = expandedKeysValue => {
     setExpandedKeys(expandedKeysValue)
     setAutoExpandParent(false)
   }
-
   const onSelect = selectedKeysValue => {
     setSelectedKeys(selectedKeysValue)
   }
-
   const onCheck = checkedKeysValue => {
     setCheckedKeys(checkedKeysValue)
   }
 
+  /**
+   * 分配菜单
+   * @returns {Promise<boolean>}
+   */
   const handleDistributeMenu = async () => {
-    const hide = message.loading(`正在为角色【${currentRole.roleName}】分配菜单`);
+    const hide = message.loading(`正在为角色【${ currentRole.roleName }】分配菜单`);
     try {
       await distributeMenu(roleId, checkedKeys)
       hide()

@@ -21,15 +21,8 @@ function processingMenus(menus = []) {
 const MenuTable = () => {
   const actionRef = useRef()
   const [selectedRowsState, setSelectedRows] = useState([])
-  const [currentMenu, setCurrentMenu] = useState({})
-  const [menuFormSetting, setMenuFormSetting] = useState({
-    visible: false,
-    title: '添加菜单'
-  })
-
-  const handleFormSetting = title => {
-    setMenuFormSetting({ ...menuFormSetting, visible: true, title })
-  }
+  const [menuId, setMenuId] = useState(undefined)
+  const [isModalVisible, setModalVisible] = useState(false)
 
   const columns = [
     {
@@ -123,14 +116,14 @@ const MenuTable = () => {
       render: (_, record) => [
         <a key="edit" onClick={
           () => {
-            handleFormSetting('编辑菜单')
-            setCurrentMenu(record)
+            setMenuId(record.id)
+            setModalVisible(true)
           }
         }>编辑</a>,
         <a key="create" onClick={
           () => {
-            handleFormSetting('新增菜单')
-            setCurrentMenu({ pid: record.id, type: 0 })
+            setMenuId(undefined)
+            setModalVisible(true)
           }
         }>新增</a>,
         <RecordDropDown tableActionRef={ actionRef } menu={ record } key="dropOperate"/>
@@ -174,8 +167,8 @@ const MenuTable = () => {
               type="primary"
               onClick={
                 () => {
-                  handleFormSetting('新增菜单')
-                  setCurrentMenu({ type: 0 })
+                  setMenuId(undefined)
+                  setModalVisible(true)
                 }
               }>
               新增
@@ -210,12 +203,15 @@ const MenuTable = () => {
           </Button>
         </FooterToolbar>
       ) }
-      <MenuForm
-        tableActionRef={ actionRef }
-        currentMenu={ currentMenu }
-        setCurrentMenu={ setCurrentMenu }
-        menuFormSetting={ menuFormSetting }
-        setMenuFormSetting={ setMenuFormSetting }/>
+      {
+        !isModalVisible ? '' :
+          <MenuForm
+            menuId={ menuId }
+            isModalVisible={ isModalVisible }
+            setModalVisible={ setModalVisible }
+            tableActionRef={ actionRef }
+          />
+      }
     </>
   )
 }
