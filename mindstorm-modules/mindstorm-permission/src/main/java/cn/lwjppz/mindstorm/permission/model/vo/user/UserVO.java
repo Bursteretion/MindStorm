@@ -37,9 +37,6 @@ public class UserVO {
     @ApiModelProperty(value = "真实姓名")
     private String realName;
 
-    @ApiModelProperty(value = "学号")
-    private String sno;
-
     @ApiModelProperty(value = "年龄")
     private Integer age;
 

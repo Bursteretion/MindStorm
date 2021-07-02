@@ -19,8 +19,8 @@ const RoleTable = () => {
    * @returns {Promise<{total: number, data: *[], success}>}
    */
   const handleQueryRoles = async params => {
-    const res = await searchRolesPage({ ...params, pageIndex: params.current, pageSize: params.pageSize })
-    const { records = [] } = res.data.searchRoles
+    const res = await searchRolesPage({...params, pageIndex: params.current, pageSize: params.pageSize})
+    const {records = []} = res.data.searchRoles
     return {
       data: records,
       total: records.length,
@@ -36,16 +36,16 @@ const RoleTable = () => {
    */
   const handleChangeRoleStatus = async (checked, role) => {
     const tip = checked ? '启用' : '禁用'
-    const hide = message.loading(`正在${ tip }角色【${ role.roleName }】`)
+    const hide = message.loading(`正在${tip}角色【${role.roleName}】`)
     try {
       await changeRoleStatus(role.id, checked ? 1 : 0)
       hide()
-      message.success(`${ tip }成功！`)
+      message.success(`${tip}成功！`)
       actionRef?.current.reset()
       return true
     } catch (error) {
       hide()
-      message.error(`${ tip }失败请重试！`)
+      message.error(`${tip}失败请重试！`)
       return false
     }
   }
@@ -56,7 +56,7 @@ const RoleTable = () => {
    * @returns {Promise<boolean>}
    */
   const handleDeleteRole = async role => {
-    const hide = message.loading(`正在删除角色【${ role.roleName }】`)
+    const hide = message.loading(`正在删除角色【${role.roleName}】`)
     try {
       await deleteRole(role.id)
       hide()
@@ -92,11 +92,11 @@ const RoleTable = () => {
       valueType: 'select',
       valueEnum: RoleStatus,
       render: (_, record) => {
-        const { status } = record
+        const {status} = record
         return (
           <Switch
-            checked={ status === 1 }
-            onChange={ checked => handleChangeRoleStatus(checked, record) }
+            checked={status === 1}
+            onChange={checked => handleChangeRoleStatus(checked, record)}
             checkedChildren="启用"
             unCheckedChildren="禁用"/>
         )
@@ -127,19 +127,19 @@ const RoleTable = () => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a key="edit" onClick={ () => {
+        <a key="edit" onClick={() => {
           setRoleFormModalVisible(true)
           setRoleId(record.id)
-        } }>编辑</a>,
-        <a key="distribute" onClick={ () => {
+        }}>编辑</a>,
+        <a key="distribute" onClick={() => {
           setRoleMenuFormModalVisible(true)
           setRoleId(record.id)
         }
         }>分配权限</a>,
         <Popconfirm
           key="delete"
-          title={ `你确定要删除【${ record.roleName }】这个角色吗？` }
-          onConfirm={ () => handleDeleteRole(record) }
+          title={`你确定要删除【${record.roleName}】这个角色吗？`}
+          onConfirm={() => handleDeleteRole(record)}
           okText="确定"
           cancelText="取消"
         >
@@ -152,8 +152,8 @@ const RoleTable = () => {
   return (
     <>
       <ProTable
-        columns={ columns }
-        actionRef={ actionRef }
+        columns={columns}
+        actionRef={actionRef}
         rowSelection={
           {
             checkStrictly: false,
@@ -161,18 +161,18 @@ const RoleTable = () => {
             onChange: (_, selectedRows) => setSelectedRows(selectedRows)
           }
         }
-        request={ params => handleQueryRoles(params) }
-        rowKey={ record => record.id }
+        request={params => handleQueryRoles(params)}
+        rowKey={record => record.id}
         dateFormatter="string"
         headerTitle="系统菜单"
-        pagination={ { defaultCurrent: 1, defaultPageSize: 5 } }
-        options={ { fullScreen: true } }
+        pagination={{defaultCurrent: 1, defaultPageSize: 5}}
+        options={{fullScreen: true}}
         tableAlertRender={
           (
-            { selectedRowKeys }) => (
-            <Space size={ 24 }>
+            {selectedRowKeys}) => (
+            <Space size={24}>
               <span>
-                已选 { selectedRowKeys.length } 项
+                已选 {selectedRowKeys.length} 项
               </span>
             </Space>
           )
@@ -180,10 +180,10 @@ const RoleTable = () => {
         tableAlertOptionRender={
           () => {
             return (
-              <Space size={ 16 }>
+              <Space size={16}>
                 <a>批量删除</a>
                 <a>导出数据</a>
-                <a style={ { marginLeft: 8 } }>
+                <a style={{marginLeft: 8}}>
                   取消选择
                 </a>
               </Space>
@@ -194,12 +194,12 @@ const RoleTable = () => {
           () => [
             <Button
               key="button"
-              icon={ <PlusOutlined/> }
+              icon={<PlusOutlined/>}
               type="primary"
-              onClick={ () => {
+              onClick={() => {
                 setRoleFormModalVisible(true)
                 setRoleId(undefined)
-              } }>
+              }}>
               新增
             </Button>
           ]
@@ -208,18 +208,18 @@ const RoleTable = () => {
       {
         !isRoleFormModalVisible ? '' :
           <RoleForm
-            isModalVisible={ isRoleFormModalVisible }
-            setModalVisible={ setRoleFormModalVisible }
-            roleId={ roleId }
-            actionRef={ actionRef }
+            isModalVisible={isRoleFormModalVisible}
+            setModalVisible={setRoleFormModalVisible}
+            roleId={roleId}
+            actionRef={actionRef}
           />
       }
       {
         !isRoleMenuFormModalVisible ? '' :
           <RoleMenuForm
-            isModalVisible={ isRoleMenuFormModalVisible }
-            setModalVisible={ setRoleMenuFormModalVisible }
-            roleId={ roleId }
+            isModalVisible={isRoleMenuFormModalVisible}
+            setModalVisible={setRoleMenuFormModalVisible}
+            roleId={roleId}
           />
       }
     </>

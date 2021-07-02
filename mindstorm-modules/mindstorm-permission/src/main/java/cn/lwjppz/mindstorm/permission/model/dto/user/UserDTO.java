@@ -26,8 +26,6 @@ public class UserDTO {
 
     private String realName;
 
-    private String sno;
-
     private Integer age;
 
     private Integer sex;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout'
+import UserTable from "@/pages/Permission/user/components/UserTable";
 
 export default () => {
   return (
@@ -12,7 +13,7 @@ export default () => {
           }
         }
       >
-        用户管理
+        <UserTable/>
       </PageContainer>
     </div>
   )

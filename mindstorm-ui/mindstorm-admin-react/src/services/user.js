@@ -3,9 +3,58 @@ import request from '@/utils/request';
 export async function query() {
   return request('/api/users');
 }
+
 export async function queryCurrent() {
   return request('/api/mindstorm-auth/auth/info');
 }
+
 export async function queryNotices() {
   return request('/api/notices');
+}
+
+export async function listUsers(pageIndex, pageSize) {
+  return request(`/api/mindstorm-permission/permission/user/list/${pageIndex}/${pageSize}`)
+}
+
+export async function createUser(userVO) {
+  return request('/api/mindstorm-permission/permission/user/create/admin', {
+    method: 'POST',
+    data: userVO
+  })
+}
+
+export async function changeUserStatus(userId, status) {
+  return request('/api/mindstorm-permission/permission/user/change', {
+    method: 'GET',
+    params: {userId, status}
+  })
+}
+
+export async function getUserById(userId) {
+  return request(`/api/mindstorm-permission/permission/user/infoById/${userId}`)
+}
+
+export async function updateUser(userVO) {
+  return request('/api/mindstorm-permission/permission/user/update', {
+    method: 'POST',
+    data: userVO
+  })
+}
+
+export async function deleteUser(userId) {
+  return request(`/api/mindstorm-permission/permission/user/delete/${userId}`, {
+    method: 'DELETE'
+  })
+}
+
+export async function searchUsers(searchUserVO) {
+  return request(`/api/mindstorm-permission/permission/user/search`, {
+    method: 'post',
+    data: searchUserVO
+  })
+}
+
+export const UserStatus = {
+  1: { text: '启用', status: 1 },
+  0: { text: '禁用', status: 0 }
 }

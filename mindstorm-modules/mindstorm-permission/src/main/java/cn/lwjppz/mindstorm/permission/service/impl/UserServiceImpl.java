@@ -77,8 +77,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public IPage<UserDTO> pageBySearchUser(int pageIndex, int pageSize, SearchUserVO searchUserVO) {
-        IPage<User> iPage = new Page<>(pageIndex, pageSize);
+    public IPage<UserDTO> pageBySearchUser(SearchUserVO searchUserVO) {
+        IPage<User> iPage = null;
+        if (null != searchUserVO.getPageIndex() && null != searchUserVO.getPageSize()) {
+            iPage = new Page<>(searchUserVO.getPageIndex(), searchUserVO.getPageSize());
+        } else {
+            iPage = new Page<>(1, 5);
+        }
 
         LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
 
@@ -92,6 +97,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         if (null != searchUserVO.getStatus()) {
             queryWrapper.eq(User::getStatus, searchUserVO.getStatus());
+        }
+
+        if (null != searchUserVO.getStartTime() && null != searchUserVO.getEndTime()) {
+            queryWrapper.between(User::getGmtCreate, searchUserVO.getStartTime(), searchUserVO.getEndTime());
         }
 
         iPage = baseMapper.selectPage(iPage, queryWrapper);
@@ -109,9 +118,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         var user = new User();
         BeanUtils.copyProperties(userVO, user);
-        //  密码加密
-        setPassword(user, user.getPassword());
-
         baseMapper.updateById(user);
 
         return user;
@@ -226,6 +232,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (null == user) {
             throw new EntityNotFoundException("未找到Id为" + userId + " 的用户！");
         }
+
 
         return user;
     }

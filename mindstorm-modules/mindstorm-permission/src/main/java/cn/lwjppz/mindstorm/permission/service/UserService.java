@@ -35,18 +35,16 @@ public interface UserService extends IService<User> {
     /**
      * 多条件查询用户信息
      *
-     * @param pageIndex    第几页
-     * @param pageSize     每页条数
      * @param searchUserVO 搜索条件
      * @return 分页数据
      */
-    IPage<UserDTO> pageBySearchUser(int pageIndex, int pageSize, SearchUserVO searchUserVO);
+    IPage<UserDTO> pageBySearchUser(SearchUserVO searchUserVO);
 
     /**
-     * 新增一个管理员
+     * 新增一个用户
      *
-     * @param userVO 管理员信息
-     * @return User 管理员信息
+     * @param userVO 用户信息
+     * @return User 用户信息
      */
     User insertUser(@NonNull UserVO userVO);
 

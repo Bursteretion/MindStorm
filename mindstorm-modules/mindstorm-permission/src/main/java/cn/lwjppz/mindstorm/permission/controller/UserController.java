@@ -38,7 +38,6 @@ public class UserController {
 
     @ApiOperation("分页获取用户信息")
     @GetMapping("/list/{pageIndex}/{pageSize}")
-    @PreAuthorize(hasPermission = "permission:user:list")
     public CommonResult pageBy(@ApiParam("第几页") @PathVariable("pageIndex") Integer pageIndex,
                                @ApiParam("每页条数") @PathVariable("pageSize") Integer pageSize) {
         IPage<UserDTO> page = userService.pageByUsers(pageIndex, pageSize);
@@ -46,12 +45,10 @@ public class UserController {
     }
 
     @ApiOperation("多条件查询用户信息")
-    @PostMapping("/search/{pageIndex}/{pageSize}")
-    @PreAuthorize(hasPermission = "permission:user:query")
-    public CommonResult pageBySearch(@ApiParam("第几页") @PathVariable("pageIndex") Integer pageIndex,
-                                     @ApiParam("每页条数") @PathVariable("pageSize") Integer pageSize,
-                                     @ApiParam("查询表单信息") @RequestBody SearchUserVO searchUserVO) {
-        IPage<UserDTO> page = userService.pageBySearchUser(pageIndex, pageSize, searchUserVO);
+    @PostMapping("/search")
+    public CommonResult pageBySearch(
+            @ApiParam("查询表单信息") @RequestBody SearchUserVO searchUserVO) {
+        IPage<UserDTO> page = userService.pageBySearchUser(searchUserVO);
         return CommonResult.ok().data("page", page);
     }
 
@@ -69,19 +66,15 @@ public class UserController {
         return CommonResult.ok().data("user", user);
     }
 
-    @ApiOperation("新增管理员")
+    @ApiOperation("新增用户")
     @PostMapping("/create/admin")
-    @PreAuthorize(hasPermission = "permission:user:add")
-    @Log(operateModule = "用户管理", logType = LogType.INSERT)
-    public CommonResult createAdmin(@ApiParam("管理员信息") @RequestBody UserVO userVO) {
-        var admin = userService.insertUser(userVO);
-        return CommonResult.ok().data("admin", admin);
+    public CommonResult createAdmin(@ApiParam("用户信息") @RequestBody UserVO userVO) {
+        var user = userService.insertUser(userVO);
+        return CommonResult.ok().data("user", user);
     }
 
     @ApiOperation("修改用户信息")
     @PostMapping("/update")
-    @Log(operateModule = "用户管理", logType = LogType.UPDATE)
-    @PreAuthorize(hasPermission = "permission:user:update")
     public CommonResult update(@ApiParam("用户信息") @RequestBody UserVO userVO) {
         var user = userService.updateUser(userVO);
         return CommonResult.ok().data("user", user);
@@ -89,8 +82,6 @@ public class UserController {
 
     @ApiOperation("删除用户")
     @DeleteMapping("/delete/{userId}")
-    @Log(operateModule = "用户管理", logType = LogType.DELETE)
-    @PreAuthorize(hasPermission = "permission:user:delete")
     public CommonResult delete(@ApiParam("用户Id") @PathVariable("userId") String userId) {
         boolean b = userService.deleteUser(userId);
         return CommonResult.ok().data("delete", b);
@@ -98,8 +89,6 @@ public class UserController {
 
     @ApiOperation("更改用户状态")
     @GetMapping("/change")
-    @Log(operateModule = "用户管理", logType = LogType.UPDATE)
-    @PreAuthorize(hasPermission = "permission:user:status")
     public CommonResult change(@ApiParam("用户Id") @RequestParam("userId") String userId,
                                @ApiParam("用户状态") @RequestParam("status") Integer status) {
         var userStatus = ValueEnum.valueToEnum(UserStatus.class, status);

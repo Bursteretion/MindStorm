@@ -70,7 +70,7 @@
           size="mini"
           type="warning">删除
         </el-button>
-        <el-button size="mini" type="danger" style="margin-left: 20px">结算</el-button>
+        <el-button @click="handleRes" size="mini" type="danger" style="margin-left: 20px">下单</el-button>
       </el-card>
     </div>
   </div>
@@ -81,8 +81,12 @@
 import {
   listCar,
   deleteCar,
+  deleteShopCar,
   batchDeleteCar,
-  updateCount
+  updateCount,
+  insertOrder,
+  insertOrderItem,
+  orderDetail
 } from "@/api/shop";
 
 export default {
@@ -119,7 +123,7 @@ export default {
         this.totalPrice = 0
       }
 
-      updateCount(row.shopCarId, row.count).then(res => {
+      updateCount(row.shopCarId, row.productPrice, row.productCount).then(res => {
         console.log(res)
       })
     },
@@ -161,6 +165,40 @@ export default {
             type: 'success',
             message: '删除成功!'
           })
+        }
+      })
+    },
+    handleRes() {
+      console.log(this.multipleSelection, this.totalPrice)
+      insertOrder({ totalPrice: this.totalPrice }).then(res => {
+        if (res.code === 20000) {
+          console.log(res.data)
+          const { order } = res.data
+          this.multipleSelection.forEach(item => {
+            const orderItem = {
+              orderId: order.id,
+              productId: item.productId,
+              count: item.productCount
+            }
+            console.log(orderItem)
+            insertOrderItem(orderItem).then(res => {
+              console.log(res)
+            })
+
+            deleteCar(item.userShopCarId).then(res => {
+              if (res.code === 20000) {
+                deleteShopCar(item.shopCarId).then(r => {
+                  console.log(r)
+                })
+              }
+            })
+          })
+          this.$message({
+            type: 'success',
+            message: '生成订单成功!'
+          })
+
+          this.loadShopCars()
         }
       })
     }
