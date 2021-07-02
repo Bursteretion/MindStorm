@@ -2,8 +2,8 @@ import React, { useRef, useState } from 'react';
 import { Button, message, Popconfirm, Space, Switch, Table, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import ProTable from "@ant-design/pro-table";
-import { changeUserStatus, searchUsers, UserStatus } from "@/services/user";
-import UserForm from "@/pages/Permission/user/components/UserForm";
+import { changeUserStatus, deleteUser, searchUsers, UserStatus } from "@/services/user";
+import UserForm from "./UserForm";
 
 const UserTable = () => {
   const actionRef = useRef()
@@ -21,8 +21,19 @@ const UserTable = () => {
     }
   }
 
-  const handleDeleteUser = userVO => {
-
+  const handleDeleteUser = async userVO => {
+    const hide = message.loading(`正在删除用户【${ userVO.username }】`)
+    try {
+      await deleteUser(userVO.id)
+      hide()
+      message.success(`删除成功！`)
+      actionRef?.current.reset()
+      return true
+    } catch (error) {
+      hide()
+      message.error(`删除失败请重试！`)
+      return false
+    }
   }
 
   /**
