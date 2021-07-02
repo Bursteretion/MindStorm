@@ -21,6 +21,9 @@ const UserTable = () => {
     }
   }
 
+  /**
+   * 删除用户
+   */
   const handleDeleteUser = async userVO => {
     const hide = message.loading(`正在删除用户【${ userVO.username }】`)
     try {

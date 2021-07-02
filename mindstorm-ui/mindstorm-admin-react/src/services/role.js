@@ -7,9 +7,7 @@ export async function listRoles() {
 }
 
 export async function listUnDisableRoles() {
-  return request('/api/mindstorm-permission/permission/role/list/un-disable', {
-    method: 'GET'
-  })
+  return request('/api/mindstorm-permission/permission/role/list/un-disable')
 }
 
 export async function pageByRoles(pageIndex, pageSize) {

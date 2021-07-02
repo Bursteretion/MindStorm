@@ -1,58 +1,86 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Skeleton, message } from "antd";
-import { ProFormText, ProFormRadio, ProFormDateTimePicker, ProFormDigit } from "@ant-design/pro-form";
+import { ProFormText, ProFormRadio, ProFormDateTimePicker, ProFormDigit, ProFormSelect } from "@ant-design/pro-form";
 import { createUser, getUserById, updateUser } from "@/services/user";
+import { listUnDisableRoles } from "@/services/role";
+import { distributeRole, userRole } from "@/services/userRole";
 
 const RoleForm = props => {
-  const { isModalVisible, setModalVisible, userId, actionRef } = props
-  const [userForm] = Form.useForm()
-  const [initialValues, setInitialValues] = useState(undefined)
+  const [userForm] = Form.useForm();
+  const { isModalVisible, setModalVisible, userId, actionRef } = props;
+  const [selectedRole, setSelectedRole] = useState([]);
+  const [selectOptions, setSelectOptions] = useState([]);
+  const [initialValues, setInitialValues] = useState(undefined);
 
-  useEffect(() => {
-    async function fetchData() {
-      if (userId !== undefined) {
-        const res = await getUserById(userId)
-        const { user } = res.data
-        setInitialValues({
-          username: user.username,
-          realName: user.realName,
-          birthDay: user.birthDay,
-          email: user.email,
-          phone: user.phone,
-          sex: user.sex,
-          age: user.age,
-          status: user.status
-        })
+  /**
+   * 初始化用户信息
+   */
+  const handleFetchUser = async () => {
+    if (userId !== undefined) {
+      const res = await getUserById(userId)
+      const { user } = res.data
+      setInitialValues({
+        username: user.username,
+        realName: user.realName,
+        birthDay: user.birthDay,
+        email: user.email,
+        phone: user.phone,
+        sex: user.sex,
+        age: user.age,
+        status: user.status
+      })
+    }
+  };
+  const handleFetchUnDisableRoles = async () => {
+    const res = await listUnDisableRoles();
+    if (res.code === 20000) {
+      const { roles = [] } = res.data;
+      setSelectOptions(roles);
+    }
+  };
+  const handleFetchUserRole = async () => {
+    if (userId !== undefined) {
+      const res = await userRole(userId);
+      if (res.code === 20000) {
+        const { userRoleDTO: { roles = [] } } = res.data;
+        setSelectedRole(roles);
       }
     }
+  };
 
-    fetchData()
-  }, [])
+  useEffect(() => {
+    handleFetchUser();
+    handleFetchUnDisableRoles();
+    handleFetchUserRole();
+  }, []);
 
   const handleSubmitForm = async userVO => {
-    console.log(userVO)
-    const tip = userId === undefined ? '添加' : '更新'
+    const tip = userId === undefined ? '添加' : '更新';
     const hide = message.loading(`正在${ tip }用户【${ userVO.username }】`);
     try {
       if (userId === undefined) {
-        await createUser(userVO)
+        await createUser(userVO);
       } else {
-        await updateUser({ ...userVO, id: userId })
+        await updateUser({ ...userVO, id: userId });
       }
-      hide()
-      message.success(`${ tip }成功！`)
-      setInitialValues(undefined)
-      actionRef.current.reset()
-      return true
+      const { userRoles = [] } = userVO;
+      if (userRoles.length >= 0) {
+        await distributeRole(userId, userRoles);
+      }
+      hide();
+      message.success(`${ tip }成功！`);
+      setInitialValues(undefined);
+      actionRef.current.reset();
+      return true;
     } catch (error) {
-      hide()
-      message.error(`${ tip }失败请重试！`)
-      return false
+      hide();
+      message.error(`${ tip }失败请重试！`);
+      return false;
     }
   }
 
-  const modalTitle = userId === undefined ? '添加用户' : '编辑用户'
-  const modalOkText = userId === undefined ? '添加' : '提交'
+  const modalTitle = userId === undefined ? '添加用户' : '编辑用户';
+  const modalOkText = userId === undefined ? '添加' : '提交';
 
   return (
     <Modal
@@ -114,11 +142,6 @@ const RoleForm = props => {
                 name="email"
                 label="邮箱"
                 placeholder="请输入邮箱"
-                rules={ [
-                  {
-                    pattern: '^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\\\.)+[a-z]{2,}$',
-                    message: '邮箱格式不正确'
-                  }] }
               />
               <ProFormDateTimePicker
                 name="birthDay"
@@ -158,6 +181,18 @@ const RoleForm = props => {
                   }
                 ] }
                 rules={ [{ required: true, message: '用户状态必选！' }] }
+              />
+              <ProFormSelect
+                name="userRoles"
+                fieldProps={ {
+                  mode: 'multiple',
+                  maxTagCount: 'responsive',
+                  value: selectedRole,
+                  onChange: value => setSelectedRole(value)
+                } }
+                label="用户角色"
+                options={ selectOptions }
+                placeholder="请为该用户分配角色"
               />
             </Form>
           )
