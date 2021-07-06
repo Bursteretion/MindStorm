@@ -129,6 +129,21 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
     }
 
     @Override
+    public boolean changeStatus(String academyId, Integer status) {
+        if (StringUtils.isNotEmpty(academyId)) {
+            Academy academy = baseMapper.selectById(academyId);
+            if (null == academy) {
+                throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
+            }
+            academy.setStatus(status);
+
+            return baseMapper.updateById(academy) > 0;
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean deleteAcademy(String academyId) {
         if (StringUtils.isNotEmpty(academyId)) {
             // 删除院系专业关联信息

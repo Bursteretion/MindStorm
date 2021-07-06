@@ -78,6 +78,14 @@ public class AcademyController {
         return CommonResult.ok().data("academyInfo", academyInfo);
     }
 
+    @PutMapping("/change/{academyId}/{status}")
+    @ApiOperation("更改院系状态")
+    public CommonResult changeAcademyStatus(@ApiParam("学院Id") @PathVariable("academyId") String academyId,
+                                            @ApiParam("状态") @PathVariable("status") Integer status) {
+        var success = academyService.changeStatus(academyId, status);
+        return CommonResult.ok().data("success", success);
+    }
+
     @DeleteMapping("/delete/{academyId}")
     @ApiOperation("根据学院Id删除学院信息")
     public CommonResult delete(@ApiParam("学院Id") @PathVariable("academyId") String academyId) {

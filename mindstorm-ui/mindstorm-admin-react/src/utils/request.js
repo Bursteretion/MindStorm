@@ -1,7 +1,7 @@
 /** Request 网络请求工具 更详细的 api 文档: https://github.com/umijs/umi-request */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-import { getToken } from "@/utils/authority";
+import { getToken } from '@/utils/authority';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -29,7 +29,7 @@ const errorHandler = (error) => {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     notification.error({
-      message: `请求错误 ${ status }: ${ url }`,
+      message: `请求错误 ${status}: ${url}`,
       description: errorText,
     });
   } else if (!response) {
@@ -52,9 +52,10 @@ const MyRequest = extend({
 const request = (url, options = {}) => {
   return MyRequest(url, {
     ...options,
+    prefix: '/api',
     headers: {
       ...options.headers,
-      Authorization: getToken()
+      Authorization: getToken(),
     },
   });
 };

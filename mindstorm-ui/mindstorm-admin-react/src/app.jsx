@@ -67,6 +67,26 @@ export async function getInitialState() {
   };
 }
 
+/**
+ * 请求前拦截器
+ */
+const authHeaderInterceptor = (url, options) => {
+  const authHeader = { Authorization: getToken() };
+  return {
+    url: `${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
+
+export const request = {
+  timeout: 1000,
+  prefix: '/api',
+  errorConfig: {},
+  middlewares: [],
+  requestInterceptors: [authHeaderInterceptor],
+  responseInterceptors: [],
+};
+
 export const layout = ({ initialState }) => {
   return {
     rightContentRender: () => <RightContent />,

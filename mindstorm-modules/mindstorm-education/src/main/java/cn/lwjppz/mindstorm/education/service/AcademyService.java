@@ -75,6 +75,15 @@ public interface AcademyService extends IService<Academy> {
     Academy infoAcademy(String academyId);
 
     /**
+     * 更改院系状态
+     *
+     * @param academyId 院系Id
+     * @param status    院系状态
+     * @return 是否更改成功
+     */
+    boolean changeStatus(String academyId, Integer status);
+
+    /**
      * 根据学院Id删除学院信息
      *
      * @param academyId 学院Id

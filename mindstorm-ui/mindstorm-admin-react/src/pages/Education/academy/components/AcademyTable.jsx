@@ -1,17 +1,51 @@
 import React, { useRef, useState } from 'react';
-import { Button, Popconfirm, Space, Table, Tag } from 'antd';
+import { Button, message, Popconfirm, Space, Switch, Table } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
+import { AcademyStatus, changeAcademyStatus, queryAcademies } from '@/services/academy';
 
 const AcademyTable = () => {
   const actionRef = useRef();
-  const [selectedRowsState, setSelectedRows] = useState([]);
 
-  const handleQueryAcademies = (params) => {};
+  const handleQueryAcademies = async (params) => {
+    const res = await queryAcademies({
+      ...params,
+      pageIndex: params.current,
+      pageSize: params.pageSize,
+    });
+    const { records = [] } = res.data.queryAcademyPage;
+    return {
+      data: records,
+      total: records.length,
+      success: res.success,
+    };
+  };
+
+  const handleChangeAcademyStatus = async (checked, academy) => {
+    const tip = checked ? '启用' : '禁用';
+    const hide = message.loading(`正在${tip}院系【${academy.name}】`);
+    try {
+      await changeAcademyStatus(academy.id, checked ? 1 : 0);
+      hide();
+      message.success(`${tip}成功！`);
+      actionRef?.current.reset();
+      return true;
+    } catch (error) {
+      hide();
+      message.error(`${tip}失败请重试！`);
+      return false;
+    }
+  };
 
   const handleDeleteAcademy = (academy) => {};
 
   const columns = [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      valueType: 'indexBorder',
+      width: 48,
+    },
     {
       title: '院系名称',
       dataIndex: 'name',
@@ -26,13 +60,17 @@ const AcademyTable = () => {
       title: '状态',
       dataIndex: 'status',
       valueType: 'select',
-      valueEnum: {
-        1: { text: '正常', status: 1 },
-        0: { text: '禁用', status: 0 },
-      },
+      valueEnum: AcademyStatus,
       render: (_, record) => {
         const { status } = record;
-        return <Space>{status === 1 ? '正常' : '禁用'}</Space>;
+        return (
+          <Switch
+            checked={status === 1}
+            onChange={(checked) => handleChangeAcademyStatus(checked, record)}
+            checkedChildren="启用"
+            unCheckedChildren="禁用"
+          />
+        );
       },
     },
     {
@@ -84,31 +122,12 @@ const AcademyTable = () => {
       <ProTable
         columns={columns}
         actionRef={actionRef}
-        rowSelection={{
-          checkStrictly: false,
-          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-          onChange: (_, selectedRows) => setSelectedRows(selectedRows),
-        }}
         request={(params) => handleQueryAcademies(params)}
         rowKey={(record) => record.id}
         dateFormatter="string"
         headerTitle="系统菜单"
         pagination={{ defaultCurrent: 1, defaultPageSize: 5 }}
         options={{ fullScreen: true }}
-        tableAlertRender={({ selectedRowKeys }) => (
-          <Space size={24}>
-            <span>已选 {selectedRowKeys.length} 项</span>
-          </Space>
-        )}
-        tableAlertOptionRender={() => {
-          return (
-            <Space size={16}>
-              <a>批量删除</a>
-              <a>导出数据</a>
-              <a style={{ marginLeft: 8 }}>取消选择</a>
-            </Space>
-          );
-        }}
         toolBarRender={() => [
           <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => {}}>
             新增
