@@ -1,16 +1,19 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
+import routes from './routes';
 
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
-  antd: {},
-  dva: {
-    hmr: true,
+  antd: {
+    // dark: true,
   },
-  history: {
-    type: 'browser',
+  layout: {
+    // https://umijs.org/zh-CN/plugins/plugin-layout
+    locale: true,
+    siderWidth: 208,
+    ...defaultSettings,
   },
   locale: {
     default: 'zh-CN',
@@ -18,91 +21,24 @@ export default defineConfig({
     baseNavigator: true,
   },
   dynamicImport: {
-    loading: '@/components/PageLoading/index',
+    loading: '@ant-design/pro-layout/es/PageLoading',
+  },
+  dva: {
+    hmr: true,
+  },
+  history: {
+    type: 'browser',
   },
   targets: {
     ie: 11,
   },
-  routes: [
-    {
-      path: '/',
-      component: '../layouts/BlankLayout',
-      routes: [
-        {
-          path: '/user',
-          component: '../layouts/UserLayout',
-          routes: [
-            {
-              path: '/user',
-              redirect: '/user/login'
-            },
-            {
-              path: '/user/login',
-              name: 'login',
-              component: './User/login',
-            },
-            {
-              component: '404',
-            }
-          ],
-        },
-        {
-          path: '/',
-          wrappers: ['@/wrappers/auth'],
-          component: '../layouts/BasicLayout',
-          routes: [
-            {
-              path: '/',
-              redirect: '/dashboard/analysis',
-            },
-            {
-              name: 'dashboard',
-              icon: 'dashboard',
-              path: '/dashboard/analysis',
-              component: './Dashboard/analysis'
-            },
-            {
-              path: '/permission',
-              icon: 'control',
-              name: 'permission',
-              routes: [
-                {
-                  path: '/permission',
-                  redirect: '/permission/menu'
-                },
-                {
-                  name: 'menu',
-                  path: '/permission/menu',
-                  component: './Permission/menu'
-                },
-                {
-                  name: 'role',
-                  path: '/permission/role',
-                  component: './Permission/role'
-                },
-                {
-                  name: 'user',
-                  path: '/permission/user',
-                  component: './Permission/user'
-                },
-                {
-                  component: '404'
-                }
-              ]
-            },
-            {
-              component: '404'
-            }
-          ]
-        }
-      ],
-    }
-  ],
+  routes,
   theme: {
     'primary-color': defaultSettings.primaryColor,
   },
   title: false,
   ignoreMomentLocale: true,
+  fastRefresh: {},
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',

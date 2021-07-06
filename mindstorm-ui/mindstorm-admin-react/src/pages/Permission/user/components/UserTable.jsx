@@ -6,38 +6,38 @@ import { changeUserStatus, deleteUser, searchUsers, UserStatus } from "@/service
 import UserForm from "./UserForm";
 
 const UserTable = () => {
-  const actionRef = useRef()
-  const [isModalVisible, setModalVisible] = useState(false)
-  const [userId, setUserId] = useState(undefined)
-  const [selectedRowsState, setSelectedRows] = useState([])
+  const actionRef = useRef();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [userId, setUserId] = useState(undefined);
+  const [selectedRowsState, setSelectedRows] = useState([]);
 
   const handleQueryUsers = async params => {
-    const res = await searchUsers({ ...params, pageIndex: params.current, pageSize: params.pageSize })
-    const { records = [] } = res.data.page
+    const res = await searchUsers({ ...params, pageIndex: params.current, pageSize: params.pageSize });
+    const { records = [] } = res.data.page;
     return {
       data: records,
       total: records.length,
       success: res.success
-    }
-  }
+    };
+  };
 
   /**
    * 删除用户
    */
   const handleDeleteUser = async userVO => {
-    const hide = message.loading(`正在删除用户【${ userVO.username }】`)
+    const hide = message.loading(`正在删除用户【${ userVO.username }】`);
     try {
-      await deleteUser(userVO.id)
-      hide()
-      message.success(`删除成功！`)
-      actionRef?.current.reset()
-      return true
+      await deleteUser(userVO.id);
+      hide();
+      message.success(`删除成功！`);
+      actionRef?.current.reset();
+      return true;
     } catch (error) {
-      hide()
-      message.error(`删除失败请重试！`)
-      return false
+      hide();
+      message.error(`删除失败请重试！`);
+      return false;
     }
-  }
+  };
 
   /**
    * 更改用户状态

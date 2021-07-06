@@ -1,13 +1,11 @@
-import { reloadAuthorized } from './Authorized';
-
-const TokenKey = 'mindstorm-token'
+const TokenKey = 'mindstorm-token';
 
 function setItem(key, value, expire) {
   const obj = {
     data: value,
     time: Date.now(),
-    expire
-  }
+    expire,
+  };
   localStorage.setItem(key, JSON.stringify(obj));
 }
 
@@ -25,7 +23,7 @@ function getItem(key) {
 }
 
 function removeItem(key) {
-  localStorage.removeItem(key)
+  localStorage.removeItem(key);
 }
 
 export function getToken(str) {
@@ -33,12 +31,9 @@ export function getToken(str) {
 }
 
 export function setToken(token) {
-  setItem(TokenKey, token, 1000 * 60 * 60 * 24)
-
-  reloadAuthorized()
+  setItem(TokenKey, token, 1000 * 60 * 60 * 24);
 }
 
 export function removeToken() {
-  removeItem(TokenKey)
+  removeItem(TokenKey);
 }
-

@@ -36,10 +36,10 @@ import java.util.stream.Collectors;
 public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> implements AcademyService,
         BaseInterface<Academy> {
 
-    private final AcademyProfessionService academyProfessionServicea;
+    private final AcademyProfessionService academyProfessionService;
 
     public AcademyServiceImpl(AcademyProfessionService academyProfessionService) {
-        this.academyProfessionServicea = academyProfessionService;
+        this.academyProfessionService = academyProfessionService;
     }
 
     @Override
@@ -62,7 +62,12 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
 
     @Override
     public IPage<AcademyDTO> queryAcademies(AcademyQueryVO academyQueryVO) {
-        IPage<Academy> iPage = new Page<>(academyQueryVO.getPageNum(), academyQueryVO.getPageSize());
+        IPage<Academy> iPage = null;
+        if (null != academyQueryVO.getPageIndex() && null != academyQueryVO.getPageSize()) {
+            iPage = new Page<>(academyQueryVO.getPageIndex(), academyQueryVO.getPageSize());
+        } else {
+            iPage = new Page<>(1, 5);
+        }
         var queryWrapper = getCommonQueryWrapper();
 
         if (StringUtils.isNotEmpty(academyQueryVO.getAcademyName())) {
@@ -127,7 +132,7 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
     public boolean deleteAcademy(String academyId) {
         if (StringUtils.isNotEmpty(academyId)) {
             // 删除院系专业关联信息
-            var deleted = academyProfessionServicea.deleteAcademyProfessionByAcademyId(academyId);
+            var deleted = academyProfessionService.deleteAcademyProfessionByAcademyId(academyId);
             return baseMapper.deleteById(academyId) > 0 && deleted;
         }
         return false;

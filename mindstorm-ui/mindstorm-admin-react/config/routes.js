@@ -1,73 +1,85 @@
 export default [
   {
-    path: '/',
-    component: '../layouts/BlankLayout',
+    path: '/user',
+    layout: false,
     routes: [
       {
         path: '/user',
-        component: '../layouts/UserLayout',
         routes: [
           {
             name: 'login',
             path: '/user/login',
-            component: './User/login',
-          },
-        ],
-      },
-      {
-        path: '/',
-        component: '../layouts/SecurityLayout',
-        routes: [
-          {
-            path: '/',
-            component: '../layouts/BasicLayout',
-            authority: ['admin', 'user'],
-            routes: [
-              {
-                path: '/',
-                redirect: '/welcome',
-              },
-              {
-                path: '/welcome',
-                name: 'welcome',
-                icon: 'smile',
-                component: './Welcome',
-              },
-              {
-                path: '/admin',
-                name: 'admin',
-                icon: 'crown',
-                component: './Admin',
-                authority: ['admin'],
-                routes: [
-                  {
-                    path: '/admin/sub-page',
-                    name: 'sub-page',
-                    icon: 'smile',
-                    component: './Welcome',
-                    authority: ['admin'],
-                  },
-                ],
-              },
-              {
-                name: 'list.table-list',
-                icon: 'table',
-                path: '/list',
-                component: './TableList',
-              },
-              {
-                component: './404',
-              },
-            ],
-          },
-          {
-            component: './404',
+            component: './User/Login',
           },
         ],
       },
     ],
   },
   {
-    component: './404',
+    path: '/',
+    redirect: '/dashboard/analysis',
+  },
+  {
+    name: 'dashboard',
+    path: '/dashboard',
+    routes: [
+      {
+        path: '/dashboard',
+        redirect: '/dashboard/analysis',
+      },
+      {
+        name: 'analysis',
+        path: '/dashboard/analysis',
+        component: './Dashboard/analysis',
+        access: 'hasRouter',
+      },
+    ],
+  },
+  {
+    path: '/permission',
+    name: 'permission',
+    routes: [
+      {
+        path: '/permission',
+        redirect: '/permission/menu',
+      },
+      {
+        name: 'menu',
+        path: '/permission/menu',
+        component: './Permission/menu',
+        access: 'hasRouter',
+      },
+      {
+        name: 'role',
+        path: '/permission/role',
+        component: './Permission/role',
+        access: 'hasRouter',
+      },
+      {
+        name: 'user',
+        path: '/permission/user',
+        component: './Permission/user',
+        access: 'hasRouter',
+      },
+    ],
+  },
+  {
+    path: '/education',
+    name: 'education',
+    routes: [
+      {
+        path: '/education',
+        redirect: '/education/academy',
+      },
+      {
+        name: 'academy',
+        path: '/education/academy',
+        component: './Education/academy',
+        access: 'hasRouter',
+      },
+    ],
+  },
+  {
+    component: '404',
   },
 ];

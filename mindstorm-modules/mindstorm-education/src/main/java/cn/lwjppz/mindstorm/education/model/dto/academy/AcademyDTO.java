@@ -23,6 +23,8 @@ public class AcademyDTO {
 
     private String name;
 
+    private Integer status;
+
     private Integer sort;
 
     private Date gmtCreate;

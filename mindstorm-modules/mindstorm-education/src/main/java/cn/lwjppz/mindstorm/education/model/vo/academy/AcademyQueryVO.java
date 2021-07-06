@@ -23,7 +23,7 @@ import java.util.Date;
 public class AcademyQueryVO {
 
     @ApiModelProperty("页码")
-    private Integer pageNum;
+    private Integer pageIndex;
 
     @ApiModelProperty("每页条数")
     private Integer pageSize;

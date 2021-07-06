@@ -171,6 +171,21 @@ publicPath?: ""
 basePath?: string
 writeToFileEmit?: boolean
 }
+/**
+ * open mfsu feature
+ */
+mfsu?: {
+development?: {
+output?: string
+}
+production?: {
+output?: string
+}
+mfName?: string
+exportAllMembers?: {
+
+}
+}
 mountElementId?: ""
 mpa?: {
 
@@ -246,6 +261,31 @@ mock?: {
 exclude?: string[]
 }
 ProBlockOption?: string
+themeConfig?: {
+
+}
+logo?: (string | boolean)
+mode?: any
+description?: string
+locales?: string[][]
+resolve?: {
+
+}
+menus?: {
+
+}
+navs?: (any[] | {
+
+})
+algolia?: {
+apiKey?: string
+indexName?: string
+debug?: boolean
+}
+sitemap?: {
+hostname?: string
+excludes?: string[]
+}
 antd?: {
 dark?: boolean
 compact?: boolean
@@ -284,5 +324,28 @@ block?: number
 esbuild?: {
 target?: (string | string[])
 }
+openAPI?: ({
+requestLibPath?: string
+schemaPath?: string
+mock?: boolean
+projectName?: string
+apiPrefix?: (string | (() => any))
+namespace?: string
+hook?: {
+customFunctionName?: (() => any)
+customClassName?: (() => any)
+}
+}[] | {
+requestLibPath?: string
+schemaPath?: string
+mock?: boolean
+projectName?: string
+apiPrefix?: (string | (() => any))
+namespace?: string
+hook?: {
+customFunctionName?: (() => any)
+customClassName?: (() => any)
+}
+})
 [k: string]: any
 }

@@ -1,54 +1,54 @@
 import React, { useRef, useState } from 'react';
-import { Button, Space, Table, Tag } from "antd";
+import { Button, Space, Table, Tag } from 'antd';
 import ProTable from '@ant-design/pro-table';
-import { MenuType, querySearchMenus } from "@/services/menu";
-import { PlusOutlined } from "@ant-design/icons";
-import { FooterToolbar } from "@ant-design/pro-layout";
-import MenuForm from "./MenuForm";
-import RecordDropDown from './RecordDropDown'
+import { MenuType, querySearchMenus } from '@/services/menu';
+import { PlusOutlined } from '@ant-design/icons';
+import { FooterToolbar } from '@ant-design/pro-layout';
+import MenuForm from './MenuForm';
+import RecordDropDown from './RecordDropDown';
 
 function processingMenus(menus = []) {
-  if (menus.length <= 0) return
-  menus.forEach(v => {
-    const backup = v
+  if (menus.length <= 0) return;
+  menus.forEach((v) => {
+    const backup = v;
     if (backup.children.length <= 0) {
-      backup.children = undefined
+      backup.children = undefined;
     }
-    processingMenus(backup.children)
-  })
+    processingMenus(backup.children);
+  });
 }
 
 const MenuTable = () => {
-  const actionRef = useRef()
-  const [selectedRowsState, setSelectedRows] = useState([])
-  const [menuId, setMenuId] = useState(undefined)
-  const [isModalVisible, setModalVisible] = useState(false)
+  const actionRef = useRef();
+  const [selectedRowsState, setSelectedRows] = useState([]);
+  const [menuId, setMenuId] = useState(undefined);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const columns = [
     {
       title: '菜单名称',
       dataIndex: 'name',
-      width: 200
+      width: 200,
     },
     {
       title: '图标',
       dataIndex: 'icon',
-      search: false
+      search: false,
     },
     {
       title: '排序',
       dataIndex: 'sort',
-      search: false
+      search: false,
     },
     {
       title: '权限标识',
       dataIndex: 'permissionValue',
-      search: false
+      search: false,
     },
     {
       title: '组件路径',
       dataIndex: 'component',
-      search: false
+      search: false,
     },
     {
       title: '菜单类型',
@@ -57,20 +57,20 @@ const MenuTable = () => {
       valueEnum: {
         0: { text: '目录', status: 0 },
         1: { text: '菜单', status: 1 },
-        2: { text: '按钮', status: 2 }
+        2: { text: '按钮', status: 2 },
       },
       render: (_, record) => {
-        const menuType = MenuType[record.type]
+        const menuType = MenuType[record.type];
         return (
           <Space>
             {
-              <Tag color={ menuType.color } key={ menuType.text }>
-                { menuType.text }
+              <Tag color={menuType.color} key={menuType.text}>
+                {menuType.text}
               </Tag>
             }
           </Space>
-        )
-      }
+        );
+      },
     },
     {
       title: '状态',
@@ -78,15 +78,11 @@ const MenuTable = () => {
       valueType: 'select',
       valueEnum: {
         1: { text: '正常', status: 1 },
-        0: { text: '禁用', status: 0 }
+        0: { text: '禁用', status: 0 },
       },
       render: (_, record) => {
-        const { status } = record
-        return (
-          <Space>
-            { status === 1 ? '正常' : '禁用' }
-          </Space>
-        )
+        const { status } = record;
+        return <Space>{status === 1 ? '正常' : '禁用'}</Space>;
       },
     },
     {
@@ -94,7 +90,7 @@ const MenuTable = () => {
       dataIndex: 'gmtCreate',
       valueType: 'dateTime',
       hideInForm: true,
-      hideInSearch: true
+      hideInSearch: true,
     },
     {
       title: '创建时间',
@@ -105,115 +101,113 @@ const MenuTable = () => {
         transform: (value) => {
           return {
             startTime: value[0],
-            endTime: value[1]
-          }
-        }
-      }
+            endTime: value[1],
+          };
+        },
+      },
     },
     {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a key="edit" onClick={
-          () => {
-            setMenuId(record.id)
-            setModalVisible(true)
-          }
-        }>编辑</a>,
-        <a key="create" onClick={
-          () => {
-            setMenuId(undefined)
-            setModalVisible(true)
-          }
-        }>新增</a>,
-        <RecordDropDown tableActionRef={ actionRef } menu={ record } key="dropOperate"/>
-      ]
-    }
-  ]
+        <a
+          key="edit"
+          onClick={() => {
+            setMenuId(record.id);
+            setModalVisible(true);
+          }}
+        >
+          编辑
+        </a>,
+        <a
+          key="create"
+          onClick={() => {
+            setMenuId(undefined);
+            setModalVisible(true);
+          }}
+        >
+          新增
+        </a>,
+        <RecordDropDown tableActionRef={actionRef} menu={record} key="dropOperate" />,
+      ],
+    },
+  ];
 
   return (
     <>
       <ProTable
-        columns={ columns }
-        actionRef={ actionRef }
-        rowSelection={
-          {
-            checkStrictly: false,
-            selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
-            onChange: (_, selectedRows) => setSelectedRows(selectedRows)
-          }
-        }
-        request={
-          params => querySearchMenus(params).then(res => {
-            const { searchMenus = [] } = res.data
-            processingMenus(searchMenus)
+        columns={columns}
+        actionRef={actionRef}
+        rowSelection={{
+          checkStrictly: false,
+          selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+          onChange: (_, selectedRows) => setSelectedRows(selectedRows),
+        }}
+        request={(params) =>
+          querySearchMenus(params).then((res) => {
+            const { searchMenus = [] } = res.data;
+            processingMenus(searchMenus);
             return {
               data: searchMenus,
               total: searchMenus.length,
-              success: res.success
-            }
+              success: res.success,
+            };
           })
         }
-        rowKey={ record => record.id }
+        rowKey={(record) => record.id}
         dateFormatter="string"
         headerTitle="系统菜单"
-        pagination={ false }
-        options={ { fullScreen: true } }
-        toolBarRender={
-          () => [
-            <Button
-              key="button"
-              icon={ <PlusOutlined/> }
-              type="primary"
-              onClick={
-                () => {
-                  setMenuId(undefined)
-                  setModalVisible(true)
-                }
-              }>
-              新增
-            </Button>
-          ]
-        }
+        pagination={false}
+        options={{ fullScreen: true }}
+        toolBarRender={() => [
+          <Button
+            key="button"
+            icon={<PlusOutlined />}
+            type="primary"
+            onClick={() => {
+              setMenuId(undefined);
+              setModalVisible(true);
+            }}
+          >
+            新增
+          </Button>,
+        ]}
       />
-      { selectedRowsState?.length > 0 && (
+      {selectedRowsState?.length > 0 && (
         <FooterToolbar
           extra={
             <div>
-              已选择{ ' ' }
-              <a style={ { fontWeight: 600 } }>
-                { selectedRowsState.length }
-              </a>{ ' ' }
-              项，
+              已选择 <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a> 项，
               <span>
-                  目录总计：{ selectedRowsState.filter(item => item.type === 0).length } 个，
-                  菜单总计：{ selectedRowsState.filter(item => item.type === 1).length } 个，
-                  按钮总计：{ selectedRowsState.filter(item => item.type === 2).length } 个
-                </span>
+                目录总计：{selectedRowsState.filter((item) => item.type === 0).length} 个，
+                菜单总计：{selectedRowsState.filter((item) => item.type === 1).length} 个，
+                按钮总计：{selectedRowsState.filter((item) => item.type === 2).length} 个
+              </span>
             </div>
           }
         >
           <Button
             danger
-            onClick={ async () => {
-              setSelectedRows([])
-            } }
+            onClick={async () => {
+              setSelectedRows([]);
+            }}
           >
             批量删除
           </Button>
         </FooterToolbar>
-      ) }
-      {
-        !isModalVisible ? '' :
-          <MenuForm
-            menuId={ menuId }
-            isModalVisible={ isModalVisible }
-            setModalVisible={ setModalVisible }
-            tableActionRef={ actionRef }
-          />
-      }
+      )}
+      {!isModalVisible ? (
+        ''
+      ) : (
+        <MenuForm
+          menuId={menuId}
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          tableActionRef={actionRef}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default MenuTable
+export default MenuTable;

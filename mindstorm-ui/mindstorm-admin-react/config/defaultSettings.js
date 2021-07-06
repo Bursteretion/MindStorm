@@ -11,4 +11,5 @@ const proSettings = {
   pwa: false,
   iconfontUrl: '',
 };
+
 export default proSettings;

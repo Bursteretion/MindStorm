@@ -20,7 +20,7 @@ Cache-Control: no-cache
 Content-Type: application/json
 
 {
-  "pageNum": 1,
+  "pageIndex": 1,
   "pageSize": 5,
   "academyName": "",
   "status": 1,
@@ -36,7 +36,8 @@ Content-Type: application/json
 
 {
   "id": "",
-  "name": "",
+  "name": "信息工程学院",
+  "description": "",
   "sort": 1
 }
 
@@ -49,6 +50,7 @@ Content-Type: application/json
 {
   "id": "",
   "name": "",
+  "description": "",
   "sort": 1
 }
 

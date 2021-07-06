@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { createBrowserHistory, History } from 'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/node_modules/@umijs/runtime';
+import { createBrowserHistory, History } from 'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/node_modules/umi/node_modules/@umijs/runtime';
 
 let options = {
   "basename": "/"

@@ -1,22 +1,20 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import MenuTable from "@/pages/Permission/menu/components/MenuTable";
+import MenuTable from '@/pages/Permission/menu/components/MenuTable';
 
 const MenuList = () => {
   return (
     <div>
       <PageContainer
-        header={
-          {
-            ghost: true,
-            title: ''
-          }
-        }
+        header={{
+          ghost: true,
+          title: '',
+        }}
       >
-        <MenuTable/>
+        <MenuTable />
       </PageContainer>
     </div>
-  )
-}
+  );
+};
 
-export default MenuList
+export default MenuList;

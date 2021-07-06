@@ -5,8 +5,8 @@ import '../global.jsx';
 import { plugin } from './core/plugin';
 import './core/pluginRegister';
 import { createHistory } from './core/history';
-import { ApplyPluginsType } from 'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/node_modules/@umijs/runtime';
-import { renderClient } from 'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/node_modules/@umijs/renderer-react/dist/index.js';
+import { ApplyPluginsType } from 'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/node_modules/umi/node_modules/@umijs/runtime';
+import { renderClient } from 'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/node_modules/umi/node_modules/@umijs/renderer-react';
 import { getRoutes } from './core/routes';
 
 
@@ -40,7 +40,7 @@ export default clientRender();
 
 
     window.g_umi = {
-      version: '3.4.25',
+      version: '3.5.3',
     };
   
 
