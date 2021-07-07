@@ -2,7 +2,12 @@ import React, { useRef, useState } from 'react';
 import { Button, message, Popconfirm, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { AcademyStatus, changeAcademyStatus, queryAcademies } from '@/services/academy';
+import {
+  AcademyStatus,
+  changeAcademyStatus,
+  deleteAcademy,
+  queryAcademies,
+} from '@/services/academy';
 import AcademyForm from './AcademyForm';
 
 const AcademyTable = () => {
@@ -40,7 +45,20 @@ const AcademyTable = () => {
     }
   };
 
-  const handleDeleteAcademy = (academy) => {};
+  const handleDeleteAcademy = async (academy) => {
+    const hide = message.loading(`正在删除院系【${academy.name}】`);
+    try {
+      await deleteAcademy(academy.id);
+      hide();
+      message.success(`删除成功！`);
+      actionRef?.current.reset();
+      return true;
+    } catch (error) {
+      hide();
+      message.error(`删除失败请重试！`);
+      return false;
+    }
+  };
 
   const columns = [
     {
@@ -109,15 +127,6 @@ const AcademyTable = () => {
           }}
         >
           编辑
-        </a>,
-        <a
-          key="create"
-          onClick={() => {
-            setModalVisible(true);
-            setAcademyId(undefined);
-          }}
-        >
-          新增
         </a>,
         <Popconfirm
           key="delete"

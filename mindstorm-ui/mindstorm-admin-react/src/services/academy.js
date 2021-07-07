@@ -21,6 +21,12 @@ export async function updateAcademy(academyVO) {
   });
 }
 
+export async function deleteAcademy(academyId) {
+  return request(`/mindstorm-education/education/academy/delete/${academyId}`, {
+    method: 'DELETE',
+  });
+}
+
 export async function infoAcademy(academyId) {
   return request(`/mindstorm-education/education/academy/info/${academyId}`, {
     method: 'PUT',
