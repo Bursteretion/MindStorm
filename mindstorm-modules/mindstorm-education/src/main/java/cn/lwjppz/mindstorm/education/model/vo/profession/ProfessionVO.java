@@ -23,6 +23,9 @@ public class ProfessionVO {
     @ApiModelProperty(value = "专业Id")
     private String id;
 
+    @ApiModelProperty(value = "院系Id")
+    private String academyId;
+
     @ApiModelProperty(value = "专业名称")
     private String name;
 

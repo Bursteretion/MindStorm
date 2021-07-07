@@ -53,7 +53,7 @@ export default [
         name: 'role',
         path: '/permission/role',
         component: './Permission/role',
-        access: 'hasRouter',
+        // access: 'hasRouter',
       },
       {
         name: 'user',
@@ -75,6 +75,12 @@ export default [
         name: 'academy',
         path: '/education/academy',
         component: './Education/academy',
+        access: 'hasRouter',
+      },
+      {
+        name: 'profession',
+        path: '/education/profession',
+        component: './Education/profession',
         access: 'hasRouter',
       },
     ],

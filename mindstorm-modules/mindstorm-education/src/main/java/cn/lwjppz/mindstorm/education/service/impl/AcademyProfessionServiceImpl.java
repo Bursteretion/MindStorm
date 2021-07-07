@@ -31,6 +31,27 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
     }
 
     @Override
+    public AcademyProfession getAcademyProfessionsByProfessionId(String professionId) {
+        LambdaQueryWrapper<AcademyProfession> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(AcademyProfession::getProfessionId, professionId);
+
+        return baseMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public AcademyProfession updateAcademyProfession(String academyId, String professionId) {
+        LambdaQueryWrapper<AcademyProfession> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(AcademyProfession::getProfessionId, professionId);
+
+        AcademyProfession academyProfession = baseMapper.selectOne(queryWrapper);
+        academyProfession.setAcademyId(academyId);
+
+        baseMapper.updateById(academyProfession);
+
+        return academyProfession;
+    }
+
+    @Override
     public AcademyProfession insertAcademyProfession(String academyId, String professionId) {
         if (StringUtils.isNotEmpty(academyId) && StringUtils.isNotEmpty(professionId)) {
             var academyProfession = new AcademyProfession();
@@ -42,6 +63,8 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
         }
         return null;
     }
+
+
 
     @Override
     public boolean deleteAcademyProfessionByAcademyId(String academyId) {

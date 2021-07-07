@@ -1,10 +1,13 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
+import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.permission.mapper.RoleMenuMapper;
 import cn.lwjppz.mindstorm.permission.model.dto.roleMenu.RoleMenuDTO;
+import cn.lwjppz.mindstorm.permission.model.entity.Menu;
 import cn.lwjppz.mindstorm.permission.model.entity.Role;
 import cn.lwjppz.mindstorm.permission.model.entity.RoleMenu;
+import cn.lwjppz.mindstorm.permission.service.MenuService;
 import cn.lwjppz.mindstorm.permission.service.RoleMenuService;
 import cn.lwjppz.mindstorm.permission.service.RoleService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -31,9 +34,12 @@ import java.util.stream.Collectors;
 public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> implements RoleMenuService {
 
     private final RoleService roleService;
+    private final MenuService menuService;
 
-    public RoleMenuServiceImpl(@Lazy RoleService roleService) {
+    public RoleMenuServiceImpl(@Lazy RoleService roleService,
+                               @Lazy MenuService menuService) {
         this.roleService = roleService;
+        this.menuService = menuService;
     }
 
     @Override
@@ -44,6 +50,10 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
         queryWrapper.eq(RoleMenu::getRoleId, roleId);
 
         List<RoleMenu> roleMenus = baseMapper.selectList(queryWrapper);
+        roleMenus = roleMenus.stream().filter(item -> {
+            Menu menu = menuService.getMenuById(item.getMenuId());
+            return StringUtils.isNotEmpty(menu.getPid());
+        }).collect(Collectors.toList());
 
         // 提取菜单Id
         List<String> checkedKeys = ServiceUtils.fetchProperty(roleMenus, RoleMenu::getMenuId);

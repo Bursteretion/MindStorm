@@ -181,7 +181,6 @@ export function getRoutes() {
             "name": "role",
             "path": "/permission/role",
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Permission__role' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Permission/role'), loading: LoadingComponent}),
-            "access": "hasRouter",
             "exact": true
           },
           {
@@ -206,6 +205,13 @@ export function getRoutes() {
             "name": "academy",
             "path": "/education/academy",
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Education__academy' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Education/academy'), loading: LoadingComponent}),
+            "access": "hasRouter",
+            "exact": true
+          },
+          {
+            "name": "profession",
+            "path": "/education/profession",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Education__profession' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Education/profession'), loading: LoadingComponent}),
             "access": "hasRouter",
             "exact": true
           }

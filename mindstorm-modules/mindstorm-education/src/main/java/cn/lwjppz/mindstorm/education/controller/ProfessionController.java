@@ -47,9 +47,9 @@ public class ProfessionController {
 
     @GetMapping("/list/{academyId}")
     @ApiOperation("根据院系Id获取该院系开设的所有专业")
-    public CommonResult listProfessionsByAcademyId(@ApiParam("院系Id") @PathVariable("academyId") String academyid) {
+    public CommonResult listProfessionsByAcademyId(@ApiParam("院系Id") @PathVariable("academyId") String academyId) {
         var professions =
-                professionService.convertToProfessionDTO(professionService.getProfessionsByAcademyId(academyid));
+                professionService.convertToProfessionDTO(professionService.getProfessionsByAcademyId(academyId));
         return CommonResult.ok().data("professions", professions);
     }
 

@@ -24,6 +24,23 @@ public interface AcademyProfessionService extends IService<AcademyProfession> {
     List<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId);
 
     /**
+     * 根据专业Id获取院系专业相关联信息
+     *
+     * @param professionId 专业Id
+     * @return 关联信息
+     */
+    AcademyProfession getAcademyProfessionsByProfessionId(String professionId);
+
+    /**
+     * 更新专业院系关联信息
+     *
+     * @param academyId    院系Id
+     * @param professionId 专业Id
+     * @return 关联信息
+     */
+    AcademyProfession updateAcademyProfession(String academyId, String professionId);
+
+    /**
      * 新增院系专业关联
      *
      * @param academyId    院系Id

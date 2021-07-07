@@ -81,7 +81,12 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
 
     @Override
     public IPage<ProfessionDTO> queryProfessions(ProfessionQueryVO professionQueryVO) {
-        IPage<Profession> iPage = new Page<>(professionQueryVO.getPageNum(), professionQueryVO.getPageSize());
+        IPage<Profession> iPage;
+        if (null != professionQueryVO.getPageIndex() && null != professionQueryVO.getPageSize()) {
+            iPage = new Page<>(professionQueryVO.getPageIndex(), professionQueryVO.getPageSize());
+        } else {
+            iPage = new Page<>(1, 5);
+        }
         var queryWrapper = getCommonQueryWrapper();
 
         if (StringUtils.isNotEmpty(professionQueryVO.getProfessionName())) {
@@ -111,7 +116,11 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         var profession = new Profession();
         BeanUtils.copyProperties(professionVO, profession);
 
+        // 新增专业
         baseMapper.insert(profession);
+
+        // 新增院系专业关联
+        academyProfessionService.insertAcademyProfession(professionVO.getAcademyId(), profession.getId());
 
         return profession;
     }
@@ -122,6 +131,9 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         BeanUtils.copyProperties(professionVO, profession);
 
         baseMapper.updateById(profession);
+
+        // 更新关联信息
+        academyProfessionService.updateAcademyProfession(professionVO.getAcademyId(), professionVO.getId());
 
         return profession;
     }
@@ -160,6 +172,7 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         var professionDTO = new ProfessionDTO();
         BeanUtils.copyProperties(profession, professionDTO);
 
+        professionDTO.setAcademyId(academyProfessionService.getAcademyProfessionsByProfessionId(profession.getId()).getAcademyId());
         return professionDTO;
     }
 

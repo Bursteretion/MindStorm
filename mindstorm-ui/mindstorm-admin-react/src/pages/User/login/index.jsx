@@ -29,30 +29,6 @@ const LoginMessage = ({ content }) => (
   />
 );
 
-/** 此方法会跳转到 redirect 参数所在的位置 */
-const goto = () => {
-  const urlParams = new URL(window.location.href);
-  const params = getPageQuery();
-  let { redirect } = params;
-
-  if (redirect) {
-    const redirectUrlParams = new URL(redirect);
-
-    if (redirectUrlParams.origin === urlParams.origin) {
-      redirect = redirect.substr(urlParams.origin.length);
-
-      if (redirect.match(/^\/.*#/)) {
-        redirect = redirect.substr(redirect.indexOf('#') + 1);
-      }
-    } else {
-      window.location.href = '/';
-      return;
-    }
-  }
-
-  window.location.href = redirect || '/';
-};
-
 const Login = () => {
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState({});
@@ -83,8 +59,10 @@ const Login = () => {
         });
         setToken(res.data.access_token);
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        goto();
+        setTimeout(async () => {
+          await fetchUserInfo();
+          window.location.href = '/';
+        }, 1000);
         return;
       }
       // 如果失败去设置用户错误信息

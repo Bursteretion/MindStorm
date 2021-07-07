@@ -21,6 +21,8 @@ public class ProfessionDTO {
 
     private String id;
 
+    private String academyId;
+
     private String name;
 
     private Integer status;

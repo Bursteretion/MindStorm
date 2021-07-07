@@ -1,8 +1,7 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import AcademyTable from './components/AcademyTable';
 
-const AcademyList = () => {
+const ProfessionList = () => {
   return (
     <>
       <PageContainer
@@ -10,11 +9,9 @@ const AcademyList = () => {
           ghost: true,
           title: '',
         }}
-      >
-        <AcademyTable />
-      </PageContainer>
+      ></PageContainer>
     </>
   );
 };
 
-export default AcademyList;
+export default ProfessionList;
