@@ -27,10 +27,10 @@ public class AcademyVO {
     @ApiModelProperty("学院名称")
     private String name;
 
-    @ApiModelProperty(value = "院系简介")
-    private String description;
-
     @ApiModelProperty("排序")
     private Integer sort;
+
+    @ApiModelProperty("状态")
+    private Integer status;
 
 }

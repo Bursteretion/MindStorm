@@ -176,7 +176,7 @@ const RoleTable = () => {
         request={(params) => handleQueryRoles(params)}
         rowKey={(record) => record.id}
         dateFormatter="string"
-        headerTitle="系统菜单"
+        headerTitle="角色列表"
         pagination={{ defaultCurrent: 1, defaultPageSize: 5 }}
         options={{ fullScreen: true }}
         tableAlertRender={({ selectedRowKeys }) => (

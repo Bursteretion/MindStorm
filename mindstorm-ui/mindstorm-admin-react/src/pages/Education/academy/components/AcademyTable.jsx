@@ -1,11 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { Button, message, Popconfirm, Space, Switch, Table } from 'antd';
+import { Button, message, Popconfirm, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { AcademyStatus, changeAcademyStatus, queryAcademies } from '@/services/academy';
+import AcademyForm from './AcademyForm';
 
 const AcademyTable = () => {
   const actionRef = useRef();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [academyId, setAcademyId] = useState(undefined);
 
   const handleQueryAcademies = async (params) => {
     const res = await queryAcademies({
@@ -98,10 +101,22 @@ const AcademyTable = () => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a key="edit" onClick={() => {}}>
+        <a
+          key="edit"
+          onClick={() => {
+            setModalVisible(true);
+            setAcademyId(record.id);
+          }}
+        >
           编辑
         </a>,
-        <a key="create" onClick={() => {}}>
+        <a
+          key="create"
+          onClick={() => {
+            setModalVisible(true);
+            setAcademyId(undefined);
+          }}
+        >
           新增
         </a>,
         <Popconfirm
@@ -125,15 +140,33 @@ const AcademyTable = () => {
         request={(params) => handleQueryAcademies(params)}
         rowKey={(record) => record.id}
         dateFormatter="string"
-        headerTitle="系统菜单"
+        headerTitle="院系列表"
         pagination={{ defaultCurrent: 1, defaultPageSize: 5 }}
         options={{ fullScreen: true }}
         toolBarRender={() => [
-          <Button key="button" icon={<PlusOutlined />} type="primary" onClick={() => {}}>
+          <Button
+            key="button"
+            icon={<PlusOutlined />}
+            type="primary"
+            onClick={() => {
+              setModalVisible(true);
+              setAcademyId(undefined);
+            }}
+          >
             新增
           </Button>,
         ]}
       />
+      {!isModalVisible ? (
+        ''
+      ) : (
+        <AcademyForm
+          academyId={academyId}
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          actionRef={actionRef}
+        />
+      )}
     </>
   );
 };

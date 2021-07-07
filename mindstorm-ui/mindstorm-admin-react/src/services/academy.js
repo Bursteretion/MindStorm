@@ -7,6 +7,26 @@ export async function queryAcademies(params) {
   });
 }
 
+export async function createAcademy(academyVO) {
+  return request('/mindstorm-education/education/academy/create', {
+    method: 'POST',
+    data: academyVO,
+  });
+}
+
+export async function updateAcademy(academyVO) {
+  return request('/mindstorm-education/education/academy/update', {
+    method: 'POST',
+    data: academyVO,
+  });
+}
+
+export async function infoAcademy(academyId) {
+  return request(`/mindstorm-education/education/academy/info/${academyId}`, {
+    method: 'PUT',
+  });
+}
+
 export async function changeAcademyStatus(academyId, status) {
   return request(`/mindstorm-education/education/academy/change/${academyId}/${status}`, {
     method: 'PUT',

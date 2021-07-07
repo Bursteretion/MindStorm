@@ -72,7 +72,7 @@ public class AcademyController {
     }
 
     @PutMapping("/info/{academyId}")
-    @ApiOperation("根据学院Id删除学院信息")
+    @ApiOperation("根据学院Id获取学院信息")
     public CommonResult info(@ApiParam("学院Id") @PathVariable("academyId") String academyId) {
         var academyInfo = academyService.infoAcademy(academyId);
         return CommonResult.ok().data("academyInfo", academyInfo);
