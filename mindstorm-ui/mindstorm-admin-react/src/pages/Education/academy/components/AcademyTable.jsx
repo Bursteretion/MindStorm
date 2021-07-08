@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, message, Popconfirm, Switch } from 'antd';
+import { Button, message, Popconfirm, Switch, Tree } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import {
@@ -9,22 +9,37 @@ import {
   queryAcademies,
 } from '@/services/academy';
 import AcademyForm from './AcademyForm';
+import { useModel } from 'umi';
+
+function processingAcademies(academies = []) {
+  if (academies.length <= 0) return;
+  academies.forEach((v) => {
+    const backup = v;
+    if (backup.children.length <= 0) {
+      backup.children = undefined;
+    }
+    processingAcademies(backup.children);
+  });
+}
 
 const AcademyTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
   const [academyId, setAcademyId] = useState(undefined);
+  const { setAcademyTree, generateAcademyTreeSelect } = useModel('academy', (res) => ({
+    setAcademyTree: res.setAcademyTree,
+    generateAcademyTreeSelect: res.generateAcademyTreeSelect,
+  }));
 
   const handleQueryAcademies = async (params) => {
-    const res = await queryAcademies({
-      ...params,
-      pageIndex: params.current,
-      pageSize: params.pageSize,
-    });
-    const { records = [], total } = res.data.queryAcademyPage;
+    const res = await queryAcademies(params);
+    const { academyTree = [] } = res.data;
+    processingAcademies(academyTree);
+    setAcademyTree(academyTree);
+    generateAcademyTreeSelect();
     return {
-      data: records,
-      total,
+      data: academyTree,
+      total: academyTree.length,
       success: res.success,
     };
   };
@@ -62,12 +77,6 @@ const AcademyTable = () => {
 
   const columns = [
     {
-      title: '序号',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
-    {
       title: '院系名称',
       dataIndex: 'name',
       width: 200,
@@ -83,8 +92,14 @@ const AcademyTable = () => {
       valueType: 'select',
       valueEnum: AcademyStatus,
       render: (_, record) => {
-        const { status } = record;
-        return (
+        const { status, pid } = record;
+        return pid === '0' ? (
+          status === 1 ? (
+            '正常'
+          ) : (
+            '禁用'
+          )
+        ) : (
           <Switch
             checked={status === 1}
             onChange={(checked) => handleChangeAcademyStatus(checked, record)}
@@ -128,15 +143,27 @@ const AcademyTable = () => {
         >
           编辑
         </a>,
-        <Popconfirm
-          key="delete"
-          title={`你确定要删除【${record.name}】这个院系吗？`}
-          onConfirm={() => handleDeleteAcademy(record)}
-          okText="确定"
-          cancelText="取消"
+        <a
+          key="create"
+          onClick={() => {
+            setModalVisible(true);
+          }}
         >
-          <a>删除</a>
-        </Popconfirm>,
+          新增
+        </a>,
+        record.pid === '0' ? (
+          ''
+        ) : (
+          <Popconfirm
+            key="delete"
+            title={`你确定要删除【${record.name}】这个院系吗？`}
+            onConfirm={() => handleDeleteAcademy(record)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <a>删除</a>
+          </Popconfirm>
+        ),
       ],
     },
   ];
@@ -150,7 +177,7 @@ const AcademyTable = () => {
         rowKey={(record) => record.id}
         dateFormatter="string"
         headerTitle="院系列表"
-        pagination={{ defaultCurrent: 1, defaultPageSize: 10 }}
+        pagination={null}
         options={{ fullScreen: true }}
         toolBarRender={() => [
           <Button

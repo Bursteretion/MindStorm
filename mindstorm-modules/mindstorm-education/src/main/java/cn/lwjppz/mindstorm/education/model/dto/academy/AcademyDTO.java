@@ -21,6 +21,8 @@ public class AcademyDTO {
 
     private String id;
 
+    private String pid;
+
     private String name;
 
     private Integer status;

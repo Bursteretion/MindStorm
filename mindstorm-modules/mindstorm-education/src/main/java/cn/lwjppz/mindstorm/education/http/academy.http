@@ -36,8 +36,9 @@ Content-Type: application/json
 
 {
   "id": "",
-  "name": "信息工程学院",
-  "description": "",
+  "pid": "0",
+  "name": "三明学院",
+  "status": 1,
   "sort": 1
 }
 

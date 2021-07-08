@@ -24,6 +24,9 @@ public class AcademyVO {
     @ApiModelProperty("学院Id")
     private String id;
 
+    @ApiModelProperty("学院上级Id")
+    private String pid;
+
     @ApiModelProperty("学院名称")
     private String name;
 

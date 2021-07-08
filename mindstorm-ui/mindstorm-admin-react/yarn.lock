@@ -38,6 +38,16 @@
     classnames "^2.2.6"
     rc-util "^5.9.4"
 
+"@ant-design/pro-card@^1.14.5":
+  version "1.14.5"
+  resolved "https://registry.nlark.com/@ant-design/pro-card/download/@ant-design/pro-card-1.14.5.tgz#8d29c13d122f7582e5d3f74c352ffc940f65ac31"
+  integrity sha1-jSnBPRIvdYLl0/dMNS/8lA9lrDE=
+  dependencies:
+    "@ant-design/icons" "^4.2.1"
+    "@ant-design/pro-utils" "1.19.5"
+    classnames "^2.2.6"
+    omit.js "^2.0.2"
+
 "@ant-design/pro-cli@^2.0.2":
   version "2.1.1"
   resolved "https://registry.nlark.com/@ant-design/pro-cli/download/@ant-design/pro-cli-2.1.1.tgz?cache=0&sync_timestamp=1622711259927&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40ant-design%2Fpro-cli%2Fdownload%2F%40ant-design%2Fpro-cli-2.1.1.tgz#9f5babe908fed91ecb222883a3defe980708ac03"
@@ -229,6 +239,20 @@
   version "1.19.4"
   resolved "https://registry.nlark.com/@ant-design/pro-utils/download/@ant-design/pro-utils-1.19.4.tgz?cache=0&sync_timestamp=1625134371657&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40ant-design%2Fpro-utils%2Fdownload%2F%40ant-design%2Fpro-utils-1.19.4.tgz#d6d51b8746c371c9cfd881a59d02139345d21de8"
   integrity sha1-1tUbh0bDccnP2IGlnQITk0XSHeg=
+  dependencies:
+    "@ant-design/icons" "^4.3.0"
+    "@ant-design/pro-provider" "1.4.15"
+    classnames "^2.2.6"
+    fast-deep-equal "^3.1.3"
+    lodash.merge "^4.6.2"
+    moment "^2.27.0"
+    rc-util "^5.0.6"
+    swr "^0.5.6"
+
+"@ant-design/pro-utils@1.19.5":
+  version "1.19.5"
+  resolved "https://registry.nlark.com/@ant-design/pro-utils/download/@ant-design/pro-utils-1.19.5.tgz#df49b3f0e99fe4adcc896ea37e28abbff31838bc"
+  integrity sha1-30mz8Omf5K3MiW6jfiirv/MYOLw=
   dependencies:
     "@ant-design/icons" "^4.3.0"
     "@ant-design/pro-provider" "1.4.15"

@@ -1,7 +1,9 @@
 package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademySelectDTO;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyTreeSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyVO;
@@ -35,21 +37,21 @@ public interface AcademyService extends IService<Academy> {
     List<Academy> getUnDisableAcademies();
 
     /**
-     * 分页查询院系信息
+     * 查询院系信息
      *
      * @param pageNum  页码
      * @param pageSize 每页条数
-     * @return 分页信息
+     * @return 院系信息
      */
-    IPage<AcademyDTO> pageAcademies(int pageNum, int pageSize);
+    List<Academy> pageAcademies(int pageNum, int pageSize);
 
     /**
      * 根据院系信息查询学院
      *
      * @param academyQueryVO 院系查询信息
-     * @return 分页信息
+     * @return 院系信息
      */
-    IPage<AcademyDTO> queryAcademies(AcademyQueryVO academyQueryVO);
+    List<Academy> queryAcademies(AcademyQueryVO academyQueryVO);
 
     /**
      * 新增学院
@@ -74,6 +76,14 @@ public interface AcademyService extends IService<Academy> {
      * @return 学院信息
      */
     Academy infoAcademy(String academyId);
+
+    /**
+     * 将院系信息转为树形结构
+     *
+     * @param academies 院系列表
+     * @return 树形院系列表
+     */
+    List<AcademyDetailDTO> generateAcademyTree(List<Academy> academies);
 
     /**
      * 更改院系状态

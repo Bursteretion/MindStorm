@@ -22,12 +22,6 @@ import java.util.Date;
 @ApiModel("院系查询表单信息")
 public class AcademyQueryVO {
 
-    @ApiModelProperty("页码")
-    private Integer pageIndex;
-
-    @ApiModelProperty("每页条数")
-    private Integer pageSize;
-
     @ApiModelProperty("院系名称")
     private String academyName;
 

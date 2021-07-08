@@ -11,6 +11,10 @@ export async function queryAcademySelects() {
   return request('/mindstorm-education/education/academy/listSelect');
 }
 
+export async function queryAcademyTree() {
+  return request('/mindstorm-education/education/academy/academyTree');
+}
+
 export async function createAcademy(academyVO) {
   return request('/mindstorm-education/education/academy/create', {
     method: 'POST',

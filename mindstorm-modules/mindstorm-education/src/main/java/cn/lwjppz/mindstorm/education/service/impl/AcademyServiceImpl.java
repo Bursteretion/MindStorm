@@ -6,7 +6,9 @@ import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademySelectDTO;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyTreeSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.mapper.AcademyMapper;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
@@ -22,7 +24,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -57,18 +62,12 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
     }
 
     @Override
-    public IPage<AcademyDTO> pageAcademies(int pageNum, int pageSize) {
-        return queryAcademies(new AcademyQueryVO(pageNum, pageSize, null, null, null, null));
+    public List<Academy> pageAcademies(int pageNum, int pageSize) {
+        return queryAcademies(new AcademyQueryVO(null, null, null, null));
     }
 
     @Override
-    public IPage<AcademyDTO> queryAcademies(AcademyQueryVO academyQueryVO) {
-        IPage<Academy> iPage = null;
-        if (null != academyQueryVO.getPageIndex() && null != academyQueryVO.getPageSize()) {
-            iPage = new Page<>(academyQueryVO.getPageIndex(), academyQueryVO.getPageSize());
-        } else {
-            iPage = new Page<>(1, 5);
-        }
+    public List<Academy> queryAcademies(AcademyQueryVO academyQueryVO) {
         var queryWrapper = getCommonQueryWrapper();
 
         if (StringUtils.isNotEmpty(academyQueryVO.getAcademyName())) {
@@ -83,14 +82,7 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
             queryWrapper.in(Academy::getGmtCreate, academyQueryVO.getStartTime(), academyQueryVO.getEndTime());
         }
 
-        iPage = baseMapper.selectPage(iPage, queryWrapper);
-
-        IPage<AcademyDTO> resPage = new Page<>();
-        BeanUtils.copyProperties(iPage, resPage);
-
-        resPage.setRecords(convertToAcademyDTO(iPage.getRecords()));
-
-        return resPage;
+        return baseMapper.selectList(queryWrapper);
     }
 
     @Override
@@ -187,6 +179,7 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
     @Override
     public List<AcademySelectDTO> convertToAcademySelectDTO(List<Academy> academies) {
         return academies.stream()
+                .filter(item -> !"0".equals(item.getPid()))
                 .map(this::convertToAcademySelectDTO)
                 .collect(Collectors.toList());
     }
@@ -196,5 +189,42 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
         LambdaQueryWrapper<Academy> wrapper = Wrappers.lambdaQuery();
         wrapper.orderByAsc(Academy::getSort);
         return wrapper;
+    }
+
+    @Override
+    public List<AcademyDetailDTO> generateAcademyTree(List<Academy> academies) {
+        Map<String, AcademyDetailDTO> hash = new HashMap<>(academies.size());
+        List<AcademyDetailDTO> academyDetails = convertToAcademyDetailDTO(academies);
+        academyDetails.forEach(item -> {
+            hash.put(item.getId(), item);
+            item.setChildren(new ArrayList<>());
+        });
+
+        List<AcademyDetailDTO> res = new ArrayList<>();
+        academyDetails.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getPid()) && hash.containsKey(item.getPid())) {
+                AcademyDetailDTO academyDetailDTO = hash.get(item.getPid());
+                List<AcademyDetailDTO> children = academyDetailDTO.getChildren();
+                children.add(item);
+                academyDetailDTO.setChildren(children);
+            } else {
+                res.add(item);
+            }
+        });
+
+        return res;
+    }
+
+    private AcademyDetailDTO convertToAcademyDetailDTO(Academy academy) {
+        AcademyDetailDTO academyDetailDTO = new AcademyDetailDTO();
+        BeanUtils.copyProperties(academy, academyDetailDTO);
+
+        return academyDetailDTO;
+    }
+
+    private List<AcademyDetailDTO> convertToAcademyDetailDTO(List<Academy> academies) {
+        return academies.stream()
+                .map(this::convertToAcademyDetailDTO)
+                .collect(Collectors.toList());
     }
 }

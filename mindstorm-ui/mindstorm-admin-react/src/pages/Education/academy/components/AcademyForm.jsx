@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Form, message, Modal, Skeleton } from 'antd';
+import { Form, message, Modal, Skeleton, TreeSelect } from 'antd';
 import { ProFormDigit, ProFormRadio, ProFormText } from '@ant-design/pro-form';
 import { createAcademy, infoAcademy, updateAcademy } from '@/services/academy';
+import { useModel } from 'umi';
 
 const AcademyForm = (props) => {
   const { isModalVisible, setModalVisible, academyId, actionRef } = props;
   const [initialValues, setInitialValues] = useState(undefined);
   const [academyForm] = Form.useForm();
+  const { academyTree } = useModel('academy', (res) => ({
+    academyTree: res.academyTree,
+  }));
 
   useEffect(() => {
     async function fetchData() {
@@ -17,6 +21,7 @@ const AcademyForm = (props) => {
           name: academyInfo.name,
           status: academyInfo.status,
           sort: academyInfo.sort,
+          pid: academyInfo.pid,
         });
       }
     }
@@ -77,6 +82,18 @@ const AcademyForm = (props) => {
           labelCol={{ span: 4 }}
           initialValues={initialValues}
         >
+          <Form.Item
+            label="上级院系"
+            name="pid"
+            rules={[{ required: true, message: '上级院系必选！' }]}
+          >
+            <TreeSelect
+              allowClear
+              showArrow
+              placeholder="请选择上级院系/部门"
+              treeData={academyTree}
+            />
+          </Form.Item>
           <ProFormText
             name="name"
             label="院系名称"
@@ -90,21 +107,25 @@ const AcademyForm = (props) => {
             min={0}
             rules={[{ required: true, message: '院系排序不能为空！' }]}
           />
-          <ProFormRadio.Group
-            name="status"
-            label="院系状态"
-            options={[
-              {
-                label: '正常',
-                value: 1,
-              },
-              {
-                label: '禁用',
-                value: 0,
-              },
-            ]}
-            rules={[{ required: true, message: '院系状态必选！' }]}
-          />
+          {initialValues !== undefined && initialValues.pid === '0' ? (
+            ''
+          ) : (
+            <ProFormRadio.Group
+              name="status"
+              label="院系状态"
+              options={[
+                {
+                  label: '正常',
+                  value: 1,
+                },
+                {
+                  label: '禁用',
+                  value: 0,
+                },
+              ]}
+              rules={[{ required: true, message: '院系状态必选！' }]}
+            />
+          )}
         </Form>
       )}
     </Modal>
