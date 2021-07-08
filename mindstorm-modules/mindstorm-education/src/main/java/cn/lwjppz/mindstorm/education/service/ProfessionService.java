@@ -83,6 +83,15 @@ public interface ProfessionService extends IService<Profession> {
     Profession infoProfession(String professionId);
 
     /**
+     * 改变专业状态
+     *
+     * @param professionId 专业Id
+     * @param status       状态
+     * @return 是否更改成功
+     */
+    boolean changeProfessionStatus(String professionId, Integer status);
+
+    /**
      * 根据专业Id删除该专业
      *
      * @param professionId 专业Id

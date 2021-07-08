@@ -27,8 +27,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("mse_major")
-@ApiModel(value = "Major对象", description = "开设专业表")
+@TableName("mse_profession")
+@ApiModel(value = "Profession对象", description = "开设专业表")
 public class Profession implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -89,6 +89,14 @@ public class ProfessionController {
         return CommonResult.ok().data("professionInfo", professionInfo);
     }
 
+    @PutMapping("/change/{professionId}/{status}")
+    @ApiOperation("改变专业状态")
+    public CommonResult changeProfessionStatus(@ApiParam("专业Id") @PathVariable("professionId") String professionId,
+                                               @ApiParam("状态") @PathVariable("status") Integer status) {
+        var success = professionService.changeProfessionStatus(professionId, status);
+        return CommonResult.ok().data("success", success);
+    }
+
     @DeleteMapping("/delete/{professionId}")
     @ApiOperation("根据专业Id删除该专业")
     public CommonResult delete(@ApiParam("专业Id") @PathVariable("professionId") String professionId) {

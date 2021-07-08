@@ -2,26 +2,26 @@ import React, { useRef, useState } from 'react';
 import { Button, message, Popconfirm, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
+import ProfessionForm from './ProfessionForm';
 import {
-  AcademyStatus,
-  changeAcademyStatus,
-  deleteAcademy,
-  queryAcademies,
-} from '@/services/academy';
-import AcademyForm from './AcademyForm';
+  changeProfessionStatus,
+  deleteProfession,
+  ProfessionStatus,
+  queryProfessions,
+} from '@/services/profession';
 
-const AcademyTable = () => {
+const ProfessionTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
-  const [academyId, setAcademyId] = useState(undefined);
+  const [professionId, setProfessionId] = useState(undefined);
 
-  const handleQueryAcademies = async (params) => {
-    const res = await queryAcademies({
+  const handleQueryProfessions = async (params) => {
+    const res = await queryProfessions({
       ...params,
       pageIndex: params.current,
       pageSize: params.pageSize,
     });
-    const { records = [], total } = res.data.queryAcademyPage;
+    const { records = [], total } = res.data.queryProfessions;
     return {
       data: records,
       total,
@@ -29,11 +29,11 @@ const AcademyTable = () => {
     };
   };
 
-  const handleChangeAcademyStatus = async (checked, academy) => {
+  const handleChangeProfessionStatus = async (checked, profession) => {
     const tip = checked ? '启用' : '禁用';
-    const hide = message.loading(`正在${tip}院系【${academy.name}】`);
+    const hide = message.loading(`正在${tip}专业【${profession.name}】`);
     try {
-      await changeAcademyStatus(academy.id, checked ? 1 : 0);
+      await changeProfessionStatus(profession.id, checked ? 1 : 0);
       hide();
       message.success(`${tip}成功！`);
       actionRef?.current.reset();
@@ -45,10 +45,10 @@ const AcademyTable = () => {
     }
   };
 
-  const handleDeleteAcademy = async (academy) => {
-    const hide = message.loading(`正在删除院系【${academy.name}】`);
+  const handleDeleteProfession = async (profession) => {
+    const hide = message.loading(`正在删除专业【${profession.name}】`);
     try {
-      await deleteAcademy(academy.id);
+      await deleteProfession(profession.id);
       hide();
       message.success(`删除成功！`);
       actionRef?.current.reset();
@@ -68,9 +68,14 @@ const AcademyTable = () => {
       width: 48,
     },
     {
-      title: '院系名称',
-      dataIndex: 'name',
+      title: '所属院系',
+      dataIndex: 'academyName',
       width: 200,
+      search: false,
+    },
+    {
+      title: '专业名称',
+      dataIndex: 'name',
     },
     {
       title: '排序',
@@ -81,13 +86,13 @@ const AcademyTable = () => {
       title: '状态',
       dataIndex: 'status',
       valueType: 'select',
-      valueEnum: AcademyStatus,
+      valueEnum: ProfessionStatus,
       render: (_, record) => {
         const { status } = record;
         return (
           <Switch
             checked={status === 1}
-            onChange={(checked) => handleChangeAcademyStatus(checked, record)}
+            onChange={(checked) => handleChangeProfessionStatus(checked, record)}
             checkedChildren="启用"
             unCheckedChildren="禁用"
           />
@@ -123,15 +128,15 @@ const AcademyTable = () => {
           key="edit"
           onClick={() => {
             setModalVisible(true);
-            setAcademyId(record.id);
+            setProfessionId(record.id);
           }}
         >
           编辑
         </a>,
         <Popconfirm
           key="delete"
-          title={`你确定要删除【${record.name}】这个院系吗？`}
-          onConfirm={() => handleDeleteAcademy(record)}
+          title={`你确定要删除【${record.name}】这个专业吗？`}
+          onConfirm={() => handleDeleteProfession(record)}
           okText="确定"
           cancelText="取消"
         >
@@ -146,7 +151,7 @@ const AcademyTable = () => {
       <ProTable
         columns={columns}
         actionRef={actionRef}
-        request={(params) => handleQueryAcademies(params)}
+        request={(params) => handleQueryProfessions(params)}
         rowKey={(record) => record.id}
         dateFormatter="string"
         headerTitle="院系列表"
@@ -159,7 +164,7 @@ const AcademyTable = () => {
             type="primary"
             onClick={() => {
               setModalVisible(true);
-              setAcademyId(undefined);
+              setProfessionId(undefined);
             }}
           >
             新增
@@ -169,8 +174,8 @@ const AcademyTable = () => {
       {!isModalVisible ? (
         ''
       ) : (
-        <AcademyForm
-          academyId={academyId}
+        <ProfessionForm
+          professionId={professionId}
           isModalVisible={isModalVisible}
           setModalVisible={setModalVisible}
           actionRef={actionRef}
@@ -179,4 +184,5 @@ const AcademyTable = () => {
     </>
   );
 };
-export default AcademyTable;
+
+export default ProfessionTable;

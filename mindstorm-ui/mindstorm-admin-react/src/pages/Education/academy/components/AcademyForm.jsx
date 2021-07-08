@@ -83,7 +83,13 @@ const AcademyForm = (props) => {
             placeholder="请输入院系名称"
             rules={[{ required: true, message: '院系名称不能为空！' }]}
           />
-          <ProFormDigit label="院系排序" name="sort" width="sm" min={0} />
+          <ProFormDigit
+            label="院系排序"
+            name="sort"
+            width="sm"
+            min={0}
+            rules={[{ required: true, message: '院系排序不能为空！' }]}
+          />
           <ProFormRadio.Group
             name="status"
             label="院系状态"

@@ -5,7 +5,9 @@ import cn.lwjppz.mindstorm.education.model.entity.AcademyProfession;
 import cn.lwjppz.mindstorm.education.mapper.AcademyProfessionMapper;
 import cn.lwjppz.mindstorm.education.service.AcademyProfessionService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,24 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
         queryWrapper.eq(AcademyProfession::getAcademyId, academyId);
 
         return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public IPage<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId, Integer pageIndex,
+                                                                     Integer pageSize) {
+        LambdaQueryWrapper<AcademyProfession> queryWrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotEmpty(academyId)) {
+            queryWrapper.eq(AcademyProfession::getAcademyId, academyId);
+        }
+
+        IPage<AcademyProfession> page;
+        if (null != pageIndex && null != pageSize) {
+            page = new Page<>(pageIndex, pageSize);
+        } else {
+            page = new Page<>(1, 5);
+        }
+
+        return baseMapper.selectPage(page, queryWrapper);
     }
 
     @Override
@@ -63,7 +83,6 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
         }
         return null;
     }
-
 
 
     @Override

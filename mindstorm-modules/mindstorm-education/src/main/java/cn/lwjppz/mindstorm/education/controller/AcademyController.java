@@ -35,6 +35,13 @@ public class AcademyController {
         return CommonResult.ok().data("academies", academies);
     }
 
+    @GetMapping("/listSelect")
+    @ApiOperation("获取院系信息下拉框")
+    public CommonResult listSelectAcademies() {
+        var academySelects = academyService.convertToAcademySelectDTO(academyService.getAcademies());
+        return CommonResult.ok().data("academySelects", academySelects);
+    }
+
     @GetMapping("/list-unDisable")
     @ApiOperation("获取所有未禁用的院系信息")
     public CommonResult listUnDisableAcademies() {

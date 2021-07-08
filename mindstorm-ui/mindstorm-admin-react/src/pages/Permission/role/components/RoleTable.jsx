@@ -24,10 +24,10 @@ const RoleTable = () => {
       pageIndex: params.current,
       pageSize: params.pageSize,
     });
-    const { records = [] } = res.data.searchRoles;
+    const { records = [], total } = res.data.searchRoles;
     return {
       data: records,
-      total: records.length,
+      total,
       success: res.success,
     };
   };

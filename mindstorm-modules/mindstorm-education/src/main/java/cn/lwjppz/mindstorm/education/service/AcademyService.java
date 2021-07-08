@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademySelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyVO;
@@ -114,5 +115,21 @@ public interface AcademyService extends IService<Academy> {
      * @return AcademyDTO 对象集合
      */
     List<AcademyDTO> convertToAcademyDTO(List<Academy> academies);
+
+    /**
+     * 将 Academy 对象转为 下拉选择类型对象
+     *
+     * @param academy Academy 对象
+     * @return 拉选择类型对象
+     */
+    AcademySelectDTO convertToAcademySelectDTO(Academy academy);
+
+    /**
+     * 将 Academy 对象集合转为 下拉选择类型对象集合
+     *
+     * @param academies Academy 对象集合
+     * @return 下拉选择类型对象集合
+     */
+    List<AcademySelectDTO> convertToAcademySelectDTO(List<Academy> academies);
 
 }

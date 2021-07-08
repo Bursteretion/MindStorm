@@ -6,15 +6,14 @@ import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
-import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
 import cn.lwjppz.mindstorm.education.model.dto.profession.ProfessionDTO;
-import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.model.entity.AcademyProfession;
 import cn.lwjppz.mindstorm.education.model.entity.Profession;
 import cn.lwjppz.mindstorm.education.mapper.ProfessionMapper;
 import cn.lwjppz.mindstorm.education.model.vo.profession.ProfessionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.profession.ProfessionVO;
 import cn.lwjppz.mindstorm.education.service.AcademyProfessionService;
+import cn.lwjppz.mindstorm.education.service.AcademyService;
 import cn.lwjppz.mindstorm.education.service.ProfessionService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -22,6 +21,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,9 +40,12 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         BaseInterface<Profession> {
 
     private final AcademyProfessionService academyProfessionService;
+    private final AcademyService academyService;
 
-    public ProfessionServiceImpl(AcademyProfessionService academyProfessionService) {
+    public ProfessionServiceImpl(@Lazy AcademyProfessionService academyProfessionService,
+                                 @Lazy AcademyService academyService) {
         this.academyProfessionService = academyProfessionService;
+        this.academyService = academyService;
     }
 
     @Override
@@ -76,37 +79,49 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
 
     @Override
     public IPage<ProfessionDTO> pageProfessions(int pageNum, int pageSize) {
-        return queryProfessions(new ProfessionQueryVO(pageNum, pageSize, null, null, null, null));
+        return queryProfessions(new ProfessionQueryVO(pageNum, pageSize, null, null, null, null, null));
     }
 
     @Override
     public IPage<ProfessionDTO> queryProfessions(ProfessionQueryVO professionQueryVO) {
-        IPage<Profession> iPage;
-        if (null != professionQueryVO.getPageIndex() && null != professionQueryVO.getPageSize()) {
-            iPage = new Page<>(professionQueryVO.getPageIndex(), professionQueryVO.getPageSize());
-        } else {
-            iPage = new Page<>(1, 5);
-        }
-        var queryWrapper = getCommonQueryWrapper();
+        IPage<AcademyProfession> academyProfessionsPage =
+                academyProfessionService.getAcademyProfessionsByAcademyId(professionQueryVO.getAcademyId(),
+                        professionQueryVO.getPageIndex(), professionQueryVO.getPageSize());
 
-        if (StringUtils.isNotEmpty(professionQueryVO.getProfessionName())) {
-            queryWrapper.like(Profession::getName, professionQueryVO.getProfessionName());
-        }
+        List<AcademyProfession> records = academyProfessionsPage.getRecords();
+        var professionIds = ServiceUtils.fetchProperty(records, AcademyProfession::getProfessionId);
+        // 根据Id集合查询所有专业信息
+        List<Profession> professions = professionIds.stream()
+                .map(baseMapper::selectById)
+                .collect(Collectors.toList());
 
-        if (null != professionQueryVO.getStartTime() && null != professionQueryVO.getEndTime()) {
-            queryWrapper.in(Profession::getGmtCreate, professionQueryVO.getStartTime(), professionQueryVO.getEndTime());
-        }
+        // 筛选专业信息
+        professions = professions
+                .stream()
+                .filter(item -> {
+                    if (StringUtils.isNotEmpty(professionQueryVO.getProfessionName())) {
+                        return item.getName().contains(professionQueryVO.getProfessionName());
+                    }
+                    return true;
+                }).filter(item -> {
+                    if (null != professionQueryVO.getStatus()) {
+                        return item.getStatus().equals(professionQueryVO.getStatus());
+                    }
+                    return true;
+                })
+                .filter(item -> {
+                    if (null != professionQueryVO.getStartTime() && null != professionQueryVO.getEndTime()) {
+                        return item.getGmtCreate().compareTo(professionQueryVO.getStartTime()) >= 0
+                                && item.getGmtCreate().compareTo(professionQueryVO.getEndTime()) <= 0;
 
-        if (null != professionQueryVO.getStatus()) {
-            queryWrapper.eq(Profession::getStatus, professionQueryVO.getStatus());
-        }
-
-        iPage = baseMapper.selectPage(iPage, queryWrapper);
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
 
         IPage<ProfessionDTO> resPage = new Page<>();
-        BeanUtils.copyProperties(iPage, resPage);
-
-        resPage.setRecords(convertToProfessionDTO(iPage.getRecords()));
+        BeanUtils.copyProperties(academyProfessionsPage, resPage);
+        resPage.setRecords(convertToProfessionDTO(professions));
 
         return resPage;
     }
@@ -151,6 +166,18 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
     }
 
     @Override
+    public boolean changeProfessionStatus(String professionId, Integer status) {
+        if (StringUtils.isNotEmpty(professionId)) {
+            Profession profession = baseMapper.selectById(professionId);
+            if (null != profession) {
+                profession.setStatus(status);
+                baseMapper.updateById(profession);
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean deleteProfession(String professionId) {
         if (StringUtils.isNotEmpty(professionId)) {
             // 删除院系专业关联信息
@@ -172,7 +199,11 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         var professionDTO = new ProfessionDTO();
         BeanUtils.copyProperties(profession, professionDTO);
 
-        professionDTO.setAcademyId(academyProfessionService.getAcademyProfessionsByProfessionId(profession.getId()).getAcademyId());
+        AcademyProfession academyProfession =
+                academyProfessionService.getAcademyProfessionsByProfessionId(profession.getId());
+        professionDTO.setAcademyId(academyProfession.getAcademyId());
+        professionDTO.setAcademyName(academyService.infoAcademy(academyProfession.getAcademyId()).getName());
+
         return professionDTO;
     }
 

@@ -28,6 +28,9 @@ public class ProfessionQueryVO {
     @ApiModelProperty("每页条数")
     private Integer pageSize;
 
+    @ApiModelProperty("院系Id")
+    private String academyId;
+
     @ApiModelProperty("专业名称")
     private String professionName;
 

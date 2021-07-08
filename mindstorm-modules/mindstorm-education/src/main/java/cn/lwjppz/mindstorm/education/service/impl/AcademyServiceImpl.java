@@ -6,6 +6,7 @@ import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
+import cn.lwjppz.mindstorm.education.model.dto.academy.AcademySelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.mapper.AcademyMapper;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
@@ -172,6 +173,21 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
     public List<AcademyDTO> convertToAcademyDTO(List<Academy> academies) {
         return academies.stream()
                 .map(this::convertToAcademyDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public AcademySelectDTO convertToAcademySelectDTO(Academy academy) {
+        AcademySelectDTO academySelectDTO = new AcademySelectDTO();
+        academySelectDTO.setLabel(academy.getName());
+        academySelectDTO.setValue(academy.getId());
+        return academySelectDTO;
+    }
+
+    @Override
+    public List<AcademySelectDTO> convertToAcademySelectDTO(List<Academy> academies) {
+        return academies.stream()
+                .map(this::convertToAcademySelectDTO)
                 .collect(Collectors.toList());
     }
 

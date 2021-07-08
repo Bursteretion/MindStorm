@@ -48,7 +48,6 @@ export async function getInitialState() {
       const { roles, permissions } = currentUser;
       const routeRes = await getRouters(roles);
       const { routes } = routeRes.data;
-      console.log(routes);
       const authorityRoutes = generateAuthorityMenus(routes);
       return {
         currentUser,
