@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProfessionTable from './components/ProfessionTable';
+import ProfessionMain from './components/ProfessionMain';
 
 const ProfessionList = () => {
   return (
@@ -11,7 +11,7 @@ const ProfessionList = () => {
           title: '',
         }}
       >
-        <ProfessionTable />
+        <ProfessionMain />
       </PageContainer>
     </>
   );

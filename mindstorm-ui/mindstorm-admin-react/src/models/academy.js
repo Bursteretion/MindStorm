@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { queryAcademies } from '@/services/academy';
 
 const processAcademyTree = (tree = []) => {
   tree.forEach((item) => {

@@ -14,36 +14,17 @@ import {
 import ProCard from '@ant-design/pro-card';
 import { queryAcademies } from '@/services/academy';
 
-const ProfessionTable = () => {
+const ProfessionTable = (props) => {
+  const { currentSelectedAcademyId } = props;
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
   const [professionId, setProfessionId] = useState(undefined);
-  const [currentSelectedAcademyId, setCurrentSelectedAcademyId] = useState(undefined);
-  const {
-    academyTree = [],
-    setAcademyTree,
-    generateAcademyTreeSelect,
-  } = useModel('academy', (res) => ({
-    academyTree: res.academyTree,
-    setAcademyTree: res.setAcademyTree,
-    generateAcademyTreeSelect: res.generateAcademyTreeSelect,
-  }));
-
-  useEffect(() => {
-    async function fetchAcademies() {
-      if (academyTree === [] || academyTree.length === 0) {
-        const res = await queryAcademies({});
-        setAcademyTree(res.data.academyTree);
-        generateAcademyTreeSelect();
-      }
-    }
-
-    fetchAcademies();
-  }, []);
 
   const handleQueryProfessions = async (params) => {
     const res = await queryProfessions({
+      academyId: currentSelectedAcademyId,
       ...params,
+      professionName: params.name,
       pageIndex: params.current,
       pageSize: params.pageSize,
     });
@@ -54,6 +35,10 @@ const ProfessionTable = () => {
       success: res.success,
     };
   };
+
+  useEffect(() => {
+    actionRef.current?.reload();
+  }, [currentSelectedAcademyId]);
 
   const handleChangeProfessionStatus = async (checked, profession) => {
     const tip = checked ? '启用' : '禁用';
@@ -167,10 +152,81 @@ const ProfessionTable = () => {
   ];
 
   return (
+    <>
+      <ProTable
+        columns={columns}
+        actionRef={actionRef}
+        request={(params) => handleQueryProfessions(params)}
+        rowKey={(record) => record.id}
+        dateFormatter="string"
+        headerTitle="专业列表"
+        pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+        }}
+        options={{ fullScreen: true }}
+        toolBarRender={() => [
+          <Button
+            key="button"
+            icon={<PlusOutlined />}
+            type="primary"
+            onClick={() => {
+              setModalVisible(true);
+              setProfessionId(undefined);
+            }}
+          >
+            新增
+          </Button>,
+        ]}
+      />
+      {!isModalVisible ? (
+        ''
+      ) : (
+        <ProfessionForm
+          professionId={professionId}
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          actionRef={actionRef}
+        />
+      )}
+    </>
+  );
+};
+
+const ProfessionMain = () => {
+  const [currentSelectedAcademyId, setCurrentSelectedAcademyId] = useState(undefined);
+  const [defaultSelectedKeys, setDefaultSelectedKeys] = useState(undefined);
+  const {
+    academyTree = [],
+    setAcademyTree,
+    generateAcademyTreeSelect,
+  } = useModel('academy', (res) => ({
+    academyTree: res.academyTree,
+    setAcademyTree: res.setAcademyTree,
+    generateAcademyTreeSelect: res.generateAcademyTreeSelect,
+  }));
+
+  useEffect(() => {
+    async function fetchAcademies() {
+      if (academyTree === [] || academyTree.length === 0) {
+        const res = await queryAcademies({});
+        setAcademyTree(res.data.academyTree);
+        generateAcademyTreeSelect();
+      }
+    }
+
+    fetchAcademies();
+  }, []);
+
+  return (
     <ProCard split="vertical">
-      <ProCard className="card" colSpan="220px" ghost title="院系">
+      <ProCard className="card" colSpan="20%" ghost title="院系">
         <Tree
-          onSelect={(selectedKeys) => setCurrentSelectedAcademyId(selectedKeys[0])}
+          defaultSelectedKeys={defaultSelectedKeys}
+          onSelect={(selectedKeys) => {
+            setCurrentSelectedAcademyId(selectedKeys[0]);
+            setDefaultSelectedKeys(selectedKeys[0]);
+          }}
           className="academyTree"
           defaultExpandAll
           switcherIcon={<DownOutlined />}
@@ -178,42 +234,10 @@ const ProfessionTable = () => {
         />
       </ProCard>
       <ProCard>
-        <ProTable
-          columns={columns}
-          actionRef={actionRef}
-          request={(params) => handleQueryProfessions(params)}
-          rowKey={(record) => record.id}
-          dateFormatter="string"
-          headerTitle="专业列表"
-          pagination={{ defaultCurrent: 1, defaultPageSize: 10 }}
-          options={{ fullScreen: true }}
-          toolBarRender={() => [
-            <Button
-              key="button"
-              icon={<PlusOutlined />}
-              type="primary"
-              onClick={() => {
-                setModalVisible(true);
-                setProfessionId(undefined);
-              }}
-            >
-              新增
-            </Button>,
-          ]}
-        />
-        {!isModalVisible ? (
-          ''
-        ) : (
-          <ProfessionForm
-            professionId={professionId}
-            isModalVisible={isModalVisible}
-            setModalVisible={setModalVisible}
-            actionRef={actionRef}
-          />
-        )}
+        <ProfessionTable currentSelectedAcademyId={currentSelectedAcademyId} />
       </ProCard>
     </ProCard>
   );
 };
 
-export default ProfessionTable;
+export default ProfessionMain;

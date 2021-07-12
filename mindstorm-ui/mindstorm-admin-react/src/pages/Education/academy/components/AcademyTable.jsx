@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, message, Popconfirm, Switch, Tree } from 'antd';
+import { Button, message, Popconfirm, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import {
@@ -11,17 +11,6 @@ import {
 import AcademyForm from './AcademyForm';
 import { useModel } from 'umi';
 
-function processingAcademies(academies = []) {
-  if (academies.length <= 0) return;
-  academies.forEach((v) => {
-    const backup = v;
-    if (backup.children.length <= 0) {
-      backup.children = undefined;
-    }
-    processingAcademies(backup.children);
-  });
-}
-
 const AcademyTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
@@ -32,7 +21,11 @@ const AcademyTable = () => {
   }));
 
   const handleQueryAcademies = async (params) => {
-    const res = await queryAcademies(params);
+    const res = await queryAcademies({
+      ...params,
+      pageIndex: params.current,
+      pageSize: params.pageSize,
+    });
     const { academyTree = [] } = res.data;
     // processingAcademies(academyTree);
     setAcademyTree(academyTree);
@@ -93,6 +86,7 @@ const AcademyTable = () => {
       valueEnum: AcademyStatus,
       render: (_, record) => {
         const { status, pid } = record;
+        // eslint-disable-next-line no-nested-ternary
         return pid === '0' ? (
           status === 1 ? (
             '正常'

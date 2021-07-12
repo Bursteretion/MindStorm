@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -202,7 +203,6 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         AcademyProfession academyProfession =
                 academyProfessionService.getAcademyProfessionsByProfessionId(profession.getId());
         professionDTO.setAcademyId(academyProfession.getAcademyId());
-        professionDTO.setAcademyName(academyService.infoAcademy(academyProfession.getAcademyId()).getName());
 
         return professionDTO;
     }

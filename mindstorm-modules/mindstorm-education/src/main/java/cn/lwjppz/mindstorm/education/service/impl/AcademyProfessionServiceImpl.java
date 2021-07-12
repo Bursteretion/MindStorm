@@ -4,14 +4,19 @@ import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.entity.AcademyProfession;
 import cn.lwjppz.mindstorm.education.mapper.AcademyProfessionMapper;
 import cn.lwjppz.mindstorm.education.service.AcademyProfessionService;
+import cn.lwjppz.mindstorm.education.service.AcademyService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -23,6 +28,12 @@ import java.util.List;
  */
 @Service
 public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionMapper, AcademyProfession> implements AcademyProfessionService {
+
+    private final AcademyService academyService;
+
+    public AcademyProfessionServiceImpl(@Lazy AcademyService academyService) {
+        this.academyService = academyService;
+    }
 
     @Override
     public List<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId) {
@@ -37,17 +48,30 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
                                                                      Integer pageSize) {
         LambdaQueryWrapper<AcademyProfession> queryWrapper = Wrappers.lambdaQuery();
         if (StringUtils.isNotEmpty(academyId)) {
-            queryWrapper.eq(AcademyProfession::getAcademyId, academyId);
+            Set<String> academyIdSet = new HashSet<>();
+            academyIdSet.add(academyId);
+            var academies = academyService.getAcademies();
+            academies.stream()
+                    .filter(item -> academyIdSet.contains(item.getPid()) || academyIdSet.contains(item.getId()))
+                    .forEach(item -> {
+                        academyIdSet.add(item.getId());
+                        academyIdSet.add(item.getId());
+                    });
+
+            academies.forEach(item -> {
+                if (academyIdSet.contains(item.getId()) || academyIdSet.contains(item.getPid())) {
+                    academyIdSet.add(item.getId());
+                }
+            });
+            queryWrapper.in(AcademyProfession::getAcademyId, academyIdSet);
         }
 
-        IPage<AcademyProfession> page;
         if (null != pageIndex && null != pageSize) {
-            page = new Page<>(pageIndex, pageSize);
+            IPage<AcademyProfession> page = new Page<>(pageIndex, pageSize);
+            return baseMapper.selectPage(page, queryWrapper);
         } else {
-            page = new Page<>(1, 5);
+            return baseMapper.selectPage(null, queryWrapper);
         }
-
-        return baseMapper.selectPage(page, queryWrapper);
     }
 
     @Override

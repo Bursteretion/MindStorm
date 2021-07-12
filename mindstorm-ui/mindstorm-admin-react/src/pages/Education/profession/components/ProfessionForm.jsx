@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Form, message, Modal, Skeleton } from 'antd';
+import { Form, message, Modal, Skeleton, TreeSelect } from 'antd';
 import { createProfession, infoProfession, updateProfession } from '@/services/profession';
-import { ProFormDigit, ProFormRadio, ProFormSelect, ProFormText } from '@ant-design/pro-form';
-import { queryAcademySelects } from '@/services/academy';
+import { ProFormDigit, ProFormRadio, ProFormText } from '@ant-design/pro-form';
+import { useModel } from 'umi';
 
 const ProfessionForm = (props) => {
   const { isModalVisible, setModalVisible, professionId, actionRef } = props;
   const [initialValues, setInitialValues] = useState(undefined);
-  const [selectOptions, setSelectOptions] = useState([]);
   const [professionForm] = Form.useForm();
+  const { academyTree = [] } = useModel('academy', (res) => ({
+    academyTree: res.academyTree,
+  }));
 
   const fetchProfession = async () => {
     if (professionId !== undefined) {
@@ -23,17 +25,8 @@ const ProfessionForm = (props) => {
     }
   };
 
-  const fetchAcademySelects = async () => {
-    const res = await queryAcademySelects();
-    if (res.code === 20000) {
-      const { academySelects } = res.data;
-      setSelectOptions(academySelects);
-    }
-  };
-
   useEffect(() => {
     fetchProfession();
-    fetchAcademySelects();
   }, []);
 
   const handleSubmitForm = async (professionVO) => {
@@ -89,13 +82,19 @@ const ProfessionForm = (props) => {
           labelCol={{ span: 4 }}
           initialValues={initialValues}
         >
-          <ProFormSelect
-            name="academyId"
+          <Form.Item
             label="所属院系"
-            placeholder="请选择院系"
-            options={selectOptions}
-            rules={[{ required: true, message: '请选择院系!' }]}
-          />
+            name="academyId"
+            rules={[{ required: true, message: '请选择院系！' }]}
+          >
+            <TreeSelect
+              treeDefaultExpandAll
+              allowClear
+              showArrow
+              placeholder="请选择上级院系/部门"
+              treeData={academyTree}
+            />
+          </Form.Item>
           <ProFormText
             name="name"
             label="专业名称"
