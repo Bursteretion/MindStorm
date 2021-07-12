@@ -59,7 +59,7 @@ public class AcademyController {
 
     @PostMapping("/query")
     @ApiOperation("根据院系信息查询学院")
-    public CommonResult query(@ApiParam("院系查询信息") @RequestBody AcademyQueryVO academyQueryVO) {
+    public CommonResult query(@ApiParam("院系查询信息") @RequestBody(required = false) AcademyQueryVO academyQueryVO) {
         var academyTree = academyService.generateAcademyTree(academyService.queryAcademies(academyQueryVO));
         return CommonResult.ok().data("academyTree", academyTree);
     }

@@ -1,19 +1,45 @@
-import React, { useRef, useState } from 'react';
-import { Button, message, Popconfirm, Switch } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, message, Popconfirm, Switch, Tree } from 'antd';
+import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import ProfessionForm from './ProfessionForm';
+import { useModel } from 'umi';
+import '../index.less';
 import {
   changeProfessionStatus,
   deleteProfession,
   ProfessionStatus,
   queryProfessions,
 } from '@/services/profession';
+import ProCard from '@ant-design/pro-card';
+import { queryAcademies } from '@/services/academy';
 
 const ProfessionTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
   const [professionId, setProfessionId] = useState(undefined);
+  const [currentSelectedAcademyId, setCurrentSelectedAcademyId] = useState(undefined);
+  const {
+    academyTree = [],
+    setAcademyTree,
+    generateAcademyTreeSelect,
+  } = useModel('academy', (res) => ({
+    academyTree: res.academyTree,
+    setAcademyTree: res.setAcademyTree,
+    generateAcademyTreeSelect: res.generateAcademyTreeSelect,
+  }));
+
+  useEffect(() => {
+    async function fetchAcademies() {
+      if (academyTree === [] || academyTree.length === 0) {
+        const res = await queryAcademies({});
+        setAcademyTree(res.data.academyTree);
+        generateAcademyTreeSelect();
+      }
+    }
+
+    fetchAcademies();
+  }, []);
 
   const handleQueryProfessions = async (params) => {
     const res = await queryProfessions({
@@ -66,12 +92,6 @@ const ProfessionTable = () => {
       dataIndex: 'index',
       valueType: 'indexBorder',
       width: 48,
-    },
-    {
-      title: '所属院系',
-      dataIndex: 'academyName',
-      width: 200,
-      search: false,
     },
     {
       title: '专业名称',
@@ -147,41 +167,52 @@ const ProfessionTable = () => {
   ];
 
   return (
-    <>
-      <ProTable
-        columns={columns}
-        actionRef={actionRef}
-        request={(params) => handleQueryProfessions(params)}
-        rowKey={(record) => record.id}
-        dateFormatter="string"
-        headerTitle="院系列表"
-        pagination={{ defaultCurrent: 1, defaultPageSize: 10 }}
-        options={{ fullScreen: true }}
-        toolBarRender={() => [
-          <Button
-            key="button"
-            icon={<PlusOutlined />}
-            type="primary"
-            onClick={() => {
-              setModalVisible(true);
-              setProfessionId(undefined);
-            }}
-          >
-            新增
-          </Button>,
-        ]}
-      />
-      {!isModalVisible ? (
-        ''
-      ) : (
-        <ProfessionForm
-          professionId={professionId}
-          isModalVisible={isModalVisible}
-          setModalVisible={setModalVisible}
-          actionRef={actionRef}
+    <ProCard split="vertical">
+      <ProCard className="card" colSpan="220px" ghost title="院系">
+        <Tree
+          onSelect={(selectedKeys) => setCurrentSelectedAcademyId(selectedKeys[0])}
+          className="academyTree"
+          defaultExpandAll
+          switcherIcon={<DownOutlined />}
+          treeData={academyTree}
         />
-      )}
-    </>
+      </ProCard>
+      <ProCard>
+        <ProTable
+          columns={columns}
+          actionRef={actionRef}
+          request={(params) => handleQueryProfessions(params)}
+          rowKey={(record) => record.id}
+          dateFormatter="string"
+          headerTitle="专业列表"
+          pagination={{ defaultCurrent: 1, defaultPageSize: 10 }}
+          options={{ fullScreen: true }}
+          toolBarRender={() => [
+            <Button
+              key="button"
+              icon={<PlusOutlined />}
+              type="primary"
+              onClick={() => {
+                setModalVisible(true);
+                setProfessionId(undefined);
+              }}
+            >
+              新增
+            </Button>,
+          ]}
+        />
+        {!isModalVisible ? (
+          ''
+        ) : (
+          <ProfessionForm
+            professionId={professionId}
+            isModalVisible={isModalVisible}
+            setModalVisible={setModalVisible}
+            actionRef={actionRef}
+          />
+        )}
+      </ProCard>
+    </ProCard>
   );
 };
 

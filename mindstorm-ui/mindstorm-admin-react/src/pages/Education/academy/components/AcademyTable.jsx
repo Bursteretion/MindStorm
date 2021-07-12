@@ -34,7 +34,7 @@ const AcademyTable = () => {
   const handleQueryAcademies = async (params) => {
     const res = await queryAcademies(params);
     const { academyTree = [] } = res.data;
-    processingAcademies(academyTree);
+    // processingAcademies(academyTree);
     setAcademyTree(academyTree);
     generateAcademyTreeSelect();
     return {
