@@ -1,19 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, message, Popconfirm, Select, Switch, Tag, TreeSelect } from 'antd';
-import { changeStudentStatus, deleteStudent, queryStudents } from '@/services/user/student';
+import { Button, message, Popconfirm, Switch, Tag, TreeSelect } from 'antd';
+import { changeTeacherStatus, deleteTeacher, queryTeachers } from '@/services/user/teacher';
 import { AcademyStatus, queryAcademies } from '@/services/education/academy';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import StudentForm from './StudentForm';
+import TeacherForm from './TeacherForm';
 import { useModel } from 'umi';
-import { listSelectProfessions } from '@/services/education/profession';
-import { ProFormSelect } from '@ant-design/pro-form';
 
-const StudentTable = () => {
+const TeacherTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
-  const [studentId, setStudentId] = useState(undefined);
-  const [professions, setProfessions] = useState([]);
+  const [teacherId, setTeacherId] = useState(undefined);
   const {
     academyTree = [],
     setAcademyTree,
@@ -24,13 +21,13 @@ const StudentTable = () => {
     generateAcademyTreeSelect: res.generateAcademyTreeSelect,
   }));
 
-  const handleQueryStudents = async (params) => {
-    const res = await queryStudents({
+  const handleQueryTeachers = async (params) => {
+    const res = await queryTeachers({
       ...params,
       pageIndex: params.current,
       pageSize: params.pageSize,
     });
-    const { records = [], total } = res.data.pageStudents;
+    const { records = [], total } = res.data.pageTeachers;
     return {
       data: records,
       total,
@@ -38,11 +35,11 @@ const StudentTable = () => {
     };
   };
 
-  const handleChangeStudentStatus = async (checked, student) => {
+  const handleChangeTeacherStatus = async (checked, teacher) => {
     const tip = checked ? '启用' : '禁用';
-    const hide = message.loading(`正在${tip}学生【${student.realName}】`);
+    const hide = message.loading(`正在${tip}教师【${teacher.realName}】`);
     try {
-      await changeStudentStatus(student.id, checked ? 1 : 0);
+      await changeTeacherStatus(teacher.id, checked ? 1 : 0);
       hide();
       message.success(`${tip}成功！`);
       actionRef?.current.reset();
@@ -54,10 +51,10 @@ const StudentTable = () => {
     }
   };
 
-  const handleDeleteStudent = async (student) => {
-    const hide = message.loading(`正在删除学生【${student.realName}】`);
+  const handleDeleteTeacher = async (teacher) => {
+    const hide = message.loading(`正在删除教师【${teacher.realName}】`);
     try {
-      await deleteStudent(student.id);
+      await deleteTeacher(teacher.id);
       hide();
       message.success(`删除成功！`);
       actionRef?.current.reset();
@@ -77,16 +74,8 @@ const StudentTable = () => {
     }
   };
 
-  const fetchProfessions = async () => {
-    if (professions === [] || professions.length === 0) {
-      const res = await listSelectProfessions();
-      setProfessions(res.data.professions);
-    }
-  };
-
   useEffect(() => {
     fetchAcademies();
-    fetchProfessions();
   }, []);
 
   const columns = [
@@ -114,43 +103,12 @@ const StudentTable = () => {
       },
     },
     {
-      title: '专业',
-      dataIndex: 'professionName',
-      search: false,
-    },
-    {
-      title: '专业',
-      dataIndex: 'professionId',
-      hideInTable: true,
-      renderFormItem: (item, { type }) => {
-        if (type === 'form') {
-          return null;
-        }
-        return (
-          <Select
-            showSearch
-            allowClear
-            filterOption={(input, option) =>
-              option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            name="professionId"
-            options={professions}
-            placeholder="请选择所属专业"
-          />
-        );
-      },
-    },
-    {
       title: '用户名',
       dataIndex: 'username',
     },
     {
       title: '真实姓名',
       dataIndex: 'realName',
-    },
-    {
-      title: '学号',
-      dataIndex: 'sno',
     },
     {
       title: '性别',
@@ -181,7 +139,7 @@ const StudentTable = () => {
         ) : (
           <Switch
             checked={status === 1}
-            onChange={(checked) => handleChangeStudentStatus(checked, record)}
+            onChange={(checked) => handleChangeTeacherStatus(checked, record)}
             checkedChildren="启用"
             unCheckedChildren="禁用"
           />
@@ -217,7 +175,7 @@ const StudentTable = () => {
           key="edit"
           onClick={() => {
             setModalVisible(true);
-            setStudentId(record.id);
+            setTeacherId(record.id);
           }}
         >
           编辑
@@ -228,7 +186,7 @@ const StudentTable = () => {
           <Popconfirm
             key="delete"
             title={`你确定要删除【${record.name}】这个院系吗？`}
-            onConfirm={() => handleDeleteStudent(record)}
+            onConfirm={() => handleDeleteTeacher(record)}
             okText="确定"
             cancelText="取消"
           >
@@ -243,10 +201,10 @@ const StudentTable = () => {
       <ProTable
         columns={columns}
         actionRef={actionRef}
-        request={(params) => handleQueryStudents(params)}
+        request={(params) => handleQueryTeachers(params)}
         rowKey={(record) => record.id}
         dateFormatter="string"
-        headerTitle="学生列表"
+        headerTitle="教师列表"
         pagination={null}
         options={{ fullScreen: true }}
         toolBarRender={() => [
@@ -256,7 +214,7 @@ const StudentTable = () => {
             type="primary"
             onClick={() => {
               setModalVisible(true);
-              setStudentId(undefined);
+              setTeacherId(undefined);
             }}
           >
             新增
@@ -266,9 +224,9 @@ const StudentTable = () => {
       {!isModalVisible ? (
         ''
       ) : (
-        <StudentForm
+        <TeacherForm
           actionRef={actionRef}
-          studentId={studentId}
+          teacherId={teacherId}
           isModalVisible={isModalVisible}
           setModalVisible={setModalVisible}
         />
@@ -277,4 +235,4 @@ const StudentTable = () => {
   );
 };
 
-export default StudentTable;
+export default TeacherTable;
