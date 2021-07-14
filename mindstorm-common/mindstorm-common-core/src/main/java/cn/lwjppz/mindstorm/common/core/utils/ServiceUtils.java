@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.common.core.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -67,7 +68,8 @@ public final class ServiceUtils {
      * @return a mpa which key from list data and value from data
      */
     @NonNull
-    public static <K, T, V> Map<K, V> convertToMap(@Nullable Collection<T> list, @NonNull Function<T, K> keyFunction, @NonNull Function<T, V> valueFunction) {
+    public static <K, T, V> Map<K, V> convertToMap(@Nullable Collection<T> list, @NonNull Function<T, K> keyFunction,
+                                                   @NonNull Function<T, V> valueFunction) {
         Assert.notNull(keyFunction, "key mapping function must not be null.");
         Assert.notNull(valueFunction, "value mapping function must not be null.");
 
@@ -90,6 +92,18 @@ public final class ServiceUtils {
      */
     public static boolean isEmptyId(@Nullable Number id) {
         return id == null || id.longValue() <= 0;
+    }
+
+    /**
+     * 解决 Feign 远程调用返回 LinkedHashMap 问题
+     *
+     * @param value feign调用产生的 LinkedHashMap
+     * @param clazz 要转换的类型Class对象
+     * @param <T>   类型
+     */
+    public static <T> T feignValueConvert(Object value, Class<T> clazz) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(value, clazz);
     }
 
 }

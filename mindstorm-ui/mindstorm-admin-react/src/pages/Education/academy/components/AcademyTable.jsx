@@ -7,7 +7,7 @@ import {
   changeAcademyStatus,
   deleteAcademy,
   queryAcademies,
-} from '@/services/academy';
+} from '@/services/education/academy';
 import AcademyForm from './AcademyForm';
 import { useModel } from 'umi';
 
@@ -200,4 +200,5 @@ const AcademyTable = () => {
     </>
   );
 };
+
 export default AcademyTable;

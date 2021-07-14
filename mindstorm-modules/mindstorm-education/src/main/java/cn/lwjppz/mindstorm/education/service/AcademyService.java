@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.education.service;
 
+import cn.lwjppz.mindstorm.common.core.to.AcademyTo;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademySelectDTO;
@@ -76,6 +77,8 @@ public interface AcademyService extends IService<Academy> {
      * @return 学院信息
      */
     Academy infoAcademy(String academyId);
+
+    AcademyTo remoteInfoAcademy(String academyId);
 
     /**
      * 将院系信息转为树形结构

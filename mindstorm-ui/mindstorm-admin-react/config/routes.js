@@ -1,15 +1,15 @@
 export default [
   {
-    path: '/user',
+    path: '/system',
     layout: false,
     routes: [
       {
-        path: '/user',
+        path: '/system',
         routes: [
           {
             name: 'login',
-            path: '/user/login',
-            component: './User/Login',
+            path: '/system/login',
+            component: './System/Login',
           },
         ],
       },
@@ -53,7 +53,7 @@ export default [
         name: 'role',
         path: '/permission/role',
         component: './Permission/role',
-        // access: 'hasRouter',
+        access: 'hasRouter',
       },
       {
         name: 'user',
@@ -81,6 +81,28 @@ export default [
         name: 'profession',
         path: '/education/profession',
         component: './Education/profession',
+        access: 'hasRouter',
+      },
+    ],
+  },
+  {
+    path: '/personnel',
+    name: 'Personnel',
+    routes: [
+      {
+        path: '/personnel',
+        redirect: '/personnel/student',
+      },
+      {
+        name: 'student',
+        path: '/personnel/student',
+        component: './Personnel/student',
+        access: 'hasRouter',
+      },
+      {
+        name: 'teacher',
+        path: '/personnel/teacher',
+        component: './Personnel/teacher',
         access: 'hasRouter',
       },
     ],

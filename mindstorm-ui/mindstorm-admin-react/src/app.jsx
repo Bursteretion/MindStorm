@@ -4,12 +4,12 @@ import Footer from '@/components/Footer';
 import { PageLoading } from '@ant-design/pro-layout';
 import defaultSettings from '../config/defaultSettings';
 import { history } from 'umi';
-import { queryCurrent } from '@/services/user';
+import { queryCurrent } from '@/services/permission/user';
 import { getToken } from '@/utils/authority';
-import { getRouters } from '@/services/menu';
+import { getRouters } from '@/services/permission/menu';
 import renderMenuItem from '@/utils/renderMenuItem';
 
-const loginPath = '/user/login';
+const loginPath = '/system/login';
 
 const generateAuthorityMenus = (routes) => {
   const menus = [];

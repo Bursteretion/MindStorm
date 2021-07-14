@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button, Space, Table, Tag } from 'antd';
 import ProTable from '@ant-design/pro-table';
-import { MenuType, querySearchMenus } from '@/services/menu';
+import { MenuType, querySearchMenus } from '@/services/permission/menu';
 import { PlusOutlined } from '@ant-design/icons';
 import { FooterToolbar } from '@ant-design/pro-layout';
 import MenuForm from './MenuForm';

@@ -1,10 +1,18 @@
 import request from '@/utils/request';
 
+export async function listSelectProfessions() {
+  return request('/mindstorm-education/education/profession/listSelect');
+}
+
 export async function queryProfessions(params) {
   return request('/mindstorm-education/education/profession/query', {
     method: 'POST',
     data: params,
   });
+}
+
+export async function listProfessionsByAcademyId(academyId) {
+  return request(`/mindstorm-education/education/profession/list/${academyId}`);
 }
 
 export async function createProfession(professionVO) {

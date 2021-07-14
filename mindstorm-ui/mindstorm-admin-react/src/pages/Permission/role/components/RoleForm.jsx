@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, message, Skeleton } from 'antd';
 import { ProFormDigit, ProFormText, ProFormTextArea, ProFormRadio } from '@ant-design/pro-form';
-import { createRole, updateRole, infoRole } from '@/services/role';
+import { createRole, updateRole, infoRole } from '@/services/permission/role';
 
 const RoleForm = (props) => {
   const { isModalVisible, setModalVisible, roleId, actionRef } = props;

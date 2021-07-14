@@ -27,6 +27,9 @@ public class IdeaVO implements Serializable {
     @ApiModelProperty(value = "知识点Id")
     private String id;
 
+    @ApiModelProperty(value = "所属专业Id")
+    private String professionId;
+
     @ApiModelProperty(value = "上级知识点Id")
     private String pid;
 

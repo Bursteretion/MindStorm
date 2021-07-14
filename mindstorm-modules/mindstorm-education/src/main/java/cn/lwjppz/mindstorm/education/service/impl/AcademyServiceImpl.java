@@ -3,6 +3,7 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.common.core.enums.status.AcademyStatus;
 import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
+import cn.lwjppz.mindstorm.common.core.to.AcademyTo;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
@@ -117,6 +118,21 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
                 throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
             }
             return academy;
+        }
+        return null;
+    }
+
+    @Override
+    public AcademyTo remoteInfoAcademy(String academyId) {
+        if (StringUtils.isNotEmpty(academyId)) {
+            var academy = baseMapper.selectById(academyId);
+            if (null == academy) {
+                throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
+            }
+            AcademyTo academyTo = new AcademyTo();
+            academyTo.setAcademyId(academy.getId());
+            academyTo.setAcademyName(academy.getName());
+            return academyTo;
         }
         return null;
     }

@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -37,15 +38,19 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
 
     @Override
     public List<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId) {
-        LambdaQueryWrapper<AcademyProfession> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(AcademyProfession::getAcademyId, academyId);
-
-        return baseMapper.selectList(queryWrapper);
+        return baseMapper.selectList(getAcademyProfessionLambdaQueryWrapper(academyId));
     }
 
     @Override
-    public IPage<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId, Integer pageIndex,
-                                                                     Integer pageSize) {
+    public IPage<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId,
+                                                                     @NonNull Integer pageIndex,
+                                                                     @NonNull Integer pageSize) {
+        LambdaQueryWrapper<AcademyProfession> queryWrapper = getAcademyProfessionLambdaQueryWrapper(academyId);
+        IPage<AcademyProfession> page = new Page<>(pageIndex, pageSize);
+        return baseMapper.selectPage(page, queryWrapper);
+    }
+
+    private LambdaQueryWrapper<AcademyProfession> getAcademyProfessionLambdaQueryWrapper(String academyId) {
         LambdaQueryWrapper<AcademyProfession> queryWrapper = Wrappers.lambdaQuery();
         if (StringUtils.isNotEmpty(academyId)) {
             Set<String> academyIdSet = new HashSet<>();
@@ -53,10 +58,7 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
             var academies = academyService.getAcademies();
             academies.stream()
                     .filter(item -> academyIdSet.contains(item.getPid()) || academyIdSet.contains(item.getId()))
-                    .forEach(item -> {
-                        academyIdSet.add(item.getId());
-                        academyIdSet.add(item.getId());
-                    });
+                    .forEach(item -> academyIdSet.add(item.getId()));
 
             academies.forEach(item -> {
                 if (academyIdSet.contains(item.getId()) || academyIdSet.contains(item.getPid())) {
@@ -65,13 +67,7 @@ public class AcademyProfessionServiceImpl extends ServiceImpl<AcademyProfessionM
             });
             queryWrapper.in(AcademyProfession::getAcademyId, academyIdSet);
         }
-
-        if (null != pageIndex && null != pageSize) {
-            IPage<AcademyProfession> page = new Page<>(pageIndex, pageSize);
-            return baseMapper.selectPage(page, queryWrapper);
-        } else {
-            return baseMapper.selectPage(null, queryWrapper);
-        }
+        return queryWrapper;
     }
 
     @Override

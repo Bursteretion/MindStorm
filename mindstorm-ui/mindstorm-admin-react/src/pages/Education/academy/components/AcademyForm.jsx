@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, message, Modal, Skeleton, TreeSelect } from 'antd';
 import { ProFormDigit, ProFormRadio, ProFormText } from '@ant-design/pro-form';
-import { createAcademy, infoAcademy, updateAcademy } from '@/services/academy';
+import { createAcademy, infoAcademy, updateAcademy } from '@/services/education/academy';
 import { useModel } from 'umi';
 
 const AcademyForm = (props) => {

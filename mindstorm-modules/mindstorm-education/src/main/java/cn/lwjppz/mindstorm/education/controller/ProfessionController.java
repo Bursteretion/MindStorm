@@ -37,6 +37,13 @@ public class ProfessionController {
         return CommonResult.ok().data("professions", professions);
     }
 
+    @GetMapping("/listSelect")
+    @ApiOperation("获取所有专业信息（选择组件）")
+    public CommonResult listSelectProfessions() {
+        var professions = professionService.convertToSimpleProfessionDTO(professionService.getProfessions());
+        return CommonResult.ok().data("professions", professions);
+    }
+
     @GetMapping("list-unDisable")
     @ApiOperation("获取所有未禁用的专业信息")
     public CommonResult listUnDisableProfessions() {
@@ -49,7 +56,7 @@ public class ProfessionController {
     @ApiOperation("根据院系Id获取该院系开设的所有专业")
     public CommonResult listProfessionsByAcademyId(@ApiParam("院系Id") @PathVariable("academyId") String academyId) {
         var professions =
-                professionService.convertToProfessionDTO(professionService.getProfessionsByAcademyId(academyId));
+                professionService.convertToSimpleProfessionDTO(professionService.getProfessionsByAcademyId(academyId));
         return CommonResult.ok().data("professions", professions);
     }
 
@@ -87,6 +94,13 @@ public class ProfessionController {
     public CommonResult info(@ApiParam("专业Id") @PathVariable("professionId") String professionId) {
         var professionInfo = professionService.convertToProfessionDTO(professionService.infoProfession(professionId));
         return CommonResult.ok().data("professionInfo", professionInfo);
+    }
+
+    @PutMapping("/info/remote/{professionId}")
+    @ApiOperation("根据专业Id获取专业信息（远程调用）")
+    public CommonResult remoteInfo(@ApiParam("专业Id") @PathVariable("professionId") String professionId) {
+        var professionTo = professionService.convertToProfessionTo(professionService.infoProfession(professionId));
+        return CommonResult.ok().data("professionTo", professionTo);
     }
 
     @PutMapping("/change/{professionId}/{status}")

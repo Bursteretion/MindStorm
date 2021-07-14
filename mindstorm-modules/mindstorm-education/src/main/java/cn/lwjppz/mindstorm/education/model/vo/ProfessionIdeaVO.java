@@ -21,6 +21,6 @@ public class ProfessionIdeaVO {
 
     private String professionId;
 
-    private List<String> ideaIds;
+    private String ideaId;
     
 }

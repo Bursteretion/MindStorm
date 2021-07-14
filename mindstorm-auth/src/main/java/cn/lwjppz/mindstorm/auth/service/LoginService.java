@@ -10,6 +10,7 @@ import cn.lwjppz.mindstorm.common.core.enums.status.UserStatus;
 import cn.lwjppz.mindstorm.common.core.exception.LoginException;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.core.utils.SecurityUtils;
+import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -64,9 +65,7 @@ public class LoginService {
             throw new LoginException(ResultStatus.USER_NOT_EXIST);
         }
 
-        // 解决 Feign 远程调用返回 LinkedHashMap 问题
-        ObjectMapper objectMapper = new ObjectMapper();
-        LoginUser user = objectMapper.convertValue(result.getData().get("user"), LoginUser.class);
+        LoginUser user = ServiceUtils.feignValueConvert(result.getData().get("user"), LoginUser.class);
 
         if (UserStatus.DISABLE.getValue().equals(user.getStatus())) {
             remoteLogFeignService.saveLoginVisit(username, LoginStatus.FAILED.getValue(), "用户已停用，请联系管理员");

@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.education.controller;
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
-import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaDTO;
+import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaTreeDTO;
 import cn.lwjppz.mindstorm.education.model.vo.ProfessionIdeaVO;
 import cn.lwjppz.mindstorm.education.service.ProfessionIdeaService;
 import io.swagger.annotations.Api;
@@ -33,7 +33,7 @@ public class ProfessionIdeaController {
     @GetMapping("/treeProfessionIdea/{professionId}")
     @ApiOperation("通过专业Id获取该学科的知识点树")
     public CommonResult treeProfessionIdea(@ApiParam("学科Id") @PathVariable("professionId") String professionId) {
-        List<IdeaDTO> treeIdeas = professionIdeaService.getTreeIdeas(professionId);
+        List<IdeaTreeDTO> treeIdeas = professionIdeaService.getTreeIdeas(professionId);
         return CommonResult.ok().data("treeIdeas", treeIdeas);
     }
 

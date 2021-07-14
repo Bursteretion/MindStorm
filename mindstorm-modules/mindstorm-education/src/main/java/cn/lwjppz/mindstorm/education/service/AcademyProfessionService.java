@@ -3,6 +3,7 @@ package cn.lwjppz.mindstorm.education.service;
 import cn.lwjppz.mindstorm.education.model.entity.AcademyProfession;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -32,7 +33,9 @@ public interface AcademyProfessionService extends IService<AcademyProfession> {
      * @param pageSize  每页条数
      * @return 关联信息集合
      */
-    IPage<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId, Integer pageIndex, Integer pageSize);
+    IPage<AcademyProfession> getAcademyProfessionsByAcademyId(String academyId,
+                                                              @NonNull Integer pageIndex,
+                                                              @NonNull Integer pageSize);
 
     /**
      * 根据专业Id获取院系专业相关联信息

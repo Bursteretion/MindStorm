@@ -78,6 +78,7 @@ export default [
       'ApartmentOutlined',
       'DashboardOutlined',
       'BankOutlined',
+      'UsergroupAddOutlined',
     ],
   },
 ];

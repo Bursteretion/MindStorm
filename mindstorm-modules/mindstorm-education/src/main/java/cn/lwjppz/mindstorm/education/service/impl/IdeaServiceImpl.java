@@ -2,8 +2,9 @@ package cn.lwjppz.mindstorm.education.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.mapper.IdeaMapper;
-import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaDTO;
+import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaTreeDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Idea;
+import cn.lwjppz.mindstorm.education.model.vo.ProfessionIdeaVO;
 import cn.lwjppz.mindstorm.education.model.vo.idea.IdeaVO;
 import cn.lwjppz.mindstorm.education.service.IdeaService;
 import cn.lwjppz.mindstorm.education.service.ProfessionIdeaService;
@@ -35,7 +36,7 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
     }
 
     @Override
-    public List<IdeaDTO> getTreeIdeas() {
+    public List<IdeaTreeDTO> getTreeIdeas() {
         LambdaQueryWrapper<Idea> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.orderByAsc(Idea::getSort);
         var ideas = baseMapper.selectList(queryWrapper);
@@ -43,7 +44,7 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
     }
 
     @Override
-    public List<IdeaDTO> getTreeIdeas(List<Idea> ideas) {
+    public List<IdeaTreeDTO> getTreeIdeas(List<Idea> ideas) {
         return generateTreeIdea(ideas);
     }
 
@@ -73,7 +74,10 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
         // 新增知识点
         baseMapper.insert(idea);
 
-        return getIdea(idea.getId());
+        // 新增专业知识点关联
+        professionIdeaService.insertProfessionIdea(new ProfessionIdeaVO(ideaVO.getProfessionId(), idea.getId()));
+
+        return idea;
     }
 
     @Override
@@ -83,7 +87,7 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
 
         baseMapper.updateById(idea);
 
-        return getIdea(idea.getId());
+        return idea;
     }
 
     @Override
@@ -94,14 +98,14 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
             queryWrapper.eq(Idea::getId, ideaId).or().eq(Idea::getPid, ideaId);
             var ideas = baseMapper.selectList(queryWrapper);
             if (!CollectionUtils.isEmpty(ideas)) {
-               ideas.forEach(v -> {
-                   // 删除知识点
-                   baseMapper.deleteById(v.getId());
-                   // 删除学科知识点关联
-                   professionIdeaService.deleteProfessionIdeaByIdeaId(v.getId());
-                   // 递归删除子知识点
-                   deleteIdea(v.getId());
-               });
+                ideas.forEach(v -> {
+                    // 删除知识点
+                    baseMapper.deleteById(v.getId());
+                    // 删除专业知识点关联
+                    professionIdeaService.deleteProfessionIdeaByIdeaId(v.getId());
+                    // 递归删除子知识点
+                    deleteIdea(v.getId());
+                });
             }
         }
         return true;
@@ -120,9 +124,9 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
      * @param ideas 知识点列表
      * @return 知识点树
      */
-    private List<IdeaDTO> generateTreeIdea(List<Idea> ideas) {
+    private List<IdeaTreeDTO> generateTreeIdea(List<Idea> ideas) {
         // 先将Idea集合转为IdeaDTO集合
-        List<IdeaDTO> ideaDtoS = convertToIdeaDTO(ideas);
+        List<IdeaTreeDTO> ideaDtoS = convertToIdeaDTO(ideas);
 
         // 建立知识点Id和子知识点集合映射
         var ideaMap = generateIdeaMap(ideaDtoS);
@@ -140,7 +144,7 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
         });
 
         // 筛选出没有父Id的知识点作为根节点
-        var treeIdeas = new ArrayList<IdeaDTO>();
+        var treeIdeas = new ArrayList<IdeaTreeDTO>();
         ideaDtoS.forEach(v -> {
             if (!StringUtils.isNotEmpty(v.getPid())) {
                 treeIdeas.add(v);
@@ -153,10 +157,10 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
         return treeIdeas;
     }
 
-    private List<IdeaDTO> convertToIdeaDTO(List<Idea> ideas) {
+    private List<IdeaTreeDTO> convertToIdeaDTO(List<Idea> ideas) {
         return ideas.stream()
                 .map(v -> {
-                    var ideaDTO = new IdeaDTO();
+                    var ideaDTO = new IdeaTreeDTO();
                     BeanUtils.copyProperties(v, ideaDTO);
                     ideaDTO.setChildren(new ArrayList<>());
                     return ideaDTO;
@@ -164,16 +168,16 @@ public class IdeaServiceImpl extends ServiceImpl<IdeaMapper, Idea> implements Id
                 .collect(Collectors.toList());
     }
 
-    private Map<String, List<IdeaDTO>> generateIdeaMap(List<IdeaDTO> ideaDtoS) {
+    private Map<String, List<IdeaTreeDTO>> generateIdeaMap(List<IdeaTreeDTO> ideaDtoS) {
         // 建立知识点Id和子知识点集合映射
-        var ideaMap = new HashMap<String, List<IdeaDTO>>(ideaDtoS.size());
+        var ideaMap = new HashMap<String, List<IdeaTreeDTO>>(ideaDtoS.size());
         ideaDtoS.forEach(v -> ideaMap.put(v.getId(), v.getChildren()));
         return ideaMap;
     }
 
-    private void sortChildren(IdeaDTO ideaDto) {
+    private void sortChildren(IdeaTreeDTO ideaDto) {
         if (null != ideaDto.getChildren()) {
-            ideaDto.getChildren().sort(Comparator.comparing(IdeaDTO::getSort));
+            ideaDto.getChildren().sort(Comparator.comparing(IdeaTreeDTO::getSort));
             ideaDto.getChildren().forEach(this::sortChildren);
         }
     }

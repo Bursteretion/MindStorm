@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Form, message, TreeSelect, Radio, Input, InputNumber, Skeleton, Modal } from 'antd';
-import { insertMenu, listMenusByType, MenuType, updateMenu } from '@/services/menu';
+import {
+  insertMenu,
+  listMenusByType,
+  MenuType,
+  updateMenu,
+  getMenuById,
+} from '@/services/permission/menu';
 import IconSelector from '@/components/IconSelector';
 import { MenuOutlined } from '@ant-design/icons';
-import { getMenuById } from '@/services/menu';
 import * as Icons from '@ant-design/icons';
 import convertToTreeMenus from '@/utils/treeSelect';
 import '../index.less';

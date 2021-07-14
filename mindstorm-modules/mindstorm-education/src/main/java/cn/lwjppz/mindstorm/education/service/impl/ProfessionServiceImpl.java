@@ -3,10 +3,12 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.common.core.enums.status.ProfessionStatus;
 import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
+import cn.lwjppz.mindstorm.common.core.to.ProfessionTo;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
 import cn.lwjppz.mindstorm.education.model.dto.profession.ProfessionDTO;
+import cn.lwjppz.mindstorm.education.model.dto.profession.SimpleProfessionDTO;
 import cn.lwjppz.mindstorm.education.model.entity.AcademyProfession;
 import cn.lwjppz.mindstorm.education.model.entity.Profession;
 import cn.lwjppz.mindstorm.education.mapper.ProfessionMapper;
@@ -67,7 +69,8 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         List<Profession> professions = null;
         if (StringUtils.isNotEmpty(academyId)) {
             // 根据院系Id获取该院所有院系专业关联信息
-            var academyProfessions = academyProfessionService.getAcademyProfessionsByAcademyId(academyId);
+            var academyProfessions =
+                    academyProfessionService.getAcademyProfessionsByAcademyId(academyId);
             // 提取所有专业Id
             var professionIds = ServiceUtils.fetchProperty(academyProfessions, AcademyProfession::getProfessionId);
             // 根据Id集合查询所有专业信息
@@ -167,6 +170,21 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
     }
 
     @Override
+    public ProfessionTo remoteInfoProfession(String professionId) {
+        if (StringUtils.isNotEmpty(professionId)) {
+            var profession = baseMapper.selectById(professionId);
+            if (null == profession) {
+                throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
+            }
+            ProfessionTo professionTo = new ProfessionTo();
+            professionTo.setProfessionId(profession.getId());
+            professionTo.setProfessionName(profession.getName());
+            return professionTo;
+        }
+        return null;
+    }
+
+    @Override
     public boolean changeProfessionStatus(String professionId, Integer status) {
         if (StringUtils.isNotEmpty(professionId)) {
             Profession profession = baseMapper.selectById(professionId);
@@ -212,6 +230,29 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         return professions.stream()
                 .map(this::convertToProfessionDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SimpleProfessionDTO convertToSimpleProfessionDTO(Profession profession) {
+        SimpleProfessionDTO simpleProfessionDTO = new SimpleProfessionDTO();
+        simpleProfessionDTO.setLabel(profession.getName());
+        simpleProfessionDTO.setValue(profession.getId());
+        return simpleProfessionDTO;
+    }
+
+    @Override
+    public List<SimpleProfessionDTO> convertToSimpleProfessionDTO(List<Profession> professions) {
+        return professions.stream()
+                .map(this::convertToSimpleProfessionDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProfessionTo convertToProfessionTo(Profession profession) {
+        ProfessionTo professionTo = new ProfessionTo();
+        professionTo.setProfessionName(profession.getName());
+        professionTo.setProfessionId(profession.getId());
+        return professionTo;
     }
 
     @Override

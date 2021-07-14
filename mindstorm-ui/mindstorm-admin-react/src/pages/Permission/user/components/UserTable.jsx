@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Button, message, Popconfirm, Space, Switch, Table, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { changeUserStatus, deleteUser, searchUsers, UserStatus } from '@/services/user';
+import { changeUserStatus, deleteUser, searchUsers, UserStatus } from '@/services/permission/user';
 import UserForm from './UserForm';
 
 const UserTable = () => {

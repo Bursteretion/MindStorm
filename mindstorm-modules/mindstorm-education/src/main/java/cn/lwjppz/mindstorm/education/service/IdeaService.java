@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.education.service;
 
-import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaDTO;
+import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaTreeDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Idea;
 import cn.lwjppz.mindstorm.education.model.vo.idea.IdeaVO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -22,7 +22,7 @@ public interface IdeaService extends IService<Idea> {
      *
      * @return 知识点树
      */
-    List<IdeaDTO> getTreeIdeas();
+    List<IdeaTreeDTO> getTreeIdeas();
 
     /**
      * 根据所给的知识点列表生成对应的知识点树
@@ -30,7 +30,7 @@ public interface IdeaService extends IService<Idea> {
      * @param ideas 知识点列表
      * @return 知识点树
      */
-    List<IdeaDTO> getTreeIdeas(List<Idea> ideas);
+    List<IdeaTreeDTO> getTreeIdeas(List<Idea> ideas);
 
     /**
      * 根据知识点Id获取知识点信息

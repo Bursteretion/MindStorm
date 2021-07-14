@@ -10,9 +10,9 @@ import {
   deleteProfession,
   ProfessionStatus,
   queryProfessions,
-} from '@/services/profession';
+} from '@/services/education/profession';
 import ProCard from '@ant-design/pro-card';
-import { queryAcademies } from '@/services/academy';
+import { queryAcademies } from '@/services/education/academy';
 
 const ProfessionTable = (props) => {
   const { currentSelectedAcademyId } = props;

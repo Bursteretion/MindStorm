@@ -2,7 +2,12 @@ import React, { useRef, useState } from 'react';
 import ProTable from '@ant-design/pro-table';
 import { Button, message, Popconfirm, Space, Switch, Table } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { changeRoleStatus, searchRolesPage, RoleStatus, deleteRole } from '@/services/role';
+import {
+  changeRoleStatus,
+  searchRolesPage,
+  RoleStatus,
+  deleteRole,
+} from '@/services/permission/role';
 import RoleForm from './RoleForm';
 import RoleMenuForm from './RoleMenuForm';
 

@@ -20,6 +20,6 @@
 		<module>mindstorm-education</module>
 		<module>mindstorm-permission</module>
 		<module>mindstorm-system</module>
-		<module>mindstorm-shop</module>
+		<module>mindstorm-user</module>
 	</modules>
 </project>

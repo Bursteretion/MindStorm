@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.education.service;
 
-import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaDTO;
+import cn.lwjppz.mindstorm.education.model.dto.idea.IdeaTreeDTO;
 import cn.lwjppz.mindstorm.education.model.entity.ProfessionIdea;
 import cn.lwjppz.mindstorm.education.model.vo.ProfessionIdeaVO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -23,7 +23,7 @@ public interface ProfessionIdeaService extends IService<ProfessionIdea> {
      * @param professionId 学科Id
      * @return 该学科知识点树
      */
-    List<IdeaDTO> getTreeIdeas(String professionId);
+    List<IdeaTreeDTO> getTreeIdeas(String professionId);
 
     /**
      * 新增学科知识点关联

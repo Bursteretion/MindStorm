@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { listMenus } from '@/services/menu';
+import { listMenus } from '@/services/permission/menu';
 import convertToTreeMenus from '@/utils/treeSelect';
 import { message, Modal, Skeleton, Tree } from 'antd';
-import { distributeMenu, roleMenu } from '@/services/roleMenu';
+import { distributeMenu, roleMenu } from '@/services/permission/roleMenu';
 
 const RoleMenuForm = (props) => {
   const { isModalVisible, setModalVisible, roleId } = props;
