@@ -89,18 +89,11 @@ public class ProfessionController {
         return CommonResult.ok().data("updatedProfession", updatedProfession);
     }
 
-    @PutMapping("/info/{professionId}")
+    @GetMapping("/info/{professionId}")
     @ApiOperation("根据专业Id获取专业信息")
     public CommonResult info(@ApiParam("专业Id") @PathVariable("professionId") String professionId) {
         var professionInfo = professionService.convertToProfessionDTO(professionService.infoProfession(professionId));
         return CommonResult.ok().data("professionInfo", professionInfo);
-    }
-
-    @PutMapping("/info/remote/{professionId}")
-    @ApiOperation("根据专业Id获取专业信息（远程调用）")
-    public CommonResult remoteInfo(@ApiParam("专业Id") @PathVariable("professionId") String professionId) {
-        var professionTo = professionService.convertToProfessionTo(professionService.infoProfession(professionId));
-        return CommonResult.ok().data("professionTo", professionTo);
     }
 
     @PutMapping("/change/{professionId}/{status}")

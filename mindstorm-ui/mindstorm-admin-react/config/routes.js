@@ -1,15 +1,15 @@
 export default [
   {
-    path: '/system',
+    path: '/user',
     layout: false,
     routes: [
       {
-        path: '/system',
+        path: '/user',
         routes: [
           {
             name: 'login',
-            path: '/system/login',
-            component: './System/Login',
+            path: '/user/login',
+            component: './User/Login',
           },
         ],
       },
@@ -87,7 +87,7 @@ export default [
   },
   {
     path: '/personnel',
-    name: 'Personnel',
+    name: 'personnel',
     routes: [
       {
         path: '/personnel',
@@ -99,10 +99,26 @@ export default [
         component: './Personnel/student',
         access: 'hasRouter',
       },
+    ],
+  },
+  {
+    path: '/course',
+    name: 'course',
+    routes: [
       {
-        name: 'teacher',
-        path: '/personnel/teacher',
-        component: './Personnel/teacher',
+        path: '/course',
+        redirect: '/course/my',
+      },
+      {
+        name: 'course-list',
+        path: '/course/list',
+        component: './Course/list',
+        access: 'hasRouter',
+      },
+      {
+        name: 'my-course',
+        path: '/course/my',
+        component: './Course/my',
         access: 'hasRouter',
       },
     ],

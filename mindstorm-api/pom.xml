@@ -14,7 +14,6 @@
 	<description>Demo project for Spring Boot</description>
 
 	<modules>
-		<module>mindstorm-api-education</module>
 		<module>mindstorm-api-permission</module>
 		<module>mindstorm-api-system</module>
 	</modules>

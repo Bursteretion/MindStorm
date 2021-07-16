@@ -1,7 +1,9 @@
 package cn.lwjppz.mindstorm.permission.service;
 
 import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
+import cn.lwjppz.mindstorm.api.permission.model.UserTo;
 import cn.lwjppz.mindstorm.common.core.enums.status.UserStatus;
+import cn.lwjppz.mindstorm.permission.model.dto.user.SimpleUserSelectDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
@@ -129,4 +131,19 @@ public interface UserService extends IService<User> {
      */
     List<UserDetailDTO> convertToUserDetailDTO(List<User> users);
 
+    /**
+     * 将 User 对象转化为 UserTo 对象
+     *
+     * @param user User 对象
+     * @return UserTo 对象
+     */
+    UserTo convertToUserTo(User user);
+
+    /**
+     * 将 User 集合转化为 SimpleUserSelectDTO 集合
+     *
+     * @param users User 集合
+     * @return SimpleUserSelectDTO 集合
+     */
+    List<SimpleUserSelectDTO> convertToUserSelectDTO(List<User> users);
 }

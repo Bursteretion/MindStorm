@@ -79,6 +79,7 @@ export default [
       'DashboardOutlined',
       'BankOutlined',
       'UsergroupAddOutlined',
+      'ClusterOutlined',
     ],
   },
 ];

@@ -1,11 +1,9 @@
 package cn.lwjppz.mindstorm.education.model.vo.profession;
 
+import cn.lwjppz.mindstorm.common.core.support.BaseQueryVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
@@ -16,17 +14,12 @@ import java.util.Date;
  * @since : 2021-06-08
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @ApiModel("专业查询提交表单信息")
-public class ProfessionQueryVO {
-
-    @ApiModelProperty("页码")
-    private Integer pageIndex;
-
-    @ApiModelProperty("每页条数")
-    private Integer pageSize;
+public class ProfessionQueryVO extends BaseQueryVO {
 
     @ApiModelProperty("院系Id")
     private String academyId;
@@ -36,11 +29,5 @@ public class ProfessionQueryVO {
 
     @ApiModelProperty("专业状态（1 正常，0 禁用）")
     private Integer status;
-
-    @ApiModelProperty("创建的时间范围：开始时间")
-    private Date startTime;
-
-    @ApiModelProperty("创建的时间范围：结束时间")
-    private Date endTime;
 
 }

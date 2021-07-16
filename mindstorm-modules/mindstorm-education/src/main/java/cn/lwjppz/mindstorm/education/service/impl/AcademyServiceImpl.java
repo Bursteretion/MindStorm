@@ -3,13 +3,11 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.common.core.enums.status.AcademyStatus;
 import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
-import cn.lwjppz.mindstorm.common.core.to.AcademyTo;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademySelectDTO;
-import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyTreeSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.mapper.AcademyMapper;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
@@ -17,18 +15,13 @@ import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyVO;
 import cn.lwjppz.mindstorm.education.service.AcademyProfessionService;
 import cn.lwjppz.mindstorm.education.service.AcademyService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -64,7 +57,7 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
 
     @Override
     public List<Academy> pageAcademies(int pageNum, int pageSize) {
-        return queryAcademies(new AcademyQueryVO(null, null, null, null));
+        return queryAcademies(new AcademyQueryVO(null, null));
     }
 
     @Override
@@ -84,6 +77,27 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
         }
 
         return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<String> getAcademyIdsById(String academyId) {
+        if (StringUtils.isNotEmpty(academyId)) {
+            List<String> res = new ArrayList<>();
+            res.add(academyId);
+            var academies = baseMapper.selectList(null);
+            collectAcademyIds(academyId, academies, res);
+            return res;
+        }
+        return null;
+    }
+
+    private void collectAcademyIds(String academyId, List<Academy> academies, List<String> res) {
+        academies.forEach(item -> {
+            if (item.getPid().equals(academyId)) {
+                res.add(item.getId());
+                collectAcademyIds(item.getId(), academies, res);
+            }
+        });
     }
 
     @Override
@@ -118,21 +132,6 @@ public class AcademyServiceImpl extends ServiceImpl<AcademyMapper, Academy> impl
                 throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
             }
             return academy;
-        }
-        return null;
-    }
-
-    @Override
-    public AcademyTo remoteInfoAcademy(String academyId) {
-        if (StringUtils.isNotEmpty(academyId)) {
-            var academy = baseMapper.selectById(academyId);
-            if (null == academy) {
-                throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
-            }
-            AcademyTo academyTo = new AcademyTo();
-            academyTo.setAcademyId(academy.getId());
-            academyTo.setAcademyName(academy.getName());
-            return academyTo;
         }
         return null;
     }

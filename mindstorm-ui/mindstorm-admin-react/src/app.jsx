@@ -9,7 +9,7 @@ import { getToken } from '@/utils/authority';
 import { getRouters } from '@/services/permission/menu';
 import renderMenuItem from '@/utils/renderMenuItem';
 
-const loginPath = '/system/login';
+const loginPath = '/user/login';
 
 const generateAuthorityMenus = (routes) => {
   const menus = [];

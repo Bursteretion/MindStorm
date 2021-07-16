@@ -37,7 +37,7 @@ public class Academy implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
-    @ApiModelProperty("学院上级Id")
+    @ApiModelProperty("上级院系Id")
     private String pid;
 
     @ApiModelProperty(value = "院系名称")

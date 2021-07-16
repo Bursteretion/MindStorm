@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  cn.lwjppz.mindstorm.api.permission.factory.RemoteUserFallbackFactory
+  cn.lwjppz.mindstorm.api.permission.factory.RemotePermissionFallbackFactory

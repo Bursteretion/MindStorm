@@ -1,6 +1,5 @@
 package cn.lwjppz.mindstorm.education.service;
 
-import cn.lwjppz.mindstorm.common.core.to.ProfessionTo;
 import cn.lwjppz.mindstorm.education.model.dto.profession.ProfessionDTO;
 import cn.lwjppz.mindstorm.education.model.dto.profession.SimpleProfessionDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Profession;
@@ -85,14 +84,6 @@ public interface ProfessionService extends IService<Profession> {
     Profession infoProfession(String professionId);
 
     /**
-     * 根据专业Id获取专业信息（远程调用）
-     *
-     * @param professionId 专业Id
-     * @return 专业信息
-     */
-    ProfessionTo remoteInfoProfession(String professionId);
-
-    /**
      * 改变专业状态
      *
      * @param professionId 专业Id
@@ -148,13 +139,5 @@ public interface ProfessionService extends IService<Profession> {
      * @return SimpleProfessionDTO 集合
      */
     List<SimpleProfessionDTO> convertToSimpleProfessionDTO(List<Profession> professions);
-
-    /**
-     * 将 Profession 对象转为 ProfessionTo 对象
-     *
-     * @param profession Profession 对象
-     * @return ProfessionTo 对象
-     */
-    ProfessionTo convertToProfessionTo(Profession profession);
 
 }

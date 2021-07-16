@@ -78,18 +78,11 @@ public class AcademyController {
         return CommonResult.ok().data("updatedAcademy", academy);
     }
 
-    @PutMapping("/info/{academyId}")
+    @GetMapping("/info/{academyId}")
     @ApiOperation("根据院系Id获取院系信息")
     public CommonResult info(@ApiParam("院系Id") @PathVariable("academyId") String academyId) {
         var academyInfo = academyService.infoAcademy(academyId);
         return CommonResult.ok().data("academyInfo", academyInfo);
-    }
-
-    @PutMapping("/info/remote/{academyId}")
-    @ApiOperation("根据院系Id获取院系信息（远程调用）")
-    public CommonResult remoteInfo(@ApiParam("院系Id") @PathVariable("academyId") String academyId) {
-        var academyTo = academyService.remoteInfoAcademy(academyId);
-        return CommonResult.ok().data("academyTo", academyTo);
     }
 
     @PutMapping("/change/{academyId}/{status}")

@@ -12,6 +12,10 @@ export async function queryNotices() {
   return request('/notices');
 }
 
+export async function listUserSelects() {
+  return request(`/mindstorm-permission/permission/user/list/select`);
+}
+
 export async function listUsers(pageIndex, pageSize) {
   return request(`/mindstorm-permission/permission/user/list/${pageIndex}/${pageSize}`);
 }

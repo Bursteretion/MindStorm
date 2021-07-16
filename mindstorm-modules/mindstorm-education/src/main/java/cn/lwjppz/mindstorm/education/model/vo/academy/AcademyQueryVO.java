@@ -1,13 +1,9 @@
 package cn.lwjppz.mindstorm.education.model.vo.academy;
 
+import cn.lwjppz.mindstorm.common.core.support.BaseQueryVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-import java.util.Date;
+import lombok.*;
 
 /**
  * <p></p>
@@ -16,22 +12,17 @@ import java.util.Date;
  * @since : 2021-06-08
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @ApiModel("院系查询表单信息")
-public class AcademyQueryVO {
+public class AcademyQueryVO extends BaseQueryVO {
 
     @ApiModelProperty("院系名称")
     private String academyName;
 
     @ApiModelProperty("院系状态")
     private Integer status;
-
-    @ApiModelProperty("创建的时间范围：开始时间")
-    private Date startTime;
-
-    @ApiModelProperty("创建的时间范围：结束时间")
-    private Date endTime;
 
 }

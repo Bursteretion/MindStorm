@@ -36,9 +36,7 @@ export async function deleteAcademy(academyId) {
 }
 
 export async function infoAcademy(academyId) {
-  return request(`/mindstorm-education/education/academy/info/${academyId}`, {
-    method: 'PUT',
-  });
+  return request(`/mindstorm-education/education/academy/info/${academyId}`);
 }
 
 export async function changeAcademyStatus(academyId, status) {

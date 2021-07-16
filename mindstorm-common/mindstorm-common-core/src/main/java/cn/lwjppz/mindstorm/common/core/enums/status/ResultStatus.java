@@ -61,7 +61,13 @@ public enum ResultStatus implements IResultStatus {
 
     USER_PASSWORD_NO_MATCH(20020, "用户原密码匹配错误"),
 
-    FORBIDDEN(20021, "您无权访问，请联系管理员授权");
+    FORBIDDEN(20021, "您无权访问，请联系管理员授权"),
+
+    ENTITY_EXIT(20022, "该实体已存在！"),
+
+    ATTACHMENT_HANDLER_UNIQUE(20023, "附件处理器必须唯一！"),
+
+    FILE_OPERATION(20024, "文件处理器不存在！");
 
     private final Integer code;
 

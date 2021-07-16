@@ -1,0 +1,11 @@
+POST http://localhost:12000/file/course-cover/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="header-bg.jpg"
+
+< D:\Vue-Project\cdn-repo\file-repo\imgs\header-bg.jpg
+--WebAppBoundary--
+
+
+

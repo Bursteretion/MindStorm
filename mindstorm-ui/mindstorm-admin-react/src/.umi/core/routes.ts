@@ -122,16 +122,16 @@ export function getRoutes() {
         "component": (props) => props.children
       },
       {
-        "path": "/system",
+        "path": "/user",
         "layout": false,
         "routes": [
           {
-            "path": "/system",
+            "path": "/user",
             "routes": [
               {
                 "name": "login",
-                "path": "/system/login",
-                "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__System__Login' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/System/Login'), loading: LoadingComponent}),
+                "path": "/user/login",
+                "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__User__Login' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/User/Login'), loading: LoadingComponent}),
                 "exact": true
               }
             ]
@@ -220,7 +220,7 @@ export function getRoutes() {
       },
       {
         "path": "/personnel",
-        "name": "Personnel",
+        "name": "personnel",
         "routes": [
           {
             "path": "/personnel",
@@ -233,11 +233,29 @@ export function getRoutes() {
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Personnel__student' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Personnel/student'), loading: LoadingComponent}),
             "access": "hasRouter",
             "exact": true
+          }
+        ]
+      },
+      {
+        "path": "/course",
+        "name": "course",
+        "routes": [
+          {
+            "path": "/course",
+            "redirect": "/course/my",
+            "exact": true
           },
           {
-            "name": "teacher",
-            "path": "/personnel/teacher",
-            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Personnel__teacher' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Personnel/teacher'), loading: LoadingComponent}),
+            "name": "course-list",
+            "path": "/course/list",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Course__list' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Course/list'), loading: LoadingComponent}),
+            "access": "hasRouter",
+            "exact": true
+          },
+          {
+            "name": "my-course",
+            "path": "/course/my",
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Course__my' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Course/my'), loading: LoadingComponent}),
             "access": "hasRouter",
             "exact": true
           }

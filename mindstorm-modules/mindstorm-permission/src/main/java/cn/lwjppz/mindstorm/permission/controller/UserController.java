@@ -44,6 +44,13 @@ public class UserController {
         return CommonResult.ok().data("page", page);
     }
 
+    @ApiOperation("获取所有用户信息（选择组件）")
+    @GetMapping("/list/select")
+    public CommonResult listUserSelect() {
+        var userSelects = userService.convertToUserSelectDTO(userService.list());
+        return CommonResult.ok().data("userSelects", userSelects);
+    }
+
     @ApiOperation("多条件查询用户信息")
     @PostMapping("/search")
     public CommonResult pageBySearch(
@@ -64,6 +71,13 @@ public class UserController {
     public CommonResult infoByUserId(@ApiParam("用户Id") @PathVariable("userId") String userId) {
         UserDetailDTO user = userService.convertToUserDetailDTO(userService.selectUserByUserId(userId));
         return CommonResult.ok().data("user", user);
+    }
+
+    @ApiOperation("根据用户Id获取用户信息（远程调用）")
+    @GetMapping("/info/remote/{userId}")
+    public CommonResult remoteInfoUser(@ApiParam("用户Id") @PathVariable("userId") String userId) {
+        var userTo = userService.convertToUserTo(userService.selectUserByUserId(userId));
+        return CommonResult.ok().data("userTo", userTo);
     }
 
     @ApiOperation("新增用户")

@@ -3,7 +3,6 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.common.core.enums.status.ProfessionStatus;
 import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
-import cn.lwjppz.mindstorm.common.core.to.ProfessionTo;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.common.mybatis.common.BaseInterface;
@@ -25,7 +24,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,12 +41,9 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         BaseInterface<Profession> {
 
     private final AcademyProfessionService academyProfessionService;
-    private final AcademyService academyService;
 
-    public ProfessionServiceImpl(@Lazy AcademyProfessionService academyProfessionService,
-                                 @Lazy AcademyService academyService) {
+    public ProfessionServiceImpl(@Lazy AcademyProfessionService academyProfessionService) {
         this.academyProfessionService = academyProfessionService;
-        this.academyService = academyService;
     }
 
     @Override
@@ -83,7 +78,7 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
 
     @Override
     public IPage<ProfessionDTO> pageProfessions(int pageNum, int pageSize) {
-        return queryProfessions(new ProfessionQueryVO(pageNum, pageSize, null, null, null, null, null));
+        return queryProfessions(new ProfessionQueryVO(null, null, null));
     }
 
     @Override
@@ -170,21 +165,6 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
     }
 
     @Override
-    public ProfessionTo remoteInfoProfession(String professionId) {
-        if (StringUtils.isNotEmpty(professionId)) {
-            var profession = baseMapper.selectById(professionId);
-            if (null == profession) {
-                throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
-            }
-            ProfessionTo professionTo = new ProfessionTo();
-            professionTo.setProfessionId(profession.getId());
-            professionTo.setProfessionName(profession.getName());
-            return professionTo;
-        }
-        return null;
-    }
-
-    @Override
     public boolean changeProfessionStatus(String professionId, Integer status) {
         if (StringUtils.isNotEmpty(professionId)) {
             Profession profession = baseMapper.selectById(professionId);
@@ -245,14 +225,6 @@ public class ProfessionServiceImpl extends ServiceImpl<ProfessionMapper, Profess
         return professions.stream()
                 .map(this::convertToSimpleProfessionDTO)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public ProfessionTo convertToProfessionTo(Profession profession) {
-        ProfessionTo professionTo = new ProfessionTo();
-        professionTo.setProfessionName(profession.getName());
-        professionTo.setProfessionId(profession.getId());
-        return professionTo;
     }
 
     @Override

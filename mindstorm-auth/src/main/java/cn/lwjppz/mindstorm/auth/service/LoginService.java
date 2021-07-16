@@ -1,6 +1,6 @@
 package cn.lwjppz.mindstorm.auth.service;
 
-import cn.lwjppz.mindstorm.api.permission.feign.RemoteUserFeignService;
+import cn.lwjppz.mindstorm.api.permission.feign.RemotePermissionFeignService;
 import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
 import cn.lwjppz.mindstorm.api.system.feign.RemoteLogFeignService;
 import cn.lwjppz.mindstorm.common.core.constant.UserConstants;
@@ -11,7 +11,6 @@ import cn.lwjppz.mindstorm.common.core.exception.LoginException;
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.common.core.utils.SecurityUtils;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -26,10 +25,10 @@ import org.springframework.util.StringUtils;
 @Service
 public class LoginService {
 
-    private final RemoteUserFeignService remoteUserFeignService;
+    private final RemotePermissionFeignService remoteUserFeignService;
     private final RemoteLogFeignService remoteLogFeignService;
 
-    public LoginService(RemoteUserFeignService remoteUserFeignService,
+    public LoginService(RemotePermissionFeignService remoteUserFeignService,
                         RemoteLogFeignService remoteLogFeignService) {
         this.remoteUserFeignService = remoteUserFeignService;
         this.remoteLogFeignService = remoteLogFeignService;

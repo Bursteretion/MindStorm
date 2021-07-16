@@ -102,6 +102,7 @@
     "@umijs/preset-dumi": "^1.1.7",
     "@umijs/preset-react": "^1.7.4",
     "@umijs/yorkie": "^2.0.3",
+    "antd-img-crop": "^3.14.3",
     "carlo": "^0.9.46",
     "chalk": "^4.0.0",
     "cross-env": "^7.0.0",

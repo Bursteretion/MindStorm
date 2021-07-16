@@ -36,9 +36,7 @@ export async function deleteProfession(professionId) {
 }
 
 export async function infoProfession(professionId) {
-  return request(`/mindstorm-education/education/profession/info/${professionId}`, {
-    method: 'PUT',
-  });
+  return request(`/mindstorm-education/education/profession/info/${professionId}`);
 }
 
 export async function changeProfessionStatus(professionId, status) {

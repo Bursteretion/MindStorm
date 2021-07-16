@@ -1,14 +1,11 @@
 package cn.lwjppz.mindstorm.education.service;
 
-import cn.lwjppz.mindstorm.common.core.to.AcademyTo;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.academy.AcademySelectDTO;
-import cn.lwjppz.mindstorm.education.model.dto.academy.AcademyTreeSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Academy;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.academy.AcademyVO;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -55,6 +52,14 @@ public interface AcademyService extends IService<Academy> {
     List<Academy> queryAcademies(AcademyQueryVO academyQueryVO);
 
     /**
+     * 获取该院系及下属院系Id集合
+     *
+     * @param academyId 院系Id
+     * @return 院系id集合
+     */
+    List<String> getAcademyIdsById(String academyId);
+
+    /**
      * 新增学院
      *
      * @param academyVO 学院信息
@@ -77,8 +82,6 @@ public interface AcademyService extends IService<Academy> {
      * @return 学院信息
      */
     Academy infoAcademy(String academyId);
-
-    AcademyTo remoteInfoAcademy(String academyId);
 
     /**
      * 将院系信息转为树形结构

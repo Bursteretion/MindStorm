@@ -1,11 +1,13 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
 import cn.lwjppz.mindstorm.api.permission.model.LoginUser;
+import cn.lwjppz.mindstorm.api.permission.model.UserTo;
 import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.status.UserStatus;
 import cn.lwjppz.mindstorm.common.core.exception.AlreadyExistsException;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.permission.mapper.UserMapper;
+import cn.lwjppz.mindstorm.permission.model.dto.user.SimpleUserSelectDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDTO;
 import cn.lwjppz.mindstorm.permission.model.dto.user.UserDetailDTO;
 import cn.lwjppz.mindstorm.permission.model.entity.User;
@@ -272,4 +274,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public UserTo convertToUserTo(User user) {
+        UserTo userTo = new UserTo();
+        userTo.setUserId(user.getId());
+        userTo.setUsername(user.getUsername());
+        userTo.setRealName(user.getRealName());
+        return userTo;
+    }
+
+    @Override
+    public List<SimpleUserSelectDTO> convertToUserSelectDTO(List<User> users) {
+        return users.stream()
+                .map(user -> new SimpleUserSelectDTO(user.getId(), user.getRealName()))
+                .collect(Collectors.toList());
+    }
 }

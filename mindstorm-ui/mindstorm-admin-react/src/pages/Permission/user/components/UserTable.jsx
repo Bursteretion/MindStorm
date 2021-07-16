@@ -147,15 +147,19 @@ const UserTable = () => {
         >
           编辑
         </a>,
-        <Popconfirm
-          key="delete"
-          title={`你确定要删除【${record.username}】这个用户吗？`}
-          onConfirm={() => handleDeleteUser(record)}
-          okText="确定"
-          cancelText="取消"
-        >
-          <a>删除</a>
-        </Popconfirm>,
+        record.username === 'admin' ? (
+          ''
+        ) : (
+          <Popconfirm
+            key="delete"
+            title={`你确定要删除【${record.username}】这个用户吗？`}
+            onConfirm={() => handleDeleteUser(record)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <a>删除</a>
+          </Popconfirm>
+        ),
       ],
     },
   ];

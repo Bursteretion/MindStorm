@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Skeleton, message, TreeSelect } from 'antd';
 import { ProFormText, ProFormRadio, ProFormDigit, ProFormSelect } from '@ant-design/pro-form';
-import { createStudent, infoStudent, updateStudent } from '@/services/user/student';
+import { createStudent, infoStudent, updateStudent } from '@/services/student';
 import { useModel } from 'umi';
 import { listProfessionsByAcademyId } from '@/services/education/profession';
 import ProCard from '@ant-design/pro-card';
@@ -221,4 +221,5 @@ const StudentForm = (props) => {
     </Modal>
   );
 };
+
 export default StudentForm;

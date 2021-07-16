@@ -1,6 +1,8 @@
 package cn.lwjppz.mindstorm.permission.service.impl;
 
+import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.status.RoleStatus;
+import cn.lwjppz.mindstorm.common.core.exception.AlreadyExistsException;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.permission.mapper.RoleMapper;
@@ -93,16 +95,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public Role insertRole(@NonNull RoleVO roleVO) {
         Assert.notNull(roleVO, "RoleVO must not be null!");
 
-        Role role = new Role();
-        BeanUtils.copyProperties(roleVO, role);
-
-        if (null == roleVO.getStatus()) {
-            role.setStatus(RoleStatus.NORMAL.getValue());
+        LambdaQueryWrapper<Role> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Role::getRoleName, roleVO.getRoleName());
+        var role = baseMapper.selectOne(queryWrapper);
+        if (null != role) {
+            throw new AlreadyExistsException(ResultStatus.ENTITY_EXIT);
         }
 
-        baseMapper.insert(role);
+        Role roleCreate = new Role();
+        BeanUtils.copyProperties(roleVO, roleCreate);
 
-        return role;
+        if (null == roleVO.getStatus()) {
+            roleCreate.setStatus(RoleStatus.NORMAL.getValue());
+        }
+
+        baseMapper.insert(roleCreate);
+
+        return roleCreate;
     }
 
     @Override

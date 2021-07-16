@@ -1,13 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, message, Popconfirm, Select, Switch, Tag, TreeSelect } from 'antd';
-import { changeStudentStatus, deleteStudent, queryStudents } from '@/services/user/student';
-import { AcademyStatus, queryAcademies } from '@/services/education/academy';
+import {
+  changeStudentStatus,
+  deleteStudent,
+  queryStudents,
+  StudentStatus,
+} from '@/services/student';
+import { queryAcademies } from '@/services/education/academy';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import StudentForm from './StudentForm';
 import { useModel } from 'umi';
 import { listSelectProfessions } from '@/services/education/profession';
-import { ProFormSelect } from '@ant-design/pro-form';
 
 const StudentTable = () => {
   const actionRef = useRef();
@@ -168,7 +172,7 @@ const StudentTable = () => {
       title: '状态',
       dataIndex: 'status',
       valueType: 'select',
-      valueEnum: AcademyStatus,
+      valueEnum: StudentStatus,
       render: (_, record) => {
         const { status, pid } = record;
         // eslint-disable-next-line no-nested-ternary
@@ -227,7 +231,7 @@ const StudentTable = () => {
         ) : (
           <Popconfirm
             key="delete"
-            title={`你确定要删除【${record.name}】这个院系吗？`}
+            title={`你确定要删除【${record.name}】这个学生吗？`}
             onConfirm={() => handleDeleteStudent(record)}
             okText="确定"
             cancelText="取消"

@@ -78,12 +78,16 @@ const RoleForm = (props) => {
           labelCol={{ span: 4 }}
           initialValues={initialValues}
         >
-          <ProFormText
-            name="roleName"
-            label="角色名称"
-            placeholder="请输入角色名称"
-            rules={[{ required: true, message: '角色名称不能为空！' }]}
-          />
+          {initialValues && initialValues.roleName === 'admin' ? (
+            ''
+          ) : (
+            <ProFormText
+              name="roleName"
+              label="角色名称"
+              placeholder="请输入角色名称"
+              rules={[{ required: true, message: '角色名称不能为空！' }]}
+            />
+          )}
           <ProFormDigit label="角色排序" name="sort" width="sm" min={0} />
           <ProFormRadio.Group
             name="status"

@@ -155,15 +155,19 @@ const RoleTable = () => {
         >
           分配权限
         </a>,
-        <Popconfirm
-          key="delete"
-          title={`你确定要删除【${record.roleName}】这个角色吗？`}
-          onConfirm={() => handleDeleteRole(record)}
-          okText="确定"
-          cancelText="取消"
-        >
-          <a>删除</a>
-        </Popconfirm>,
+        record.roleName === 'admin' ? (
+          ''
+        ) : (
+          <Popconfirm
+            key="delete"
+            title={`你确定要删除【${record.roleName}】这个角色吗？`}
+            onConfirm={() => handleDeleteRole(record)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <a>删除</a>
+          </Popconfirm>
+        ),
       ],
     },
   ];

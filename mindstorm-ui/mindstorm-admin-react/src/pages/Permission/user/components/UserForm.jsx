@@ -119,12 +119,16 @@ const UserForm = (props) => {
           labelCol={{ span: 4 }}
           initialValues={initialValues}
         >
-          <ProFormText
-            name="username"
-            label="用户名"
-            placeholder="请输入用户名"
-            rules={[{ required: true, message: '用户名不能为空！' }]}
-          />
+          {initialValues && initialValues.username === 'admin' ? (
+            ''
+          ) : (
+            <ProFormText
+              name="username"
+              label="用户名"
+              placeholder="请输入用户名"
+              rules={[{ required: true, message: '用户名不能为空！' }]}
+            />
+          )}
           {userId !== undefined ? (
             ''
           ) : (
