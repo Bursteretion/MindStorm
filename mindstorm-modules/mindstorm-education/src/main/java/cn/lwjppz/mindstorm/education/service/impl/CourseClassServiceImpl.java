@@ -55,8 +55,11 @@ public class CourseClassServiceImpl extends ServiceImpl<CourseClassMapper, Cours
     }
 
     @Override
-    public List<CourseClass> queryCourseClasses(String className) {
+    public List<CourseClass> queryCourseClasses(String courseId, String className) {
         var wrapper = getCommonWrapper();
+        if (StringUtils.isNotEmpty(courseId)) {
+            wrapper.eq(CourseClass::getCourseId, courseId);
+        }
         if (StringUtils.isNotEmpty(className)) {
             wrapper.like(CourseClass::getClassName, className);
         }
@@ -105,11 +108,11 @@ public class CourseClassServiceImpl extends ServiceImpl<CourseClassMapper, Cours
     public boolean deleteCourseClassById(String courseClassId) {
         if (StringUtils.isNotEmpty(courseClassId)) {
             // 删除该班级所有关联学生信息
-            var success = courseClassStudentService.deleteCourseClassStudent(courseClassId);
+            courseClassStudentService.deleteCourseClassStudent(courseClassId);
             // 删除该班级
-            return success && baseMapper.deleteById(courseClassId) > 0;
+            baseMapper.deleteById(courseClassId);
         }
-        return false;
+        return true;
     }
 
     @Override

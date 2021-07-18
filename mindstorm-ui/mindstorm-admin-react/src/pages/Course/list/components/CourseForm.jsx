@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal, Form, message, TreeSelect, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { ProFormText, ProFormRadio, ProFormTextArea } from '@ant-design/pro-form';
@@ -33,7 +33,7 @@ const CourseForm = (props) => {
       return true;
     } catch (error) {
       hide();
-      message.error(`$创建失败请重试！`);
+      message.error(`创建失败请重试！`);
       return false;
     }
   };

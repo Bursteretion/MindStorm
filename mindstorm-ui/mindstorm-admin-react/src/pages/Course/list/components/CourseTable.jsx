@@ -7,14 +7,14 @@ import ProTable from '@ant-design/pro-table';
 import CourseForm from './CourseForm';
 import { useModel } from 'umi';
 import { listUserSelects } from '@/services/permission/user';
-import CourseDrawer from './drawer/CourseDrawer';
+import CourseDrawer from '../../common/CourseDrawer';
 
 const CourseTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [userSelects, setUserSelects] = useState([]);
-  const [courseId, setCourseId] = useState(undefined);
+  const [course, setCourse] = useState(undefined);
   const {
     academyTree = [],
     setAcademyTree,
@@ -207,7 +207,7 @@ const CourseTable = () => {
           key="edit"
           onClick={() => {
             setDrawerVisible(true);
-            setCourseId(record.id);
+            setCourse(record);
           }}
         >
           编辑
@@ -261,11 +261,12 @@ const CourseTable = () => {
           setModalVisible={setModalVisible}
         />
       )}
-      {!isDrawerVisible && courseId === undefined ? (
+      {!isDrawerVisible && course === undefined ? (
         ''
       ) : (
         <CourseDrawer
-          courseId={courseId}
+          course={course}
+          setCourse={setCourse}
           isDrawerVisible={isDrawerVisible}
           setDrawerVisible={setDrawerVisible}
         />

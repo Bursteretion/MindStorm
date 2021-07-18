@@ -36,10 +36,11 @@ public interface CourseClassService extends IService<CourseClass> {
     /**
      * 根据班级名称模糊查询
      *
+     * @param courseId  课程Id
      * @param className 班级名称
      * @return 查询到的所有班级
      */
-    List<CourseClass> queryCourseClasses(String className);
+    List<CourseClass> queryCourseClasses(String courseId, String className);
 
     /**
      * 新增课程班级信息
