@@ -1,21 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProList from '@ant-design/pro-list';
 import { Tag, message, Popconfirm, Row, Col, Input, Button } from 'antd';
 import { deleteCourseClass, queryCourseClass, updateCourseClass } from '@/services/courseclass';
 import { PlusOutlined } from '@ant-design/icons';
+import ClassForm from './components/ClassForm';
 
 const { Search } = Input;
 
 const ClassList = (props) => {
-  const { courseId } = props;
-  const actionRef = useRef();
+  const { courseId, setSelectKey } = props;
   const [courseClasses, setCourseClasses] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleQueryCourseClass = async (params) => {
+    setLoading(true);
     const res = await queryCourseClass(params);
     if (res.code === 20000) {
       setCourseClasses(res.data.courseClasses);
+      setLoading(false);
     }
   };
 
@@ -31,7 +34,7 @@ const ClassList = (props) => {
       await deleteCourseClass(courseClass.id);
       hide();
       message.success(`删除成功！`);
-      actionRef?.current.reset();
+      handleQueryCourseClass({ courseId, className: '' });
       return true;
     } catch (error) {
       hide();
@@ -42,18 +45,24 @@ const ClassList = (props) => {
 
   return (
     <>
-      <Row>
-        <Col span={8}>
-          <Button type="primary" icon={<PlusOutlined />}>
+      <Row style={{ marginBottom: 10 }}>
+        <Col span={4}>
+          <Button
+            onClick={() => {
+              setModalVisible(true);
+            }}
+            type="primary"
+            icon={<PlusOutlined />}
+          >
             新建班级
           </Button>
         </Col>
-        <Col span={8} offset={8}>
+        <Col span={4} offset={16}>
           <Search
             placeholder="搜索班级"
             loading={loading}
             onSearch={(value) => handleQueryCourseClass({ courseId, className: value })}
-            enterButton
+            allowClear
           />
         </Col>
       </Row>
@@ -63,7 +72,7 @@ const ClassList = (props) => {
         showActions="hover"
         dataSource={courseClasses}
         split={true}
-        actionRef={actionRef}
+        loading={loading}
         size="large"
         tooltip="该课程所有班级"
         editable={{
@@ -74,6 +83,7 @@ const ClassList = (props) => {
               await updateCourseClass({ id: key, className, sort });
               hide();
               message.success(`保存成功！`);
+              handleQueryCourseClass({ courseId, className: '' });
               return true;
             } catch (error) {
               hide();
@@ -119,12 +129,22 @@ const ClassList = (props) => {
                 okText="确定"
                 cancelText="取消"
               >
-                删除
+                <a>删除</a>
               </Popconfirm>,
             ],
           },
         }}
       />
+      {!isModalVisible ? (
+        ''
+      ) : (
+        <ClassForm
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          handleQueryCourseClass={handleQueryCourseClass}
+          courseId={courseId}
+        />
+      )}
     </>
   );
 };

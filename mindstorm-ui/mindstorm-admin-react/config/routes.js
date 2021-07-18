@@ -110,13 +110,13 @@ export default [
         redirect: '/course/my',
       },
       {
-        name: 'course-list',
+        name: 'courseList',
         path: '/course/list',
         component: './Course/list',
         access: 'hasRouter',
       },
       {
-        name: 'my-course',
+        name: 'myCourse',
         path: '/course/my',
         component: './Course/my',
         access: 'hasRouter',

@@ -266,7 +266,7 @@ const CourseTable = () => {
       ) : (
         <CourseDrawer
           course={course}
-          setCourse={setCourse}
+          actionRef={actionRef}
           isDrawerVisible={isDrawerVisible}
           setDrawerVisible={setDrawerVisible}
         />

@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import { Card, Drawer, Menu, Avatar } from 'antd';
 import styles from './style.less';
-import ClassList from './components/ClassList';
+import ClassList from './components/class';
 import { menuMap } from './menuMap';
 import { FrownOutlined } from '@ant-design/icons';
 
 const { Item } = Menu;
 
 const CourseDrawer = (props) => {
-  const { isDrawerVisible, setDrawerVisible, course, setCourse } = props;
+  const { isDrawerVisible, setDrawerVisible, course, actionRef } = props;
   const [selectKey, setSelectKey] = useState('class');
-
-  const getRightTitle = () => {
-    return menuMap[selectKey].key;
-  };
 
   const getMenu = () => {
     return Object.keys(menuMap).map((item) => {
@@ -56,8 +52,8 @@ const CourseDrawer = (props) => {
         width="100%"
         placement="right"
         onClose={() => {
+          actionRef?.current.reset();
           setDrawerVisible(false);
-          setCourse(undefined);
         }}
         visible={isDrawerVisible}
       >
@@ -69,10 +65,7 @@ const CourseDrawer = (props) => {
               {getMenu()}
             </Menu>
           </div>
-          <Card className={styles.right}>
-            <div className={styles.title}>{getRightTitle()}</div>
-            {renderChildren()}
-          </Card>
+          <Card className={styles.right}>{renderChildren()}</Card>
         </div>
       </Drawer>
     </>

@@ -246,14 +246,14 @@ export function getRoutes() {
             "exact": true
           },
           {
-            "name": "course-list",
+            "name": "courseList",
             "path": "/course/list",
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Course__list' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Course/list'), loading: LoadingComponent}),
             "access": "hasRouter",
             "exact": true
           },
           {
-            "name": "my-course",
+            "name": "myCourse",
             "path": "/course/my",
             "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Course__my' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Course/my'), loading: LoadingComponent}),
             "access": "hasRouter",
