@@ -1,7 +1,10 @@
 package cn.lwjppz.mindstorm.education.service;
 
+import cn.lwjppz.mindstorm.education.model.dto.courseclassstudent.CourseClassStudentDTO;
 import cn.lwjppz.mindstorm.education.model.entity.CourseClassStudent;
+import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -23,6 +26,14 @@ public interface CourseClassStudentService extends IService<CourseClassStudent> 
      * @return 学生关联列表
      */
     List<CourseClassStudent> listCourseClassStudent(String classId);
+
+    /**
+     * 条件查询课程班级学生
+     *
+     * @param courseClassStudentQueryVO 查询条件
+     * @return 分页信息
+     */
+    IPage<CourseClassStudentDTO> queryCourseClassStudent(CourseClassStudentQueryVO courseClassStudentQueryVO);
 
     /**
      * 新增课程班级学生关联
@@ -55,5 +66,21 @@ public interface CourseClassStudentService extends IService<CourseClassStudent> 
      * @return 学生数量
      */
     Integer getCount(String classId);
+
+    /**
+     * 将 CourseClassStudent 对象转为 CourseClassStudentDTO 对象
+     *
+     * @param courseClassStudent CourseClassStudent 对象
+     * @return CourseClassStudentDTO 对象
+     */
+    CourseClassStudentDTO convertCourseClassStudentDTO(CourseClassStudent courseClassStudent);
+
+    /**
+     * 将 CourseClassStudent 对象集合转为 CourseClassStudentDTO 对象集合
+     *
+     * @param courseClassStudents CourseClassStudent 对象集合
+     * @return CourseClassStudentDTO 对象集合
+     */
+    List<CourseClassStudentDTO> convertCourseClassStudentDTO(List<CourseClassStudent> courseClassStudents);
 
 }

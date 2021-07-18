@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, message, Popconfirm, Select, Switch, TreeSelect, Avatar, Tag, Drawer } from 'antd';
+import { Button, message, Popconfirm, Select, Switch, TreeSelect, Avatar, Tag } from 'antd';
 import { changeCourseStatus, deleteCourse, queryCourse, CourseStatus } from '@/services/course';
 import { queryAcademies } from '@/services/education/academy';
 import { PlusOutlined } from '@ant-design/icons';
@@ -7,12 +7,14 @@ import ProTable from '@ant-design/pro-table';
 import CourseForm from './CourseForm';
 import { useModel } from 'umi';
 import { listUserSelects } from '@/services/permission/user';
+import CourseDrawer from './drawer/CourseDrawer';
 
 const CourseTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [userSelects, setUserSelects] = useState([]);
+  const [courseId, setCourseId] = useState(undefined);
   const {
     academyTree = [],
     setAcademyTree,
@@ -205,6 +207,7 @@ const CourseTable = () => {
           key="edit"
           onClick={() => {
             setDrawerVisible(true);
+            setCourseId(record.id);
           }}
         >
           编辑
@@ -258,17 +261,15 @@ const CourseTable = () => {
           setModalVisible={setModalVisible}
         />
       )}
-      <Drawer
-        title="课程详情"
-        width="100%"
-        placement="right"
-        onClose={() => setDrawerVisible(false)}
-        visible={isDrawerVisible}
-      >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Drawer>
+      {!isDrawerVisible && courseId === undefined ? (
+        ''
+      ) : (
+        <CourseDrawer
+          courseId={courseId}
+          isDrawerVisible={isDrawerVisible}
+          setDrawerVisible={setDrawerVisible}
+        />
+      )}
     </>
   );
 };

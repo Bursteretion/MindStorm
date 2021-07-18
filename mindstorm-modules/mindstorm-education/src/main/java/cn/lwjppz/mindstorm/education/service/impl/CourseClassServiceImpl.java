@@ -94,7 +94,7 @@ public class CourseClassServiceImpl extends ServiceImpl<CourseClassMapper, Cours
             var courseClassIds = ServiceUtils.fetchProperty(courseClasses, CourseClass::getId);
             courseClassIds.stream()
                     .filter(StringUtils::isNotEmpty)
-                    .allMatch(courseClassStudentService::deleteCourseClassStudent);
+                    .forEach(courseClassStudentService::deleteCourseClassStudent);
             // 删除该课程的所有班级
             baseMapper.delete(queryWrapper);
         }

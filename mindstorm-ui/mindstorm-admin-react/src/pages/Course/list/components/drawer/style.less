@@ -1,0 +1,115 @@
+@import '~antd/es/style/themes/default.less';
+
+.drawer {
+  :global {
+    .ant-drawer-header {
+      z-index: 100;
+      box-shadow: 0 1px 12px 0 rgba(1, 39, 78, .12) !important;
+    }
+
+    .ant-drawer-body {
+      padding: 0 !important;
+      background-color: #F1F3F6;
+    }
+  }
+}
+
+.main {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: auto;
+
+  .leftMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    text-align: center;
+    background-color: @menu-bg;
+    width: 180px;
+    height: 100%;
+    border-right: @border-width-base @border-style-base @border-color-split;
+
+    .courseCover {
+      width: 138px;
+      height: 78px;
+      margin-top: 80px;
+      border-radius: 5px;
+    }
+
+    .courseName {
+      font-size: 16px;
+      text-align: center;
+      width: 100%;
+      line-height: 21px;
+      margin-top: 12px
+    }
+
+    :global {
+      .ant-menu-inline {
+        border: none;
+      }
+
+      .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+        font-weight: bold;
+        margin-top: 15px;
+      }
+
+      .ant-menu-item .ant-menu-item-icon + span, .ant-menu-submenu-title .ant-menu-item-icon + span, .ant-menu-item .anticon + span, .ant-menu-submenu-title .anticon + span {
+        margin-left: 15px !important;
+      }
+
+      .ant-menu-item {
+        height: 40px!important;
+        justify-content: center!important;
+        padding-left: 0 !important;
+        font-size: 16px;
+        .ant-menu-title-content {
+          flex: none !important;
+        }
+      }
+    }
+  }
+
+  .right {
+    flex: 1;
+    margin: 30px;
+    margin-left: 210px;
+
+    .title {
+      margin-bottom: 12px;
+      color: @heading-color;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 28px;
+    }
+  }
+
+  :global {
+    .ant-list-split .ant-list-item:last-child {
+      border-bottom: 1px solid @border-color-split;
+    }
+
+    .ant-list-item {
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .main {
+    flex-direction: column;
+
+    .leftMenu {
+      width: 100%;
+      border: none;
+    }
+
+    .right {
+      padding: 40px;
+    }
+  }
+}

@@ -23,6 +23,8 @@ public class CourseClassDTO {
 
     private Integer studentCount;
 
+    private Integer sort;
+
     private String invitationCode;
 
 }

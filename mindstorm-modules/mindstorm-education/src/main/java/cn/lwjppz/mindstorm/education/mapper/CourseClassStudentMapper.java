@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.education.mapper;
 
 import cn.lwjppz.mindstorm.education.model.entity.CourseClassStudent;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
@@ -12,5 +13,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-07-15
  */
 public interface CourseClassStudentMapper extends BaseMapper<CourseClassStudent> {
+
 
 }

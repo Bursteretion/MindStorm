@@ -80,13 +80,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             wrapper.in(Student::getGmtCreate, studentQueryVO.getStartTime(), studentQueryVO.getEndTime());
         }
 
-        IPage<Student> page;
-        if (null != studentQueryVO.getPageIndex() && null != studentQueryVO.getPageSize()) {
-            page = baseMapper.selectPage(new Page<>(studentQueryVO.getPageIndex(),
-                    studentQueryVO.getPageSize()), wrapper);
-        } else {
-            page = baseMapper.selectPage(null, wrapper);
-        }
+        IPage<Student> page = baseMapper.selectPage(new Page<>(studentQueryVO.getPageIndex(),
+                studentQueryVO.getPageSize()), wrapper);
 
         List<Student> records = page.getRecords();
         List<StudentDTO> students = convertToStudentDTO(records);
