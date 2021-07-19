@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Drawer } from 'antd';
 import styles from '@/pages/Course/manager/style.less';
 import { FrownOutlined } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
 import CourseClassList from './components/CourseClassList';
+import StudentTable from './components/StudentTable';
 
 const StudentMain = (props) => {
   const { isDrawerVisible, setDrawerVisible, classId, courseId, handleQueryCourseClass } = props;
-  const [currentClassId, setCurrentClassId] = useState(undefined);
+  const [currentClassId, setCurrentClassId] = useState(classId);
+  const childRef = React.createRef();
+
+  useEffect(() => {
+    childRef?.current.setValue(currentClassId);
+  }, [currentClassId]);
 
   return (
     <>
@@ -38,7 +44,9 @@ const StudentMain = (props) => {
               setCurrentClassId={setCurrentClassId}
             />
           </ProCard>
-          <ProCard></ProCard>
+          <ProCard>
+            <StudentTable childRef={childRef} currentClassId={currentClassId} />
+          </ProCard>
         </ProCard>
       </Drawer>
     </>

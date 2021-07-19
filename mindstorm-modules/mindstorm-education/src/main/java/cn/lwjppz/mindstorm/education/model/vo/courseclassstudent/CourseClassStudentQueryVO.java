@@ -17,6 +17,9 @@ import lombok.*;
 @ToString
 public class CourseClassStudentQueryVO extends BaseQueryVO {
 
+    @ApiModelProperty(value = "班级Id")
+    private String classId;
+
     @ApiModelProperty(value = "学生学号")
     private String sno;
 

@@ -37,6 +37,14 @@ public interface StudentService extends IService<Student> {
     IPage<StudentDTO> queryStudents(StudentQueryVO studentQueryVO);
 
     /**
+     * 根据学生Id集合查询学生信息
+     *
+     * @param studentIds 学生Id集合
+     * @return 学生信息列表
+     */
+    List<Student> queryStudent(List<String> studentIds);
+
+    /**
      * 新增一名学生
      *
      * @param studentVO 学生信息
@@ -109,4 +117,12 @@ public interface StudentService extends IService<Student> {
      */
     StudentDetailDTO convertStudentDetailDTO(Student student);
 
+    /**
+     * 通过学生姓名，电话/学号查询学生
+     *
+     * @param realName   学生姓名
+     * @param phoneOrSno 电话/学号
+     * @return 学生信息
+     */
+    Student selectStudent(String realName, String phoneOrSno);
 }

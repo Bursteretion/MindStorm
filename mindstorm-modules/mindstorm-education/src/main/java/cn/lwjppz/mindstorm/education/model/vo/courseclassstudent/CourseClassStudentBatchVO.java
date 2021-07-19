@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * <p></p>
  *
@@ -16,15 +18,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CourseClassStudentVO {
+public class CourseClassStudentBatchVO {
 
     @ApiModelProperty(value = "班级Id")
     private String classId;
 
-    @ApiModelProperty(value = "学生姓名")
-    private String realName;
-
-    @ApiModelProperty(value = "学生手机号/学号")
-    private String phoneOrSno;
+    @ApiModelProperty(value = "学生Id集合")
+    private List<String> studentIds;
 
 }

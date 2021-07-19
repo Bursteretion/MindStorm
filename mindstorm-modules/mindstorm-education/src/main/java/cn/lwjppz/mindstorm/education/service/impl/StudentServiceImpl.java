@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -90,6 +91,15 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         BeanUtils.copyProperties(page, resPage);
         resPage.setRecords(students);
         return resPage;
+    }
+
+    @Override
+    public List<Student> queryStudent(List<String> studentIds) {
+        LambdaQueryWrapper<Student> wrapper = Wrappers.lambdaQuery();
+        if (!CollectionUtils.isEmpty(studentIds)) {
+            wrapper.in(Student::getId, studentIds);
+        }
+        return baseMapper.selectList(wrapper);
     }
 
     @Override
@@ -188,5 +198,17 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         LambdaQueryWrapper<Student> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.orderByDesc(Student::getGmtCreate);
         return queryWrapper;
+    }
+
+    @Override
+    public Student selectStudent(String realName, String phoneOrSno) {
+        LambdaQueryWrapper<Student> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Student::getRealName, realName);
+        wrapper.eq(Student::getPhone, phoneOrSno).or().eq(Student::getSno, phoneOrSno);
+        var student = baseMapper.selectOne(wrapper);
+        if (null == student) {
+            throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
+        }
+        return student;
     }
 }

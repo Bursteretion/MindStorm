@@ -10,7 +10,6 @@ const { Search } = Input;
 
 const CourseClassList = (props) => {
   const { courseId, setCurrentClassId, classId } = props;
-
   const [loading, setLoading] = useState(false);
   const [courseClasses, setCourseClasses] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
