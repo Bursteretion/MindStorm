@@ -4,7 +4,7 @@ import { Tag, message, Popconfirm, Row, Col, Input, Button } from 'antd';
 import { deleteCourseClass, queryCourseClass, updateCourseClass } from '@/services/courseclass';
 import { PlusOutlined } from '@ant-design/icons';
 import ClassForm from './components/ClassForm';
-import StudentMain from '@/pages/Course/common/components/student';
+import StudentMain from '@/pages/Course/manager/components/student';
 
 const { Search } = Input;
 
@@ -160,9 +160,11 @@ const ClassList = (props) => {
         ''
       ) : (
         <StudentMain
+          courseId={courseId}
           classId={classId}
           isDrawerVisible={isDrawerVisible}
           setDrawerVisible={setDrawerVisible}
+          handleQueryCourseClass={handleQueryCourseClass}
         />
       )}
     </>

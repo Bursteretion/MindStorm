@@ -124,7 +124,7 @@ export default [
       {
         name: 'courseManager',
         path: '/course/manager',
-        component: './Course/common',
+        component: './Course/manager',
         layout: false,
       },
     ],

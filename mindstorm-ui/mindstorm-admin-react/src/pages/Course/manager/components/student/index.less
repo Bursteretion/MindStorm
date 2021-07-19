@@ -1,0 +1,35 @@
+.mainCard {
+  min-height: 620px;
+  .leftCard {
+    text-align: center;
+    .space {
+      margin: 15px;
+
+      .button {
+        font-size: 16px;
+      }
+    }
+    .list {
+      max-height: 500px;
+      margin-top: 10px;
+      overflow: auto;
+
+      li {
+        height: 60px;
+        line-height: 60px;
+        padding: 0 36px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      li:hover {
+        background-color: #F0F6FF!important;
+        cursor: pointer;
+      }
+
+      li.selected {
+        background-color: #F0F6FF!important;
+      }
+    }
+  }
+}

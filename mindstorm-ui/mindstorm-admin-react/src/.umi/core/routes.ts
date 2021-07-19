@@ -262,7 +262,7 @@ export function getRoutes() {
           {
             "name": "courseManager",
             "path": "/course/manager",
-            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Course__common' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Course/common'), loading: LoadingComponent}),
+            "component": dynamic({ loader: () => import(/* webpackChunkName: 'p__Course__manager' */'D:/project-dev/online-examination/mindstorm/mindstorm-ui/mindstorm-admin-react/src/pages/Course/manager'), loading: LoadingComponent}),
             "layout": false,
             "exact": true
           }
