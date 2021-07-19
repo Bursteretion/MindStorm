@@ -15,7 +15,6 @@ import logo from '@/assets/logo.svg';
 import { login } from '@/services/auth';
 
 import styles from './index.less';
-import { getPageQuery } from '@/utils/utils';
 import { setToken } from '@/utils/authority';
 
 const LoginMessage = ({ content }) => (

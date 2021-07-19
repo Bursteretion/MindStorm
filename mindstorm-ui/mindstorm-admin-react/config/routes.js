@@ -121,6 +121,12 @@ export default [
         component: './Course/my',
         access: 'hasRouter',
       },
+      {
+        name: 'courseManager',
+        path: '/course/manager',
+        component: './Course/common',
+        layout: false,
+      },
     ],
   },
   {

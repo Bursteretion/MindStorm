@@ -4,14 +4,17 @@ import { Tag, message, Popconfirm, Row, Col, Input, Button } from 'antd';
 import { deleteCourseClass, queryCourseClass, updateCourseClass } from '@/services/courseclass';
 import { PlusOutlined } from '@ant-design/icons';
 import ClassForm from './components/ClassForm';
+import StudentMain from '@/pages/Course/common/components/student';
 
 const { Search } = Input;
 
 const ClassList = (props) => {
-  const { courseId, setSelectKey } = props;
+  const { courseId } = props;
   const [courseClasses, setCourseClasses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isDrawerVisible, setDrawerVisible] = useState(false);
+  const [classId, setClassId] = useState(undefined);
 
   const handleQueryCourseClass = async (params) => {
     setLoading(true);
@@ -111,12 +114,20 @@ const ClassList = (props) => {
           extra: {
             editable: false,
             render: (_, { invitationCode }) => (
-              <span style={{ marginLeft: 20 }}>邀请码：{invitationCode}</span>
+              <span style={{ width: 140, float: 'right', marginLeft: 10 }}>
+                邀请码：{invitationCode}
+              </span>
             ),
           },
           actions: {
             render: (text, row, index, action) => [
-              <a target="_blank" key="link">
+              <a
+                key="edit"
+                onClick={() => {
+                  setDrawerVisible(true);
+                  setClassId(row.id);
+                }}
+              >
                 管理
               </a>,
               <a key="edit" onClick={() => action?.startEditable(row.id)}>
@@ -143,6 +154,15 @@ const ClassList = (props) => {
           setModalVisible={setModalVisible}
           handleQueryCourseClass={handleQueryCourseClass}
           courseId={courseId}
+        />
+      )}
+      {!isDrawerVisible && classId === undefined ? (
+        ''
+      ) : (
+        <StudentMain
+          classId={classId}
+          isDrawerVisible={isDrawerVisible}
+          setDrawerVisible={setDrawerVisible}
         />
       )}
     </>

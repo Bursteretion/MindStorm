@@ -5,16 +5,13 @@ import { queryAcademies } from '@/services/education/academy';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import CourseForm from './CourseForm';
-import { useModel } from 'umi';
+import { useModel, Link } from 'umi';
 import { listUserSelects } from '@/services/permission/user';
-import CourseDrawer from '../../common/CourseDrawer';
 
 const CourseTable = () => {
   const actionRef = useRef();
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [userSelects, setUserSelects] = useState([]);
-  const [course, setCourse] = useState(undefined);
   const {
     academyTree = [],
     setAcademyTree,
@@ -203,15 +200,20 @@ const CourseTable = () => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a
+        <Link
           key="edit"
-          onClick={() => {
-            setDrawerVisible(true);
-            setCourse(record);
+          // onClick={() => {
+          //   setDrawerVisible(true);
+          //   setCourse(record);
+          // }}
+          to={{
+            pathname: '/course/manager',
+            search: `?courseId=${record.id}`,
           }}
+          target="_blank"
         >
           编辑
-        </a>,
+        </Link>,
         record.pid === '0' ? (
           ''
         ) : (
@@ -259,16 +261,6 @@ const CourseTable = () => {
           actionRef={actionRef}
           isModalVisible={isModalVisible}
           setModalVisible={setModalVisible}
-        />
-      )}
-      {!isDrawerVisible && course === undefined ? (
-        ''
-      ) : (
-        <CourseDrawer
-          course={course}
-          actionRef={actionRef}
-          isDrawerVisible={isDrawerVisible}
-          setDrawerVisible={setDrawerVisible}
         />
       )}
     </>
