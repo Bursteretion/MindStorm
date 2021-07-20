@@ -3,6 +3,7 @@ package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.student.StudentDTO;
 import cn.lwjppz.mindstorm.education.model.dto.student.StudentDetailDTO;
+import cn.lwjppz.mindstorm.education.model.dto.student.StudentSimpleDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Student;
 import cn.lwjppz.mindstorm.education.model.vo.student.StudentQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.student.StudentVO;
@@ -125,4 +126,29 @@ public interface StudentService extends IService<Student> {
      * @return 学生信息
      */
     Student selectStudent(String realName, String phoneOrSno);
+
+    /**
+     * 将 Student 对象转为 StudentSimpleDTO 对象
+     *
+     * @param student Student 对象
+     * @return StudentSimpleDTO 对象
+     */
+    StudentSimpleDTO convertToStudentSimpleDTO(Student student);
+
+    /**
+     * 将 Student 集合转为 StudentSimpleDTO 集合
+     *
+     * @param students Student 集合
+     * @return StudentSimpleDTO 集合
+     */
+    List<StudentSimpleDTO> convertToStudentSimpleDTO(List<Student> students);
+
+    /**
+     * 根据学生姓名学号模糊查询学生信息列表
+     *
+     * @param realName 学生姓名
+     * @param sno      学号
+     * @return 学生列表
+     */
+    List<Student> queryStudents(String realName, String sno);
 }

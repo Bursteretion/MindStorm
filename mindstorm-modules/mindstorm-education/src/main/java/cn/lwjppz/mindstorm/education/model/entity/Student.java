@@ -35,9 +35,6 @@ public class Student implements Serializable {
     @ApiModelProperty(value = "专业Id")
     private String professionId;
 
-    @ApiModelProperty(value = "班级Id")
-    private String teamId;
-
     @ApiModelProperty(value = "用户名")
     private String username;
 

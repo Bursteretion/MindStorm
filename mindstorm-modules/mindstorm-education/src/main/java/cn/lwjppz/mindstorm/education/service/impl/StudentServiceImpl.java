@@ -6,6 +6,7 @@ import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.mapper.StudentMapper;
 import cn.lwjppz.mindstorm.education.model.dto.student.StudentDTO;
 import cn.lwjppz.mindstorm.education.model.dto.student.StudentDetailDTO;
+import cn.lwjppz.mindstorm.education.model.dto.student.StudentSimpleDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Student;
 import cn.lwjppz.mindstorm.education.model.vo.student.StudentQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.student.StudentVO;
@@ -207,8 +208,37 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         wrapper.eq(Student::getPhone, phoneOrSno).or().eq(Student::getSno, phoneOrSno);
         var student = baseMapper.selectOne(wrapper);
         if (null == student) {
-            throw new EntityNotFoundException(ResultStatus.ENTITY_NOT_FOUND);
+            throw new EntityNotFoundException("该学生不存在！");
         }
         return student;
+    }
+
+    @Override
+    public StudentSimpleDTO convertToStudentSimpleDTO(Student student) {
+        var studentSimpleDTO = new StudentSimpleDTO();
+        BeanUtils.copyProperties(student, studentSimpleDTO);
+        var studentDTO = convertToStudentDTO(student);
+        studentSimpleDTO.setAcademyName(studentDTO.getAcademyName());
+        studentSimpleDTO.setProfessionName(studentDTO.getProfessionName());
+        return studentSimpleDTO;
+    }
+
+    @Override
+    public List<StudentSimpleDTO> convertToStudentSimpleDTO(List<Student> students) {
+        return students.stream()
+                .map(this::convertToStudentSimpleDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Student> queryStudents(String realName, String sno) {
+        LambdaQueryWrapper<Student> wrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotEmpty(realName)) {
+            wrapper.like(Student::getRealName, realName);
+        }
+        if (StringUtils.isNotEmpty(sno)) {
+            wrapper.like(Student::getSno, sno);
+        }
+        return baseMapper.selectList(wrapper);
     }
 }

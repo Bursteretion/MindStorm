@@ -1,7 +1,10 @@
 import request from '@/utils/request';
 
-export async function listCourseClassStudent(classId) {
-  return request(`/mindstorm-education/education/course-class-student/list/${classId}`);
+export async function listStudentAndCheckedIds(params) {
+  return request(`/mindstorm-education/education/course-class-student/list/student`, {
+    method: 'POST',
+    data: params,
+  });
 }
 
 export async function queryCourseClassStudent(params) {
@@ -15,6 +18,13 @@ export async function createCourseClassStudent(courseClassStudentVO) {
   return request('/mindstorm-education/education/course-class-student/create', {
     method: 'POST',
     data: courseClassStudentVO,
+  });
+}
+
+export async function createBatchCourseClassStudent(courseClassStudentBatchVO) {
+  return request('/mindstorm-education/education/course-class-student/create/batch', {
+    method: 'POST',
+    data: courseClassStudentBatchVO,
   });
 }
 

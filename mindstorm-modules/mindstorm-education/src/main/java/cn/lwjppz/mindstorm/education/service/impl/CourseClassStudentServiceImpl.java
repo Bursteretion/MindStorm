@@ -4,9 +4,11 @@ import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.dto.courseclassstudent.CourseClassStudentDTO;
 import cn.lwjppz.mindstorm.education.model.dto.student.StudentDTO;
+import cn.lwjppz.mindstorm.education.model.dto.student.StudentSimpleDTO;
 import cn.lwjppz.mindstorm.education.model.entity.CourseClassStudent;
 import cn.lwjppz.mindstorm.education.mapper.CourseClassStudentMapper;
 import cn.lwjppz.mindstorm.education.model.entity.Student;
+import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentBatchVO;
 import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentVO;
 import cn.lwjppz.mindstorm.education.model.vo.student.StudentQueryVO;
@@ -20,6 +22,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -71,14 +74,19 @@ public class CourseClassStudentServiceImpl extends ServiceImpl<CourseClassStuden
         var res = courseClassStudents.stream()
                 .filter(item -> {
                     var student = studentMap.get(item.getStudentId());
-                    boolean sno = true, realName = true;
+                    boolean sno = true, realName = true, flag = true;
                     if (StringUtils.isNotEmpty(courseClassStudentQueryVO.getSno())) {
                         sno = student.getSno().contains(courseClassStudentQueryVO.getSno());
+                        flag = false;
                     }
                     if (StringUtils.isNotEmpty(courseClassStudentQueryVO.getRealName())) {
                         realName = student.getRealName().contains(courseClassStudentQueryVO.getRealName());
+                        flag = false;
                     }
-                    return sno || realName;
+                    if (flag) {
+                        return true;
+                    }
+                    return sno && realName;
                 })
                 .map(item -> {
                     var courseClassStudentDTO = new CourseClassStudentDTO();
@@ -114,6 +122,20 @@ public class CourseClassStudentServiceImpl extends ServiceImpl<CourseClassStuden
 
         baseMapper.insert(courseClassStudent);
         return courseClassStudent;
+    }
+
+    @Override
+    public boolean insertBatchCourseClassStudent(CourseClassStudentBatchVO courseClassStudentBatchVO) {
+        if (!CollectionUtils.isEmpty(courseClassStudentBatchVO.getStudentIds())) {
+            var studentIds = courseClassStudentBatchVO.getStudentIds();
+            studentIds.forEach(item -> {
+                var courseClassStudent = new CourseClassStudent();
+                courseClassStudent.setClassId(courseClassStudentBatchVO.getClassId());
+                courseClassStudent.setStudentId(item);
+                baseMapper.insert(courseClassStudent);
+            });
+        }
+        return true;
     }
 
     @Override
@@ -157,6 +179,18 @@ public class CourseClassStudentServiceImpl extends ServiceImpl<CourseClassStuden
         return courseClassStudents.stream()
                 .map(this::convertCourseClassStudentDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentSimpleDTO> listNonClassStudents(CourseClassStudentQueryVO courseClassStudentQueryVO) {
+        var checkedKeys =
+                new HashSet<>(ServiceUtils.fetchProperty(listCourseClassStudent(courseClassStudentQueryVO.getClassId()),
+                        CourseClassStudent::getStudentId));
+        var students =
+                studentService.convertToStudentSimpleDTO(studentService.queryStudents(courseClassStudentQueryVO.getRealName(), courseClassStudentQueryVO.getSno()));
+
+        students = students.stream().filter(item -> !checkedKeys.contains(item.getId())).collect(Collectors.toList());
+        return students;
     }
 
     private LambdaQueryWrapper<CourseClassStudent> getCommonWrapper() {

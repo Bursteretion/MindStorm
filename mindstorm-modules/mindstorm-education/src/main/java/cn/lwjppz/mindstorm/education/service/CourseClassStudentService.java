@@ -1,7 +1,9 @@
 package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.courseclassstudent.CourseClassStudentDTO;
+import cn.lwjppz.mindstorm.education.model.dto.student.StudentSimpleDTO;
 import cn.lwjppz.mindstorm.education.model.entity.CourseClassStudent;
+import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentBatchVO;
 import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.courseclassstudent.CourseClassStudentVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -43,7 +45,13 @@ public interface CourseClassStudentService extends IService<CourseClassStudent> 
      */
     CourseClassStudent insertCourseClassStudent(CourseClassStudentVO courseClassStudentVO);
 
-
+    /**
+     * 批量新增课程班级学生关联
+     *
+     * @param courseClassStudentBatchVO 课程班级学生关联信息
+     * @return 是否新增成功
+     */
+    boolean insertBatchCourseClassStudent(CourseClassStudentBatchVO courseClassStudentBatchVO);
 
     /**
      * 根据班级Id删除关联学生
@@ -85,4 +93,11 @@ public interface CourseClassStudentService extends IService<CourseClassStudent> 
      */
     List<CourseClassStudentDTO> convertCourseClassStudentDTO(List<CourseClassStudent> courseClassStudents);
 
+    /**
+     * 获取未加入该班级的学生列表
+     *
+     * @param courseClassStudentQueryVO 查询条件
+     * @return 学生列表
+     */
+    List<StudentSimpleDTO> listNonClassStudents(CourseClassStudentQueryVO courseClassStudentQueryVO);
 }

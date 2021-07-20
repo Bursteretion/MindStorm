@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AbstractMindStormException.class)
     public CommonResult error(AbstractMindStormException e) {
         log.error("exception message：{}", e.getMessage());
-        return CommonResult.error().code(e.getStatus().getCode()).message(e.getStatus().getMessage());
+        return CommonResult.error().code(e.getStatus().getCode()).message(e.getMessage());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

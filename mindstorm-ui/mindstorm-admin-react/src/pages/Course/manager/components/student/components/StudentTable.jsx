@@ -1,8 +1,8 @@
 import React, { useImperativeHandle, useRef, useState } from 'react';
-import { Button } from 'antd';
+import { Button, message, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { queryCourseClassStudent } from '@/services/courseclassstudent';
+import { deleteCourseClassStudent, queryCourseClassStudent } from '@/services/courseclassstudent';
 import StudentCreateForm from './StudentCreateForm';
 
 const StudentTable = (props) => {
@@ -13,7 +13,6 @@ const StudentTable = (props) => {
 
   useImperativeHandle(childRef, () => ({
     setValue: (value) => {
-      console.log(value);
       setClassId(value);
       actionRef?.current.reset();
     },
@@ -32,6 +31,16 @@ const StudentTable = (props) => {
       total,
       success: res.success,
     };
+  };
+
+  const handleDeleteCourseClassStudent = async (courseClassStudentId) => {
+    const res = await deleteCourseClassStudent(courseClassStudentId);
+    if (res.success) {
+      message.success(`移除成功！`);
+      actionRef?.current.reset();
+    } else {
+      message.error(res.message);
+    }
   };
 
   const columns = [
@@ -64,9 +73,15 @@ const StudentTable = (props) => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a key="remove" onClick={() => {}}>
-          移除
-        </a>,
+        <Popconfirm
+          key="delete"
+          title={`你确定要将【${record.realName}】从这个班级移除吗？`}
+          onConfirm={() => handleDeleteCourseClassStudent(record.id)}
+          okText="确定"
+          cancelText="取消"
+        >
+          <a>移除</a>
+        </Popconfirm>,
       ],
     },
   ];
