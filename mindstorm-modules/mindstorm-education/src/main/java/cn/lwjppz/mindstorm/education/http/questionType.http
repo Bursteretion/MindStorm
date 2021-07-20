@@ -1,0 +1,17 @@
+### 新增题型
+POST http://localhost:9000/education/question-type/create
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "id": "",
+  "name": "简答题",
+  "type": 4,
+  "isCustomize": 0
+}
+
+###
+GET http://localhost:9000/education/question-type/list
+Accept: application/json
+Cache-Control: no-cache

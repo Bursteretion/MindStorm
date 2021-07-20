@@ -43,6 +43,9 @@ public class QuestionType implements Serializable {
     @ApiModelProperty(value = "题型类型")
     private Integer type;
 
+    @ApiModelProperty(value = "是否是用户自定义题型")
+    private Integer isCustomize;
+
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic
     private Boolean isDeleted;
@@ -54,6 +57,5 @@ public class QuestionType implements Serializable {
     @ApiModelProperty(value = "更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
-
 
 }
