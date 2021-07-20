@@ -11,6 +11,7 @@ import cn.lwjppz.mindstorm.education.model.entity.Student;
 import cn.lwjppz.mindstorm.education.model.vo.student.StudentQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.student.StudentVO;
 import cn.lwjppz.mindstorm.education.service.AcademyService;
+import cn.lwjppz.mindstorm.education.service.CourseClassStudentService;
 import cn.lwjppz.mindstorm.education.service.ProfessionService;
 import cn.lwjppz.mindstorm.education.service.StudentService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -39,11 +40,14 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     private final AcademyService academyService;
     private final ProfessionService professionService;
+    private final CourseClassStudentService courseClassStudentService;
 
     public StudentServiceImpl(@Lazy AcademyService academyService,
-                              @Lazy ProfessionService professionService) {
+                              @Lazy ProfessionService professionService,
+                              @Lazy CourseClassStudentService courseClassStudentService) {
         this.academyService = academyService;
         this.professionService = professionService;
+        this.courseClassStudentService = courseClassStudentService;
     }
 
     @Override
@@ -157,9 +161,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public boolean deleteStudent(String studentId) {
         if (StringUtils.isNotEmpty(studentId)) {
-            return baseMapper.deleteById(studentId) > 0;
+            // 删除班级课程学生关联信息
+            courseClassStudentService.deleteCourseClassStudentByStudentId(studentId);
+            // 删除该学生
+            baseMapper.deleteById(studentId);
         }
-        return false;
+        return true;
     }
 
     @Override

@@ -157,6 +157,16 @@ public class CourseClassStudentServiceImpl extends ServiceImpl<CourseClassStuden
     }
 
     @Override
+    public boolean deleteCourseClassStudentByStudentId(String studentId) {
+        if (StringUtils.isNotEmpty(studentId)) {
+            LambdaQueryWrapper<CourseClassStudent> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(CourseClassStudent::getStudentId, studentId);
+            baseMapper.delete(wrapper);
+        }
+        return true;
+    }
+
+    @Override
     public Integer getCount(String classId) {
         LambdaQueryWrapper<CourseClassStudent> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(CourseClassStudent::getClassId, classId);

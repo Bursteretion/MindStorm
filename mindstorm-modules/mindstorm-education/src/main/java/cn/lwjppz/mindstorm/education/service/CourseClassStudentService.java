@@ -70,6 +70,14 @@ public interface CourseClassStudentService extends IService<CourseClassStudent> 
     boolean deleteCourseClassStudentById(String courseClassStudentId);
 
     /**
+     * 根据学生Id删除班级学生关联信息
+     *
+     * @param studentId 学生Id
+     * @return 是否删除成功
+     */
+    boolean deleteCourseClassStudentByStudentId(String studentId);
+
+    /**
      * 获取该班级学生数量
      *
      * @param classId 班级Id

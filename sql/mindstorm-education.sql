@@ -95,7 +95,7 @@ CREATE TABLE `mse_course_class` (
 
 /*Data for the table `mse_course_class` */
 
-insert  into `mse_course_class`(`id`,`course_id`,`class_name`,`sort`,`invitation_code`,`is_deleted`,`gmt_create`,`gmt_modified`) values ('1416199646961147906','1416199639684030465','计算机科学与技术2班',0,'l7WsovGw',0,'2021-07-17 00:54:42','2021-07-18 12:14:19'),('1416739061374537729','1416199639684030465','测试',2,'VBQOgMgr',1,'2021-07-18 12:38:09','2021-07-18 12:38:09'),('1416739337309409282','1416199639684030465','计算机科学与技术1班',1,'knLiZxFk',0,'2021-07-18 12:39:14','2021-07-18 12:39:14');
+insert  into `mse_course_class`(`id`,`course_id`,`class_name`,`sort`,`invitation_code`,`is_deleted`,`gmt_create`,`gmt_modified`) values ('1416199646961147906','1416199639684030465','计算机科学与技术2班',0,'l7WsovGw',0,'2021-07-17 00:54:42','2021-07-18 12:14:19'),('1416739061374537729','1416199639684030465','测试',2,'VBQOgMgr',1,'2021-07-18 12:38:09','2021-07-18 12:38:09'),('1416739337309409282','1416199639684030465','计算机科学与技术1班',1,'knLiZxFk',1,'2021-07-18 12:39:14','2021-07-18 12:39:14'),('1416936753467949057','1416199639684030465','demo',2,'R6tXi2ap',1,'2021-07-19 01:43:42','2021-07-19 01:43:42'),('1416948351054065665','1416199639684030465','周寒莉的小班级',3,'fLGF1ZPp',0,'2021-07-19 02:29:47','2021-07-19 02:29:47'),('1417062347308453889','1416199639684030465','demo',4,'o4MYaF1x',1,'2021-07-19 10:02:46','2021-07-19 10:02:46');
 
 /*Table structure for table `mse_course_class_student` */
 
@@ -111,6 +111,8 @@ CREATE TABLE `mse_course_class_student` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程班级学生表';
 
 /*Data for the table `mse_course_class_student` */
+
+insert  into `mse_course_class_student`(`id`,`class_id`,`student_id`,`gmt_create`,`gmt_modified`) values ('1417329278942855170','1416948351054065665','1415295010376908802','2021-07-20 03:43:27','2021-07-20 03:43:27'),('1417329563803205634','1416948351054065665','1415279829995380737','2021-07-20 03:44:35','2021-07-20 03:44:35');
 
 /*Table structure for table `mse_profession` */
 
@@ -131,6 +133,93 @@ CREATE TABLE `mse_profession` (
 
 insert  into `mse_profession`(`id`,`name`,`status`,`sort`,`is_deleted`,`gmt_create`,`gmt_modified`) values ('1414567755866578945','计算机科学与技术',1,1,0,'2021-07-12 12:50:09','2021-07-14 12:58:06'),('1414567816084201473','物联网工程',1,2,0,'2021-07-12 12:50:23','2021-07-12 12:50:23'),('1414567879820845058','网络工程',1,3,0,'2021-07-12 12:50:39','2021-07-12 12:50:39'),('1414567938268471298','通信工程',1,4,0,'2021-07-12 12:50:53','2021-07-12 12:50:53'),('1414568000801349634','数学与应用数学（金融与统计）',1,5,0,'2021-07-12 12:51:07','2021-07-12 12:51:07'),('1414568060016533505','人工智能',1,6,0,'2021-07-12 12:51:22','2021-07-12 12:51:22'),('1414568153213968385','电子科学与技术',1,1,0,'2021-07-12 12:51:44','2021-07-12 12:51:44'),('1414568260172914689','电子信息工程（中外合作办学）',1,2,0,'2021-07-12 12:52:09','2021-07-12 12:52:09'),('1414568522249805826','光电信息科学与工程',1,3,0,'2021-07-12 12:53:12','2021-07-12 12:53:12'),('1414568603849990145','电子信息工程',1,4,0,'2021-07-12 12:53:31','2021-07-12 12:53:31'),('1414568689397014529','机器人工程',1,1,0,'2021-07-12 12:53:52','2021-07-12 12:53:52'),('1414568749715300354','机械设计制造及其自动化',1,2,0,'2021-07-12 12:54:06','2021-07-12 12:54:06'),('1414568833291001857','机械设计制造及其自动化(国际留学生)',1,3,0,'2021-07-12 12:54:26','2021-07-12 12:54:26'),('1414568996046774273','车辆工程',1,1,0,'2021-07-12 12:55:05','2021-07-12 12:55:05'),('1414569116989530113','物理学（师范类）',1,9,0,'2021-07-12 12:55:34','2021-07-12 12:55:34');
 
+/*Table structure for table `mse_question` */
+
+DROP TABLE IF EXISTS `mse_question`;
+
+CREATE TABLE `mse_question` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '题目Id',
+  `pid` char(19) DEFAULT NULL COMMENT '当且仅当（is_folder=true）且由上级文件夹',
+  `course_id` char(19) NOT NULL COMMENT '所属课程Id',
+  `user_id` char(19) NOT NULL COMMENT '创建用户Id',
+  `question_type_id` char(19) NOT NULL COMMENT '题目类型Id',
+  `content` text NOT NULL COMMENT '题目描述',
+  `usage_amount` int(10) DEFAULT NULL COMMENT '题目被使用量',
+  `difficulty` tinyint(3) NOT NULL COMMENT '题目难度',
+  `is_folder` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否是文件夹（0-题目，1-文件夹）',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='题目表';
+
+/*Data for the table `mse_question` */
+
+/*Table structure for table `mse_question_answer` */
+
+DROP TABLE IF EXISTS `mse_question_answer`;
+
+CREATE TABLE `mse_question_answer` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '题目答案Id',
+  `question_id` char(19) NOT NULL COMMENT '题目Id',
+  `option_id` char(19) DEFAULT NULL COMMENT '题目答案对应的选项的Id',
+  `value` text COMMENT '题目答案内容（当题目没有选项时）',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='题目答案表';
+
+/*Data for the table `mse_question_answer` */
+
+/*Table structure for table `mse_question_option` */
+
+DROP TABLE IF EXISTS `mse_question_option`;
+
+CREATE TABLE `mse_question_option` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '题目标签Id',
+  `question_id` char(19) NOT NULL COMMENT '题目Id',
+  `tag` tinyint(10) NOT NULL DEFAULT '0' COMMENT '选项标签（A、B、C、D等等）',
+  `value` text NOT NULL COMMENT '选项内容',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='题目选项表';
+
+/*Data for the table `mse_question_option` */
+
+/*Table structure for table `mse_question_topic` */
+
+DROP TABLE IF EXISTS `mse_question_topic`;
+
+CREATE TABLE `mse_question_topic` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '题目知识点关联Id',
+  `question_id` char(19) NOT NULL COMMENT '题目Id',
+  `topic_id` char(19) NOT NULL COMMENT '知识点Id',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='题目知识点关联表';
+
+/*Data for the table `mse_question_topic` */
+
+/*Table structure for table `mse_question_type` */
+
+DROP TABLE IF EXISTS `mse_question_type`;
+
+CREATE TABLE `mse_question_type` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '题型Id',
+  `name` varchar(20) NOT NULL COMMENT '题型名称',
+  `type` tinyint(10) NOT NULL COMMENT '题型类型',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='题目类型（题型）表';
+
+/*Data for the table `mse_question_type` */
+
 /*Table structure for table `mse_student` */
 
 DROP TABLE IF EXISTS `mse_student`;
@@ -139,7 +228,6 @@ CREATE TABLE `mse_student` (
   `id` char(19) NOT NULL COMMENT '学生Id',
   `academy_id` varchar(19) NOT NULL COMMENT '院系Id',
   `profession_id` varchar(19) NOT NULL COMMENT '专业Id',
-  `team_id` char(19) NOT NULL COMMENT '班级Id',
   `username` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(100) NOT NULL DEFAULT '' COMMENT '密码',
   `nick_name` varchar(50) DEFAULT NULL COMMENT '昵称',
@@ -161,53 +249,22 @@ CREATE TABLE `mse_student` (
 
 /*Data for the table `mse_student` */
 
-insert  into `mse_student`(`id`,`academy_id`,`profession_id`,`team_id`,`username`,`password`,`nick_name`,`real_name`,`sno`,`age`,`sex`,`birth_day`,`phone`,`email`,`status`,`avatar`,`wx_open_id`,`is_deleted`,`gmt_create`,`gmt_modified`) values ('1415279829995380737','1413060171875524610','1414567755866578945','','lwjppz','123456',NULL,'罗炜杰','20180861215',20,1,NULL,'13850801092','lwjppz@gmail.com',1,NULL,NULL,0,'2021-07-14 11:59:41','2021-07-14 11:59:41'),('1415295010376908802','1413060171875524610','1414567755866578945','','zeus','123456',NULL,'周寒莉','20180861214',20,2,NULL,'18750836893','1731667524@qq.com',1,NULL,NULL,0,'2021-07-14 13:00:00','2021-07-16 11:28:41');
+insert  into `mse_student`(`id`,`academy_id`,`profession_id`,`username`,`password`,`nick_name`,`real_name`,`sno`,`age`,`sex`,`birth_day`,`phone`,`email`,`status`,`avatar`,`wx_open_id`,`is_deleted`,`gmt_create`,`gmt_modified`) values ('1415279829995380737','1413060171875524610','1414567755866578945','lwjppz','123456',NULL,'罗炜杰','20180861215',20,1,NULL,'13850801092','lwjppz@gmail.com',1,NULL,NULL,0,'2021-07-14 11:59:41','2021-07-14 11:59:41'),('1415295010376908802','1413060171875524610','1414567755866578945','zeus','123456',NULL,'周寒莉','20180861214',20,2,NULL,'18750836893','1731667524@qq.com',1,NULL,NULL,0,'2021-07-14 13:00:00','2021-07-16 11:28:41');
 
-/*Table structure for table `mse_teacher` */
+/*Table structure for table `mse_topic` */
 
-DROP TABLE IF EXISTS `mse_teacher`;
+DROP TABLE IF EXISTS `mse_topic`;
 
-CREATE TABLE `mse_teacher` (
-  `id` char(19) NOT NULL COMMENT '教师Id',
-  `academy_id` varchar(19) NOT NULL COMMENT '院系Id',
-  `username` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名',
-  `password` varchar(100) NOT NULL DEFAULT '' COMMENT '密码',
-  `nick_name` varchar(50) DEFAULT NULL COMMENT '昵称',
-  `real_name` varchar(50) DEFAULT NULL COMMENT '真实姓名',
-  `age` int(11) DEFAULT NULL COMMENT '年龄',
-  `sex` tinyint(3) DEFAULT NULL COMMENT '性别 1.男 2.女',
-  `birth_day` datetime DEFAULT NULL COMMENT '生日',
-  `phone` varchar(50) DEFAULT NULL COMMENT '电话',
-  `email` varchar(30) DEFAULT NULL COMMENT '邮箱',
-  `status` tinyint(4) DEFAULT NULL COMMENT '状态(0:禁止,1:正常)',
-  `avatar` varchar(255) DEFAULT NULL COMMENT '头像地址',
-  `wx_open_id` varchar(255) DEFAULT NULL COMMENT '微信openId',
+CREATE TABLE `mse_topic` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '知识点Id',
+  `name` varchar(20) NOT NULL COMMENT '知识点名称',
   `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
   `gmt_create` datetime NOT NULL COMMENT '创建时间',
   `gmt_modified` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='教师表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='知识点表';
 
-/*Data for the table `mse_teacher` */
-
-insert  into `mse_teacher`(`id`,`academy_id`,`username`,`password`,`nick_name`,`real_name`,`age`,`sex`,`birth_day`,`phone`,`email`,`status`,`avatar`,`wx_open_id`,`is_deleted`,`gmt_create`,`gmt_modified`) values ('1415306634357800961','1413060171875524610','罗老师','123456',NULL,'罗早早',32,1,NULL,'13850801092','13850801092@163.com',1,NULL,NULL,0,'2021-07-14 13:46:11','2021-07-14 13:47:05');
-
-/*Table structure for table `mse_team` */
-
-DROP TABLE IF EXISTS `mse_team`;
-
-CREATE TABLE `mse_team` (
-  `id` char(19) NOT NULL DEFAULT '' COMMENT '班级Id',
-  `name` varchar(50) NOT NULL COMMENT '班级名称',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '班级状态（0 禁用，1 正常）',
-  `sort` int(11) NOT NULL COMMENT '排序',
-  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
-  `gmt_create` datetime NOT NULL COMMENT '创建时间',
-  `gmt_modified` datetime NOT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='班级表';
-
-/*Data for the table `mse_team` */
+/*Data for the table `mse_topic` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
