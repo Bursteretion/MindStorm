@@ -4,12 +4,15 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.dto.topic.TopicDTO;
+import cn.lwjppz.mindstorm.education.model.dto.topic.TopicSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Topic;
 import cn.lwjppz.mindstorm.education.mapper.TopicMapper;
 import cn.lwjppz.mindstorm.education.model.vo.topic.TopicVO;
+import cn.lwjppz.mindstorm.education.service.QuestionTopicService;
 import cn.lwjppz.mindstorm.education.service.TopicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +29,11 @@ import java.util.stream.Collectors;
 @Service
 public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements TopicService {
 
+    private final QuestionTopicService questionTopicService;
+
+    public TopicServiceImpl(@Lazy QuestionTopicService questionTopicService) {
+        this.questionTopicService = questionTopicService;
+    }
 
     @Override
     public List<Topic> listTopics() {
@@ -81,6 +89,24 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     public List<TopicDTO> convertTopicDTO(List<Topic> topics) {
         return topics.stream()
                 .map(this::convertTopicDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TopicSelectDTO convertToTopicSelectDTO(Topic topic) {
+        var topicSelectDTO = new TopicSelectDTO();
+        BeanUtils.copyProperties(topic, topicSelectDTO);
+
+        var questionCount = questionTopicService.getCountByTopicId(topic.getId());
+        topicSelectDTO.setUsageAmount(questionCount);
+
+        return topicSelectDTO;
+    }
+
+    @Override
+    public List<TopicSelectDTO> convertToTopicSelectDTO(List<Topic> topics) {
+        return topics.stream()
+                .map(this::convertToTopicSelectDTO)
                 .collect(Collectors.toList());
     }
 }

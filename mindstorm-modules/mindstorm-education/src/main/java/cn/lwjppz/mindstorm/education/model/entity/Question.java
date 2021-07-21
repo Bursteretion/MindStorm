@@ -37,7 +37,7 @@ public class Question implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
-    @ApiModelProperty(value = "当且仅当（is_folder=true）且有上级文件夹")
+    @ApiModelProperty(value = "当有上级文件夹时，值为上级Id")
     private String pid;
 
     @ApiModelProperty(value = "所属课程Id")

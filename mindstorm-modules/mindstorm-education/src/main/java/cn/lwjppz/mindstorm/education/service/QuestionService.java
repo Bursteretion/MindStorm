@@ -13,4 +13,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface QuestionService extends IService<Question> {
 
+    /**
+     * 通过题型Id获取该题型共有多少题
+     *
+     * @param questionTypeId 题型Id
+     * @return 题目数量
+     */
+    Integer getCountByQuestionTypeId(String questionTypeId);
+
 }

@@ -34,6 +34,14 @@ public interface QuestionTopicService extends IService<QuestionTopic> {
     boolean createQuestionTopic(QuestionTopicVO questionTopicVO);
 
     /**
+     * 根据知识点Id获取关联题数
+     *
+     * @param topicId 知识点Id
+     * @return 关联题数
+     */
+    Integer getCountByTopicId(String topicId);
+
+    /**
      * 将 QuestionTopic 对象转为 QuestionTopicDTO 对象
      *
      * @param questionTopic QuestionTopic 对象

@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.questiontype.QuestionTypeDTO;
+import cn.lwjppz.mindstorm.education.model.dto.questiontype.QuestionTypeSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionType;
 import cn.lwjppz.mindstorm.education.model.vo.questiontype.QuestionTypeSimpleVO;
 import cn.lwjppz.mindstorm.education.model.vo.questiontype.QuestionTypeVO;
@@ -64,5 +65,21 @@ public interface QuestionTypeService extends IService<QuestionType> {
      * @return QuestionTypeDTO 对象集合
      */
     List<QuestionTypeDTO> convertQuestionTypeDTO(List<QuestionType> questionTypes);
+
+    /**
+     * 将 QuestionType 对象转为 QuestionTypeSelectDTO 对象
+     *
+     * @param questionType QuestionType 对象
+     * @return QuestionTypeSelectDTO 对象
+     */
+    QuestionTypeSelectDTO convertToQuestionTypeSelectDTO(QuestionType questionType);
+
+    /**
+     * 将 QuestionType 对象集合转为 QuestionTypeSelectDTO 对象集合
+     *
+     * @param questionTypes QuestionType 对象集合
+     * @return QuestionTypeSelectDTO 对象集合
+     */
+    List<QuestionTypeSelectDTO> convertToQuestionTypeSelectDTO(List<QuestionType> questionTypes);
 
 }

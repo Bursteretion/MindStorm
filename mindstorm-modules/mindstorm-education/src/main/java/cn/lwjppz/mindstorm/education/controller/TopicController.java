@@ -31,8 +31,15 @@ public class TopicController {
     @GetMapping("/list")
     @ApiOperation("获取所有知识点")
     public CommonResult listTopic() {
-        var topics = topicService.listTopics();
+        var topics = topicService.convertTopicDTO(topicService.listTopics());
         return CommonResult.ok().data("topics", topics);
+    }
+
+    @GetMapping("/list/select")
+    @ApiOperation("获取所有知识点（Select选择器组件）")
+    public CommonResult listSelectTopic() {
+        var topicSelects = topicService.convertToTopicSelectDTO(topicService.listTopics());
+        return CommonResult.ok().data("topicSelects", topicSelects);
     }
 
     @PostMapping("/create")

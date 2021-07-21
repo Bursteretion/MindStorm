@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.topic.TopicDTO;
+import cn.lwjppz.mindstorm.education.model.dto.topic.TopicSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Topic;
 import cn.lwjppz.mindstorm.education.model.vo.topic.TopicVO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -71,5 +72,21 @@ public interface TopicService extends IService<Topic> {
      * @return TopicDTO 对象集合
      */
     List<TopicDTO> convertTopicDTO(List<Topic> topics);
+
+    /**
+     * 将 Topic 对象转为 TopicSelectDTO对象
+     *
+     * @param topic Topic 对象
+     * @return TopicSelectDTO 对象
+     */
+    TopicSelectDTO convertToTopicSelectDTO(Topic topic);
+
+    /**
+     * 将 Topic 对象集合转为 TopicSelectDTO对象集合
+     *
+     * @param topics Topic 对象集合
+     * @return TopicSelectDTO 对象集合
+     */
+    List<TopicSelectDTO> convertToTopicSelectDTO(List<Topic> topics);
 
 }

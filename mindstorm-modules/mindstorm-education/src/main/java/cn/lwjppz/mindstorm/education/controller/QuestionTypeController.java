@@ -28,10 +28,18 @@ public class QuestionTypeController {
     }
 
     @GetMapping("/list")
-    @ApiOperation("获取所题型")
+    @ApiOperation("获取所有题型")
     public CommonResult listQuestionTypes() {
         var questionTypes = questionTypeService.convertQuestionTypeDTO(questionTypeService.listQuestionTypes());
         return CommonResult.ok().data("questionTypes", questionTypes);
+    }
+
+    @GetMapping("/list/select")
+    @ApiOperation("获取所有题型（Select选择器组件）")
+    public CommonResult listQuestionTypesSelect() {
+        var questionTypeSelects =
+                questionTypeService.convertToQuestionTypeSelectDTO(questionTypeService.listQuestionTypes());
+        return CommonResult.ok().data("questionTypeSelects", questionTypeSelects);
     }
 
     @PostMapping("/create")

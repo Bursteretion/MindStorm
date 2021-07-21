@@ -3,13 +3,16 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.dto.questiontype.QuestionTypeDTO;
+import cn.lwjppz.mindstorm.education.model.dto.questiontype.QuestionTypeSelectDTO;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionType;
 import cn.lwjppz.mindstorm.education.mapper.QuestionTypeMapper;
 import cn.lwjppz.mindstorm.education.model.vo.questiontype.QuestionTypeSimpleVO;
 import cn.lwjppz.mindstorm.education.model.vo.questiontype.QuestionTypeVO;
+import cn.lwjppz.mindstorm.education.service.QuestionService;
 import cn.lwjppz.mindstorm.education.service.QuestionTypeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +28,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class QuestionTypeServiceImpl extends ServiceImpl<QuestionTypeMapper, QuestionType> implements QuestionTypeService {
+
+    private final QuestionService questionService;
+
+    public QuestionTypeServiceImpl(@Lazy QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @Override
     public List<QuestionType> listQuestionTypes() {
@@ -72,6 +81,23 @@ public class QuestionTypeServiceImpl extends ServiceImpl<QuestionTypeMapper, Que
     public List<QuestionTypeDTO> convertQuestionTypeDTO(List<QuestionType> questionTypes) {
         return questionTypes.stream()
                 .map(this::convertQuestionTypeDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public QuestionTypeSelectDTO convertToQuestionTypeSelectDTO(QuestionType questionType) {
+        var questionTypeSelectDTO = new QuestionTypeSelectDTO();
+        BeanUtils.copyProperties(questionType, questionTypeSelectDTO);
+
+        var questionCount = questionService.getCountByQuestionTypeId(questionType.getId());
+        questionTypeSelectDTO.setUsageAmount(questionCount);
+        return questionTypeSelectDTO;
+    }
+
+    @Override
+    public List<QuestionTypeSelectDTO> convertToQuestionTypeSelectDTO(List<QuestionType> questionTypes) {
+        return questionTypes.stream()
+                .map(this::convertToQuestionTypeSelectDTO)
                 .collect(Collectors.toList());
     }
 }

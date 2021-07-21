@@ -69,6 +69,16 @@ public class QuestionTopicServiceImpl extends ServiceImpl<QuestionTopicMapper, Q
     }
 
     @Override
+    public Integer getCountByTopicId(String topicId) {
+        if (StringUtils.isNotEmpty(topicId)) {
+            LambdaQueryWrapper<QuestionTopic> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(QuestionTopic::getTopicId, topicId);
+            return baseMapper.selectCount(wrapper);
+        }
+        return null;
+    }
+
+    @Override
     public QuestionTopicDTO convertQuestionTopicDTO(QuestionTopic questionTopic) {
         var questionTopicDTO = new QuestionTopicDTO();
 
