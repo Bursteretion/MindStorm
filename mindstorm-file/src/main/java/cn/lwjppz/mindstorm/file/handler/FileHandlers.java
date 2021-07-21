@@ -4,7 +4,7 @@ import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.type.ImageSourceType;
 import cn.lwjppz.mindstorm.common.core.exception.FileOperationException;
 import cn.lwjppz.mindstorm.common.core.exception.RepeatTypeException;
-import cn.lwjppz.mindstorm.common.core.support.StorageType;
+import cn.lwjppz.mindstorm.common.core.enums.type.StorageType;
 import cn.lwjppz.mindstorm.common.core.support.UploadResult;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 

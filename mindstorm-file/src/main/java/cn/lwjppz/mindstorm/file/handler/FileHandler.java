@@ -1,7 +1,7 @@
 package cn.lwjppz.mindstorm.file.handler;
 
 import cn.lwjppz.mindstorm.common.core.enums.type.ImageSourceType;
-import cn.lwjppz.mindstorm.common.core.support.StorageType;
+import cn.lwjppz.mindstorm.common.core.enums.type.StorageType;
 import cn.lwjppz.mindstorm.common.core.support.UploadResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;

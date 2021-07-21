@@ -1,7 +1,11 @@
 package cn.lwjppz.mindstorm.education.service;
 
+import cn.lwjppz.mindstorm.education.model.dto.questiontopic.QuestionTopicDTO;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
+import cn.lwjppz.mindstorm.education.model.vo.questiontopic.QuestionTopicVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +16,37 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-07-20
  */
 public interface QuestionTopicService extends IService<QuestionTopic> {
+
+    /**
+     * 根据题目Id获取相关联知识点
+     *
+     * @param questionId 题目Id
+     * @return 关联知识点列表
+     */
+    List<QuestionTopic> listQuestionTopic(String questionId);
+
+    /**
+     * 新增题目知识点关联
+     *
+     * @param questionTopicVO 题目知识点关联信息
+     * @return 是否新增成功
+     */
+    boolean createQuestionTopic(QuestionTopicVO questionTopicVO);
+
+    /**
+     * 将 QuestionTopic 对象转为 QuestionTopicDTO 对象
+     *
+     * @param questionTopic QuestionTopic 对象
+     * @return QuestionTopicDTO 对象
+     */
+    QuestionTopicDTO convertQuestionTopicDTO(QuestionTopic questionTopic);
+
+    /**
+     * 将 QuestionTopic 对象集合转为 QuestionTopicDTO 对象集合
+     *
+     * @param questionTopics QuestionTopic 对象集合
+     * @return QuestionTopicDTO 对象集合
+     */
+    List<QuestionTopicDTO> convertQuestionTopicDTO(List<QuestionTopic> questionTopics);
 
 }

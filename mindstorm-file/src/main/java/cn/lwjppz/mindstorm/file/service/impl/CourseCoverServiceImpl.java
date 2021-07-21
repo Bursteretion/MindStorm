@@ -1,14 +1,13 @@
 package cn.lwjppz.mindstorm.file.service.impl;
 
 import cn.lwjppz.mindstorm.common.core.enums.type.ImageSourceType;
-import cn.lwjppz.mindstorm.common.core.support.StorageType;
+import cn.lwjppz.mindstorm.common.core.enums.type.StorageType;
 import cn.lwjppz.mindstorm.common.core.support.UploadResult;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.file.handler.FileHandlers;
 import cn.lwjppz.mindstorm.file.mapper.CourseCoverMapper;
 import cn.lwjppz.mindstorm.file.model.entity.CourseCover;
 import cn.lwjppz.mindstorm.file.service.CourseCoverService;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

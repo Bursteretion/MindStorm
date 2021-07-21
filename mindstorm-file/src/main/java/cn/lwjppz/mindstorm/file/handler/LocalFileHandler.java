@@ -3,7 +3,7 @@ package cn.lwjppz.mindstorm.file.handler;
 import cn.lwjppz.mindstorm.common.core.enums.status.ResultStatus;
 import cn.lwjppz.mindstorm.common.core.enums.type.ImageSourceType;
 import cn.lwjppz.mindstorm.common.core.exception.FileOperationException;
-import cn.lwjppz.mindstorm.common.core.support.StorageType;
+import cn.lwjppz.mindstorm.common.core.enums.type.StorageType;
 import cn.lwjppz.mindstorm.common.core.support.UploadResult;
 import cn.lwjppz.mindstorm.common.core.utils.FileNameUtils;
 import cn.lwjppz.mindstorm.common.core.utils.ImageUtils;

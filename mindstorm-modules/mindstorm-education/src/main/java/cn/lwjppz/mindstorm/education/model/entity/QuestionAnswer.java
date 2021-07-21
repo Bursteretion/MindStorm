@@ -46,6 +46,9 @@ public class QuestionAnswer implements Serializable {
     @ApiModelProperty(value = "题目答案内容（当题目没有选项时）")
     private String value;
 
+    @ApiModelProperty(value = "题目答案解析")
+    private String analyze;
+
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic
     private Boolean isDeleted;

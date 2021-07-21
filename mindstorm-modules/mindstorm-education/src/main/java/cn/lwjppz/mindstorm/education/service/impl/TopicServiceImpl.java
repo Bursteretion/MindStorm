@@ -1,10 +1,19 @@
 package cn.lwjppz.mindstorm.education.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
+import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
+import cn.lwjppz.mindstorm.education.model.dto.topic.TopicDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Topic;
 import cn.lwjppz.mindstorm.education.mapper.TopicMapper;
+import cn.lwjppz.mindstorm.education.model.vo.topic.TopicVO;
 import cn.lwjppz.mindstorm.education.service.TopicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -17,4 +26,61 @@ import org.springframework.stereotype.Service;
 @Service
 public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements TopicService {
 
+
+    @Override
+    public List<Topic> listTopics() {
+        return baseMapper.selectList(null);
+    }
+
+    @Override
+    public Topic createTopic(TopicVO topicVO) {
+        var topic = new Topic();
+        BeanUtils.copyProperties(topicVO, topic);
+
+        baseMapper.insert(topic);
+        return topic;
+    }
+
+    @Override
+    public Topic infoTopic(String topicId) {
+        if (StringUtils.isNotEmpty(topicId)) {
+            var topic = baseMapper.selectById(topicId);
+            if (null == topic) {
+                throw new EntityNotFoundException("没找到知识点Id为：" + topicId + "的知识点");
+            }
+            return topic;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateTopic(TopicVO topicVO) {
+        var topic = new Topic();
+        BeanUtils.copyProperties(topicVO, topic);
+
+        baseMapper.updateById(topic);
+        return true;
+    }
+
+    @Override
+    public boolean deleteTopic(String topicId) {
+        if (StringUtils.isNotEmpty(topicId)) {
+            baseMapper.deleteById(topicId);
+        }
+        return true;
+    }
+
+    @Override
+    public TopicDTO convertTopicDTO(Topic topic) {
+        var topicDTO = new TopicDTO();
+        BeanUtil.copyProperties(topic, topicDTO);
+        return topicDTO;
+    }
+
+    @Override
+    public List<TopicDTO> convertTopicDTO(List<Topic> topics) {
+        return topics.stream()
+                .map(this::convertTopicDTO)
+                .collect(Collectors.toList());
+    }
 }
