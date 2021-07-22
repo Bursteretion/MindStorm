@@ -96,10 +96,10 @@ public class TopicServiceImpl extends ServiceImpl<TopicMapper, Topic> implements
     public TopicSelectDTO convertToTopicSelectDTO(Topic topic) {
         var topicSelectDTO = new TopicSelectDTO();
         BeanUtils.copyProperties(topic, topicSelectDTO);
+        topicSelectDTO.setValue(topic.getId());
 
         var questionCount = questionTopicService.getCountByTopicId(topic.getId());
-        topicSelectDTO.setUsageAmount(questionCount);
-
+        topicSelectDTO.setLabel(topic.getName() + " (" + questionCount + ")");
         return topicSelectDTO;
     }
 

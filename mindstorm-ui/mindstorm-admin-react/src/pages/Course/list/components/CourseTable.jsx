@@ -5,7 +5,7 @@ import { queryAcademies } from '@/services/education/academy';
 import { PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import CourseForm from './CourseForm';
-import { useModel, Link } from 'umi';
+import { useModel, history, Link } from 'umi';
 import { listUserSelects } from '@/services/permission/user';
 
 const CourseTable = () => {
@@ -21,10 +21,15 @@ const CourseTable = () => {
     setAcademyTree: res.setAcademyTree,
     generateAcademyTreeSelect: res.generateAcademyTreeSelect,
   }));
+  const { userId = '' } = useModel('@@initialState', (res) => ({
+    userId: res.initialState.currentUser.id,
+  }));
 
   const handleQueryCourses = async (params) => {
+    const { pathname = '' } = history.location;
     const res = await queryCourse({
       ...params,
+      userId: pathname.indexOf('my') >= 0 ? userId : '',
       pageIndex: params.current,
       pageSize: params.pageSize,
     });

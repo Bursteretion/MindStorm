@@ -17,10 +17,8 @@ import lombok.ToString;
 @ToString
 public class TopicSelectDTO {
 
-    private String id;
+    private String value;
 
-    private String name;
-
-    private Integer usageAmount;
+    private String label;
 
 }

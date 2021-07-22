@@ -118,7 +118,7 @@ export default [
       {
         name: 'myCourse',
         path: '/course/my',
-        component: './Course/my',
+        component: './Course/list',
         access: 'hasRouter',
       },
       {

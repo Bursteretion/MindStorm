@@ -26,6 +26,14 @@ public interface QuestionTopicService extends IService<QuestionTopic> {
     List<QuestionTopic> listQuestionTopic(String questionId);
 
     /**
+     * 根据知识点Id获取题目列表
+     *
+     * @param topicId 知识点Id
+     * @return 题目列表
+     */
+    List<QuestionTopic> listQuestionTopicByTopicId(String topicId);
+
+    /**
      * 新增题目知识点关联
      *
      * @param questionTopicVO 题目知识点关联信息

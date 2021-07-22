@@ -45,6 +45,16 @@ public class QuestionTopicServiceImpl extends ServiceImpl<QuestionTopicMapper, Q
     }
 
     @Override
+    public List<QuestionTopic> listQuestionTopicByTopicId(String topicId) {
+        if (StringUtils.isNotEmpty(topicId)) {
+            LambdaQueryWrapper<QuestionTopic> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(QuestionTopic::getTopicId, topicId);
+            return baseMapper.selectList(wrapper);
+        }
+        return null;
+    }
+
+    @Override
     public boolean createQuestionTopic(QuestionTopicVO questionTopicVO) {
         // 先删除相关联知识点
         var questionId = questionTopicVO.getQuestionId();

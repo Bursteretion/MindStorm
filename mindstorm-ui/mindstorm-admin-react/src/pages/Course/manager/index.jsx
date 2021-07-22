@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Menu, Avatar, Skeleton } from 'antd';
 import styles from './style.less';
 import ClassList from './components/class';
+import QuestionList from './components/question';
 import { menuMap } from './menuMap';
 import { FrownOutlined } from '@ant-design/icons';
 import { history } from 'umi';
@@ -45,7 +46,8 @@ const CourseManager = () => {
     switch (selectKey) {
       case 'class':
         return <ClassList courseId={course.id} />;
-
+      case 'question':
+        return <QuestionList courseId={course.id} />;
       default:
         break;
     }

@@ -87,10 +87,11 @@ public class QuestionTypeServiceImpl extends ServiceImpl<QuestionTypeMapper, Que
     @Override
     public QuestionTypeSelectDTO convertToQuestionTypeSelectDTO(QuestionType questionType) {
         var questionTypeSelectDTO = new QuestionTypeSelectDTO();
-        BeanUtils.copyProperties(questionType, questionTypeSelectDTO);
+        questionTypeSelectDTO.setValue(questionType.getId());
 
         var questionCount = questionService.getCountByQuestionTypeId(questionType.getId());
-        questionTypeSelectDTO.setUsageAmount(questionCount);
+        questionTypeSelectDTO.setLabel(questionType.getName() + " (" + questionCount + ")");
+
         return questionTypeSelectDTO;
     }
 

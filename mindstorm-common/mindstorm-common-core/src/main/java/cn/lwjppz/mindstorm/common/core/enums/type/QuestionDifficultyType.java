@@ -31,4 +31,8 @@ public enum QuestionDifficultyType implements ValueEnum<Integer> {
     public Integer getValue() {
         return value;
     }
+
+    public String getName() {
+        return name;
+    }
 }

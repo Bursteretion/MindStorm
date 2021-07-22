@@ -60,6 +60,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public IPage<CourseDTO> queryCourse(CourseQueryVO courseQueryVO) {
         var wrapper = getCommonWrapper();
         if (StringUtils.isNotEmpty(courseQueryVO.getUserId())) {
+            // TODO 根据当前用户Id从助教表（课程所属用户Id， 助教用户Id）中获取（userId == 助教Id）的所有用户Id，根据查询出的用户Id列表查询课程
             wrapper.eq(Course::getUserId, courseQueryVO.getUserId());
         }
         if (StringUtils.isNotEmpty(courseQueryVO.getAcademyId())) {

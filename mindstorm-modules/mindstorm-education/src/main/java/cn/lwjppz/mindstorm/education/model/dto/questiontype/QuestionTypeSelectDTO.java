@@ -15,10 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QuestionTypeSelectDTO {
 
-    private String id;
+    private String value;
 
-    private String name;
-
-    private Integer usageAmount;
+    private String label;
 
 }
