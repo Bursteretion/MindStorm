@@ -40,8 +40,8 @@ public class QuestionOption implements Serializable {
     @ApiModelProperty(value = "题目Id")
     private String questionId;
 
-    @ApiModelProperty(value = "选项标签（A、B、C、D等等）")
-    private Integer tag;
+    @ApiModelProperty(value = "选项标签名（A、B、C、D等等）")
+    private String name;
 
     @ApiModelProperty(value = "选项内容")
     private String value;

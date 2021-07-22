@@ -1,6 +1,8 @@
 package cn.lwjppz.mindstorm.education.service;
 
+import cn.lwjppz.mindstorm.education.model.dto.questionanswer.QuestionAnswerDTO;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionAnswer;
+import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -12,5 +14,21 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-07-20
  */
 public interface QuestionAnswerService extends IService<QuestionAnswer> {
+
+    /**
+     * 根据题目Id获取题目答案信息
+     *
+     * @param questionId 题目Id
+     * @return 题目答案信息
+     */
+    QuestionAnswerDTO getQuestionAnswer(String questionId);
+
+    /**
+     * 新增题目答案
+     *
+     * @param questionAnswerVO 题目答案信息
+     * @return 是否新增成功
+     */
+    boolean createQuestionAnswer(QuestionAnswerVO questionAnswerVO);
 
 }
