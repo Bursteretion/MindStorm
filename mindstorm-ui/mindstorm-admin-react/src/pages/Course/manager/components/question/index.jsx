@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Popconfirm, Select } from 'antd';
-import { PlusOutlined, SettingOutlined, ToTopOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Select, Space } from 'antd';
+import { FolderOpenTwoTone, PlusOutlined, SettingOutlined, ToTopOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { queryQuestion, QuestionDifficultyStatus } from '@/services/question';
 import { listQuestionTypes } from '@/services/questiontype';
 import { listTopics } from '@/services/topic';
-import QuestionDrawer from '@/pages/Course/manager/components/question/components/QuestionDrawer';
+import QuestionDrawer from './components/QuestionDrawer';
+import { useModel } from 'umi';
+import CreateFolderForm from './components/CreateFolderForm';
+import styles from '@/pages/Course/manager/style.less';
 
 const QuestionList = (props) => {
   const { courseId } = props;
@@ -13,6 +16,36 @@ const QuestionList = (props) => {
   const [questionTypes, setQuestionTypes] = useState(undefined);
   const [topics, setTopics] = useState(undefined);
   const [isDrawerVisible, setDrawerVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [paths, setPaths] = useState([{ name: '课程题库', value: '0' }]);
+  const [pid, setPid] = useState('0');
+  const { userId = '' } = useModel('@@initialState', (res) => ({
+    userId: res.initialState.currentUser.id,
+  }));
+
+  const generatePath = () => {
+    const node = [];
+    for (let i = 0; i < paths.length; i++) {
+      node.push(
+        <Space>
+          <a
+            onClick={() => {
+              const newPath = paths.slice(0, i + 1);
+              setPaths(newPath);
+              setPid(paths[i].value);
+            }}
+            style={{ fontSize: 12 }}
+          >
+            {paths[i].name}
+          </a>
+        </Space>,
+      );
+      if (i !== paths.length - 1) {
+        node.push(<Space>{'>'}</Space>);
+      }
+    }
+    return node;
+  };
 
   const fetchQuestionTypes = async () => {
     const res = await listQuestionTypes();
@@ -33,7 +66,12 @@ const QuestionList = (props) => {
   useEffect(() => {
     fetchQuestionTypes();
     fetchTopics();
-  }, []);
+    actionRef?.current.reset();
+  }, [pid]);
+
+  // useEffect(() => {
+  //   generatePath();
+  // }, [paths]);
 
   const handleQueryQuestions = async (params) => {
     const res = await queryQuestion({
@@ -41,6 +79,7 @@ const QuestionList = (props) => {
       pageIndex: params.current,
       pageSize: params.pageSize,
       courseId,
+      pid,
     });
     const { records, total } = res.data.queryQuestionPage;
     return {
@@ -57,6 +96,23 @@ const QuestionList = (props) => {
       title: '文件夹/题目',
       dataIndex: 'content',
       hideInSearch: true,
+      render: (_, record) => (
+        <Space>
+          {!record.isFolder ? '' : <FolderOpenTwoTone style={{ fontSize: 17 }} />}
+          <a
+            onClick={() => {
+              if (record.isFolder) {
+                if (!paths.find((item) => item === record.content)) {
+                  setPaths([...paths, { name: record.content, value: record.id }]);
+                }
+              }
+              setPid(record.id);
+            }}
+          >
+            {record.content}
+          </a>
+        </Space>
+      ),
     },
     {
       title: '题目',
@@ -145,55 +201,70 @@ const QuestionList = (props) => {
 
   return (
     <>
-      <ProTable
-        columns={columns}
-        actionRef={actionRef}
-        rowKey={(record) => record.id}
-        request={(params) => handleQueryQuestions(params)}
-        dateFormatter="string"
-        headerTitle="课程题库"
-        pagination={{ defaultCurrent: 1, defaultPageSize: 10 }}
-        options={{ fullScreen: true }}
-        toolBarRender={() => [
-          <Button
-            key="create"
-            shape="round"
-            icon={<PlusOutlined />}
-            type="primary"
-            onClick={() => {
-              setDrawerVisible(true);
-            }}
-          >
-            创建题目
-          </Button>,
-          <Button key="import" shape="round">
-            批量导入
-          </Button>,
-          <Button key="folder" shape="round">
-            新建文件夹
-          </Button>,
-          <Button
-            key="questionType"
-            icon={<SettingOutlined />}
-            type="link"
-            onClick={() => {
-              setDrawerVisible(true);
-            }}
-          >
-            题型管理
-          </Button>,
-          <Button
-            key="export"
-            icon={<ToTopOutlined />}
-            type="link"
-            onClick={() => {
-              setDrawerVisible(true);
-            }}
-          >
-            导出全部
-          </Button>,
-        ]}
-      />
+      {paths && (
+        <ProTable
+          className={styles.table}
+          columns={columns}
+          actionRef={actionRef}
+          rowKey={(record) => record.id}
+          request={(params) => handleQueryQuestions(params)}
+          dateFormatter="string"
+          headerTitle={generatePath()}
+          pagination={{ defaultCurrent: 1, defaultPageSize: 10 }}
+          options={{ fullScreen: true }}
+          toolBarRender={() => [
+            <Button
+              key="create"
+              shape="round"
+              icon={<PlusOutlined />}
+              type="primary"
+              onClick={() => {
+                setDrawerVisible(true);
+              }}
+            >
+              创建题目
+            </Button>,
+            <Button key="import" shape="round">
+              批量导入
+            </Button>,
+            <Button key="folder" shape="round" onClick={() => setModalVisible(true)}>
+              新建文件夹
+            </Button>,
+            <Button
+              key="questionType"
+              icon={<SettingOutlined />}
+              type="link"
+              onClick={() => {
+                setDrawerVisible(true);
+              }}
+            >
+              题型管理
+            </Button>,
+            <Button
+              key="export"
+              icon={<ToTopOutlined />}
+              type="link"
+              onClick={() => {
+                setDrawerVisible(true);
+              }}
+            >
+              导出全部
+            </Button>,
+          ]}
+        />
+      )}
+      {!isModalVisible ? (
+        ''
+      ) : (
+        <CreateFolderForm
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          actionRef={actionRef}
+          courseId={courseId}
+          userId={userId}
+          pid={pid}
+        />
+      )}
       {!isDrawerVisible && courseId === undefined ? (
         ''
       ) : (

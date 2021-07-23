@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
     }
 
     @Override
-    public boolean createQuestionOptions(String questionId, List<QuestionOptionVO> questionOptions) {
+    public List<String> createQuestionOptions(String questionId, List<QuestionOptionVO> questionOptions) {
         // 先删除原来的题目选项
         if (StringUtils.isNotEmpty(questionId)) {
             LambdaQueryWrapper<QuestionOption> wrapper = Wrappers.lambdaQuery();
@@ -48,6 +49,7 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
             baseMapper.delete(wrapper);
         }
 
+        List<String> optionIds = new ArrayList<>();
         // 新增题目选项
         questionOptions.forEach(item -> {
             var questionOption = new QuestionOption();
@@ -55,8 +57,9 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
             questionOption.setName(item.getOptionName());
             questionOption.setValue(item.getOptionValue());
             baseMapper.insert(questionOption);
+            optionIds.add(questionOption.getId());
         });
 
-        return true;
+        return optionIds;
     }
 }

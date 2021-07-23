@@ -52,6 +52,9 @@ public class Question implements Serializable {
     @ApiModelProperty(value = "题目描述")
     private String content;
 
+    @ApiModelProperty(value = "题目排序")
+    private Integer sort;
+
     @ApiModelProperty(value = "题目被使用量")
     private Integer usageAmount;
 

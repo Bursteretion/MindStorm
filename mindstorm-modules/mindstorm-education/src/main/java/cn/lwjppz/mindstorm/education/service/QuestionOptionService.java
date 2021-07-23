@@ -30,8 +30,8 @@ public interface QuestionOptionService extends IService<QuestionOption> {
      *
      * @param questionId      题目Id
      * @param questionOptions 题目选项列表
-     * @return 是否新增成功
+     * @return 选项Id集合
      */
-    boolean createQuestionOptions(String questionId, List<QuestionOptionVO> questionOptions);
+    List<String> createQuestionOptions(String questionId, List<QuestionOptionVO> questionOptions);
 
 }

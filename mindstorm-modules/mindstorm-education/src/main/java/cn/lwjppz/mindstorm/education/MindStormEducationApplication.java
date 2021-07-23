@@ -6,6 +6,7 @@ import cn.lwjppz.mindstorm.common.security.annotation.EnableMsFeignClients;
 import cn.lwjppz.mindstorm.common.swagger.annotation.EnableCustomSwagger2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author lwj
@@ -16,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableCustomConfig
 @EnableCustomSwagger2
 @SpringBootApplication
+@EnableTransactionManagement
 public class MindStormEducationApplication {
 
     public static void main(String[] args) {

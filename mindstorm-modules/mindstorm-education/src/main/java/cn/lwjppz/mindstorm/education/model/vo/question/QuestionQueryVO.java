@@ -23,6 +23,9 @@ public class QuestionQueryVO extends BaseQueryVO {
     @ApiModelProperty(value = "所属课程Id")
     private String courseId;
 
+    @ApiModelProperty(value = "上级文件夹Id")
+    private String pid;
+
     @ApiModelProperty(value = "题目类型Id")
     private String questionTypeId;
 

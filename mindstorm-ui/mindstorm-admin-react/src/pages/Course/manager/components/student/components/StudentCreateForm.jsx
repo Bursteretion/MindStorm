@@ -37,7 +37,6 @@ const StudentCreateForm = (props) => {
       const res = await createCourseClassStudent(courseClassStudent);
       if (res.success) {
         message.success(`添加成功！`);
-        actionRef.current.reset();
         return true;
       }
       message.error(res.message);
@@ -47,7 +46,6 @@ const StudentCreateForm = (props) => {
       const res = await createBatchCourseClassStudent(courseClassStudentBatch);
       if (res.success) {
         message.success(`添加成功！`);
-        actionRef.current.reset();
         return true;
       }
       message.error(res.message);
@@ -92,6 +90,7 @@ const StudentCreateForm = (props) => {
             await handleSubmitForm(values);
             studentCreateForm.resetFields();
             setModalVisible(false);
+            actionRef.current.reset();
           });
         }}
       >

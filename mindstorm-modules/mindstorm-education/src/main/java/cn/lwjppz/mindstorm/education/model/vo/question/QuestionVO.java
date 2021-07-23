@@ -27,6 +27,12 @@ public class QuestionVO {
     @ApiModelProperty(value = "上级文件夹Id")
     private String pid;
 
+    @ApiModelProperty(value = "所属课程Id")
+    private String courseId;
+
+    @ApiModelProperty(value = "创建用户Id")
+    private String userId;
+
     @ApiModelProperty(value = "题目类型Id")
     private String questionTypeId;
 

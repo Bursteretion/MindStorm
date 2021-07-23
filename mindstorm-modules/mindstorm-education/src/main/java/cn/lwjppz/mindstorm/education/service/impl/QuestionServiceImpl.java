@@ -13,10 +13,8 @@ import cn.lwjppz.mindstorm.education.mapper.QuestionMapper;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
-import cn.lwjppz.mindstorm.education.service.CourseService;
-import cn.lwjppz.mindstorm.education.service.QuestionService;
-import cn.lwjppz.mindstorm.education.service.QuestionTopicService;
-import cn.lwjppz.mindstorm.education.service.QuestionTypeService;
+import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
+import cn.lwjppz.mindstorm.education.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -25,6 +23,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,19 +39,25 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements QuestionService {
 
+    private final CourseService courseService;
     private final QuestionTypeService questionTypeService;
     private final QuestionTopicService questionTopicService;
+    private final QuestionOptionService questionOptionService;
+    private final QuestionAnswerService questionAnswerService;
     private final RemotePermissionFeignService remotePermissionFeignService;
-    private final CourseService courseService;
 
-    public QuestionServiceImpl(@Lazy QuestionTypeService questionTypeService,
+    public QuestionServiceImpl(@Lazy CourseService courseService,
+                               @Lazy QuestionTypeService questionTypeService,
                                @Lazy QuestionTopicService questionTopicService,
-                               @Lazy RemotePermissionFeignService remotePermissionFeignService,
-                               @Lazy CourseService courseService) {
+                               @Lazy QuestionOptionService questionOptionService,
+                               @Lazy QuestionAnswerService questionAnswerService,
+                               @Lazy RemotePermissionFeignService remotePermissionFeignService) {
+        this.courseService = courseService;
         this.questionTypeService = questionTypeService;
         this.questionTopicService = questionTopicService;
+        this.questionOptionService = questionOptionService;
+        this.questionAnswerService = questionAnswerService;
         this.remotePermissionFeignService = remotePermissionFeignService;
-        this.courseService = courseService;
     }
 
     @Override
@@ -68,6 +73,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     @Override
     public IPage<QuestionDTO> listQuestions(QuestionQueryVO questionQueryVO) {
         LambdaQueryWrapper<Question> wrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotEmpty(questionQueryVO.getPid())) {
+            wrapper.eq(Question::getPid, questionQueryVO.getPid());
+        }
         if (StringUtils.isNotEmpty(questionQueryVO.getCourseId())) {
             wrapper.eq(Question::getCourseId, questionQueryVO.getCourseId());
         }
@@ -85,6 +93,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (null != questionQueryVO.getDifficulty()) {
             wrapper.eq(Question::getDifficulty, questionQueryVO.getDifficulty());
         }
+        wrapper.orderByDesc(Question::getSort).orderByDesc(Question::getGmtCreate);
 
         IPage<Question> page = new Page<>(questionQueryVO.getPageIndex(), questionQueryVO.getPageSize());
         page = baseMapper.selectPage(page, wrapper);
@@ -96,9 +105,32 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return resPage;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean createQuestion(QuestionVO questionVO) {
-        return false;
+        var question = new Question();
+        var isFolder = questionVO.getIsFolder();
+        BeanUtils.copyProperties(questionVO, question);
+        if (isFolder) {
+            question.setSort(1);
+            baseMapper.insert(question);
+        } else {
+            // 新增题目
+            question.setSort(0);
+            baseMapper.insert(question);
+
+            // 新增题目选项
+            var optionIds = questionOptionService.createQuestionOptions(question.getId(), questionVO.getOptions());
+
+            // 新增题目答案
+            var questionAnswer = new QuestionAnswerVO();
+            questionAnswer.setQuestionId(question.getId());
+            questionAnswer.setAnalyze(questionVO.getAnswerAnalyze());
+            questionAnswer.setValue(questionVO.getAnswerValue());
+            questionAnswer.setQuestionId(optionIds.get(questionVO.getAnswerIndex()));
+            questionAnswerService.createQuestionAnswer(questionAnswer);
+        }
+        return true;
     }
 
     @Override
@@ -116,11 +148,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         var questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
 
-        var questionType = questionTypeService.getById(question.getQuestionTypeId());
-        questionDTO.setQuestionType(questionType.getName());
+        if (StringUtils.isNotEmpty(question.getQuestionTypeId())) {
+            var questionType = questionTypeService.getById(question.getQuestionTypeId());
+            questionDTO.setQuestionType(questionType.getName());
+        }
 
-        var difficult = ValueEnum.valueToEnum(QuestionDifficultyType.class, question.getDifficulty());
-        questionDTO.setDifficulty(difficult.getName());
+        if (null != question.getDifficulty()) {
+            var difficult = ValueEnum.valueToEnum(QuestionDifficultyType.class, question.getDifficulty());
+            questionDTO.setDifficulty(difficult.getName());
+        }
 
         var res = remotePermissionFeignService.remoteUserInfoById(question.getUserId());
         var userTo = ServiceUtils.feignValueConvert(res.getData().get("userTo"), UserTo.class);
