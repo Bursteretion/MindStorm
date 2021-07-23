@@ -19,6 +19,8 @@ public class QuestionTypeDTO {
 
     private String name;
 
+    private Integer type;
+
     private String typeName;
 
     private Integer isCustomize;

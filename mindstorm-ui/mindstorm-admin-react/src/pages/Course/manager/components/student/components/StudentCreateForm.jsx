@@ -77,6 +77,7 @@ const StudentCreateForm = (props) => {
   return (
     <>
       <Modal
+        bodyStyle={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 10, paddingRight: 10 }}
         style={{ top: 40 }}
         okText="添加"
         destroyOnClose={true}

@@ -49,6 +49,13 @@ public class QuestionTypeController {
         return CommonResult.ok().data("questionType", questionType);
     }
 
+    @GetMapping("/info/{questionTypeId}")
+    @ApiOperation("获取题型信息")
+    public CommonResult infoQuestionType(@ApiParam("题型Id") @PathVariable("questionTypeId") String questionTypeId) {
+        var questionType = questionTypeService.convertQuestionTypeDTO(questionTypeService.getById(questionTypeId));
+        return CommonResult.ok().data("questionType", questionType);
+    }
+
     @PostMapping("/update")
     @ApiOperation("更新题型")
     public CommonResult updateQuestionType(@ApiParam("题型信息") @RequestBody QuestionTypeSimpleVO questionTypeSimpleVO) {

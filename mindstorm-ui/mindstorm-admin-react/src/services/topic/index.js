@@ -11,14 +11,14 @@ export async function createTopic(topicVO) {
   });
 }
 
-export async function updateQuestionType(topicVO) {
+export async function updateTopic(topicVO) {
   return request('/mindstorm-education/education/topic/update', {
     method: 'POST',
     data: topicVO,
   });
 }
 
-export async function deleteQuestionType(topicId) {
+export async function deleteTopic(topicId) {
   return request(`/mindstorm-education/education/topic/delete/${topicId}`, {
     method: 'DELETE',
   });

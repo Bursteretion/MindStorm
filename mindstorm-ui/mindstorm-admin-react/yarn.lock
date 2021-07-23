@@ -2434,6 +2434,14 @@
     remark "^13.0.0"
     unist-util-find-all-after "^3.0.2"
 
+"@tinymce/tinymce-react@^3.12.6":
+  version "3.12.6"
+  resolved "https://registry.nlark.com/@tinymce/tinymce-react/download/@tinymce/tinymce-react-3.12.6.tgz#8a4e2a5c5026b7a0c9c4c839af4d691804aa0604"
+  integrity sha1-ik4qXFAmt6DJxMg5r01pGASqBgQ=
+  dependencies:
+    prop-types "^15.6.2"
+    tinymce "^5.5.1"
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/@tootallnate/once/download/@tootallnate/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -16372,6 +16380,11 @@ tinycolor2@^1.4.1:
   version "1.4.2"
   resolved "https://registry.nlark.com/tinycolor2/download/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
   integrity sha1-P2pNEHGtB2dtf6Ry4frECnGdiAM=
+
+tinymce@^5.5.1:
+  version "5.8.2"
+  resolved "https://registry.nlark.com/tinymce/download/tinymce-5.8.2.tgz?cache=0&sync_timestamp=1624431361624&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftinymce%2Fdownload%2Ftinymce-5.8.2.tgz#54eb8160b697796c3b52282e648d9d12b1a7399a"
+  integrity sha1-VOuBYLaXeWw7UiguZI2dErGnOZo=
 
 tinyqueue@^2.0.3:
   version "2.0.3"

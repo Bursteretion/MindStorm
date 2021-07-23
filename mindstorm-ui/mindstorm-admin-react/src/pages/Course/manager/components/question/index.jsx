@@ -3,12 +3,13 @@ import { Button, Popconfirm, Select, Space } from 'antd';
 import { FolderOpenTwoTone, PlusOutlined, SettingOutlined, ToTopOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { queryQuestion, QuestionDifficultyStatus } from '@/services/question';
-import { listQuestionTypes } from '@/services/questiontype';
+import { listQuestionTypeSelects } from '@/services/questiontype';
 import { listTopics } from '@/services/topic';
 import QuestionDrawer from './components/QuestionDrawer';
 import { useModel } from 'umi';
 import CreateFolderForm from './components/CreateFolderForm';
 import styles from '@/pages/Course/manager/style.less';
+import QuestionTypeForm from '@/pages/Course/manager/components/question/components/QuestionTypeForm';
 
 const QuestionList = (props) => {
   const { courseId } = props;
@@ -16,7 +17,8 @@ const QuestionList = (props) => {
   const [questionTypes, setQuestionTypes] = useState(undefined);
   const [topics, setTopics] = useState(undefined);
   const [isDrawerVisible, setDrawerVisible] = useState(false);
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isCreateFolderModalVisible, setCreateFolderModalVisible] = useState(false);
+  const [isQuestionTypeModalVisible, setQuestionTypeModalVisible] = useState(false);
   const [paths, setPaths] = useState([{ name: '课程题库', value: '0' }]);
   const [pid, setPid] = useState('0');
   const { userId = '' } = useModel('@@initialState', (res) => ({
@@ -48,7 +50,7 @@ const QuestionList = (props) => {
   };
 
   const fetchQuestionTypes = async () => {
-    const res = await listQuestionTypes();
+    const res = await listQuestionTypeSelects();
     if (res.success) {
       const { questionTypeSelects } = res.data;
       setQuestionTypes(questionTypeSelects);
@@ -68,10 +70,6 @@ const QuestionList = (props) => {
     fetchTopics();
     actionRef?.current.reset();
   }, [pid]);
-
-  // useEffect(() => {
-  //   generatePath();
-  // }, [paths]);
 
   const handleQueryQuestions = async (params) => {
     const res = await queryQuestion({
@@ -227,7 +225,7 @@ const QuestionList = (props) => {
             <Button key="import" shape="round">
               批量导入
             </Button>,
-            <Button key="folder" shape="round" onClick={() => setModalVisible(true)}>
+            <Button key="folder" shape="round" onClick={() => setCreateFolderModalVisible(true)}>
               新建文件夹
             </Button>,
             <Button
@@ -235,7 +233,7 @@ const QuestionList = (props) => {
               icon={<SettingOutlined />}
               type="link"
               onClick={() => {
-                setDrawerVisible(true);
+                setQuestionTypeModalVisible(true);
               }}
             >
               题型管理
@@ -253,16 +251,24 @@ const QuestionList = (props) => {
           ]}
         />
       )}
-      {!isModalVisible ? (
+      {!isCreateFolderModalVisible ? (
         ''
       ) : (
         <CreateFolderForm
-          isModalVisible={isModalVisible}
-          setModalVisible={setModalVisible}
+          isModalVisible={isCreateFolderModalVisible}
+          setModalVisible={setCreateFolderModalVisible}
           actionRef={actionRef}
           courseId={courseId}
           userId={userId}
           pid={pid}
+        />
+      )}
+      {!isQuestionTypeModalVisible ? (
+        ''
+      ) : (
+        <QuestionTypeForm
+          isModalVisible={isQuestionTypeModalVisible}
+          setModalVisible={setQuestionTypeModalVisible}
         />
       )}
       {!isDrawerVisible && courseId === undefined ? (
@@ -272,6 +278,7 @@ const QuestionList = (props) => {
           isDrawerVisible={isDrawerVisible}
           setDrawerVisible={setDrawerVisible}
           courseId={courseId}
+          userId={userId}
           actionRef={actionRef}
         />
       )}
