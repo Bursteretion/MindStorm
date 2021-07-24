@@ -48,6 +48,13 @@ public class TopicController {
         var topic = topicService.createTopic(topicVO);
         return CommonResult.ok().data("topic", topic);
     }
+    
+    @GetMapping("/info/{topicId}")
+    @ApiOperation("获取知识点")
+    public CommonResult infoTopic(@ApiParam("知识点Id") @PathVariable("topicId") String topicId) {
+        var topic = topicService.getById(topicId);
+        return CommonResult.ok().data("topic", topic);
+    }
 
     @PostMapping("/update")
     @ApiOperation("更新知识点")

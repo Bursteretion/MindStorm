@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Form, message, Modal, Popconfirm, Skeleton } from 'antd';
-import { ProFormText } from '@ant-design/pro-form';
+import React, { useRef, useState } from 'react';
+import { Button, message, Modal, Popconfirm } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import styles from '@/pages/Course/manager/style.less';
 import { deleteQuestionType, listQuestionTypes } from '@/services/questiontype';
 import { PlusOutlined } from '@ant-design/icons';
-import CreateUpdateForm from './/CreateUpdateForm';
+import CreateUpdateQuestionTypeForm from './CreateUpdateQuestionTypeForm';
 
 const QuestionTypeForm = (props) => {
   const { isModalVisible, setModalVisible } = props;
@@ -129,7 +128,7 @@ const QuestionTypeForm = (props) => {
         {!isCreateUpdateFormVisible && currentQuestionTypeId === undefined ? (
           ''
         ) : (
-          <CreateUpdateForm
+          <CreateUpdateQuestionTypeForm
             actionRef={actionRef}
             isCreateUpdateFormVisible={isCreateUpdateFormVisible}
             setCreateUpdateFormVisible={setCreateUpdateFormVisible}

@@ -4,12 +4,12 @@ import { FolderOpenTwoTone, PlusOutlined, SettingOutlined, ToTopOutlined } from 
 import ProTable from '@ant-design/pro-table';
 import { queryQuestion, QuestionDifficultyStatus } from '@/services/question';
 import { listQuestionTypeSelects } from '@/services/questiontype';
-import { listTopics } from '@/services/topic';
+import { listTopicSelects } from '@/services/topic';
 import QuestionDrawer from './components/QuestionDrawer';
 import { useModel } from 'umi';
 import CreateFolderForm from './components/CreateFolderForm';
 import styles from '@/pages/Course/manager/style.less';
-import QuestionTypeForm from '@/pages/Course/manager/components/question/components/QuestionTypeForm';
+import QuestionTypeForm from './components/QuestionTypeForm';
 
 const QuestionList = (props) => {
   const { courseId } = props;
@@ -31,6 +31,7 @@ const QuestionList = (props) => {
       node.push(
         <Space>
           <a
+            key={i}
             onClick={() => {
               const newPath = paths.slice(0, i + 1);
               setPaths(newPath);
@@ -58,7 +59,7 @@ const QuestionList = (props) => {
   };
 
   const fetchTopics = async () => {
-    const res = await listTopics();
+    const res = await listTopicSelects();
     if (res.success) {
       const { topicSelects } = res.data;
       setTopics(topicSelects);
@@ -186,8 +187,8 @@ const QuestionList = (props) => {
       render: (_, record) => [
         <Popconfirm
           key="delete"
-          title={`你确定要将【${record.realName}】从这个班级移除吗？`}
-          onConfirm={() => handleDeleteQuestion(record.id)}
+          title={`你确定要删除这个题目吗？`}
+          onConfirm={() => handleDeleteQuestion(record)}
           okText="确定"
           cancelText="取消"
         >
@@ -271,7 +272,7 @@ const QuestionList = (props) => {
           setModalVisible={setQuestionTypeModalVisible}
         />
       )}
-      {!isDrawerVisible && courseId === undefined ? (
+      {!isDrawerVisible ? (
         ''
       ) : (
         <QuestionDrawer

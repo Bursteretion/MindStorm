@@ -1,6 +1,10 @@
 import request from '@/utils/request';
 
 export async function listTopics() {
+  return request('/mindstorm-education/education/topic/list');
+}
+
+export async function listTopicSelects() {
   return request('/mindstorm-education/education/topic/list/select');
 }
 
@@ -9,6 +13,10 @@ export async function createTopic(topicVO) {
     method: 'POST',
     data: topicVO,
   });
+}
+
+export async function infoTopic(topicId) {
+  return request(`/mindstorm-education/education/topic/info/${topicId}`);
 }
 
 export async function updateTopic(topicVO) {

@@ -8,7 +8,7 @@ import {
   updateQuestionType,
 } from '@/services/questiontype';
 
-const CreateUpdateForm = (props) => {
+const CreateUpdateQuestionTypeForm = (props) => {
   const { isCreateUpdateFormVisible, setCreateUpdateFormVisible, questionTypeId, actionRef } =
     props;
   const [initialValues, setInitialValues] = useState(undefined);
@@ -102,4 +102,4 @@ const CreateUpdateForm = (props) => {
   );
 };
 
-export default CreateUpdateForm;
+export default CreateUpdateQuestionTypeForm;
