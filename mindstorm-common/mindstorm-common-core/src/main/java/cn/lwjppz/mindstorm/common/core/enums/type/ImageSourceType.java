@@ -15,7 +15,9 @@ public enum ImageSourceType implements ValueEnum<Integer> {
     /**
      * 课程封面图片
      */
-    COURSE_COVER(1, "course/course-cover");
+    COURSE_COVER(1, "course/course-cover"),
+
+    QUESTION_IMAGE(2, "question/question-image");
 
 
     private final Integer value;

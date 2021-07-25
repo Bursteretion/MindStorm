@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FrownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Drawer, Skeleton, Space, Tabs, Collapse, Radio, Button } from 'antd';
+import { Drawer, Skeleton, Space, Tabs, Collapse, Radio, Button, Tag } from 'antd';
 import styles from '@/pages/Course/manager/style.less';
 import ProCard from '@ant-design/pro-card';
 import { listQuestionTypes } from '@/services/questiontype';
 import { Editor } from '@tinymce/tinymce-react';
 import TopicForm from '@/pages/Course/manager/components/question/components/TopicForm';
+import { uploadQuestionImage } from '@/services/attachment';
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -13,7 +14,7 @@ const { Panel } = Collapse;
 const QuestionDrawer = (props) => {
   const { isDrawerVisible, setDrawerVisible, courseId, actionRef, userId } = props;
   const [questionTypes, setQuestionTypes] = useState(undefined);
-  const [currentTopics, setCurrentTopics] = useState(undefined);
+  const [currentTopics, setCurrentTopics] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState('0');
   const [isTopicFormVisible, setTopicFormVisible] = useState(false);
   const editorRef = useRef(null);
@@ -111,6 +112,18 @@ const QuestionDrawer = (props) => {
                   'table image media charmap emoticons hr pagebreak insertdatetime print preview | ' +
                   'fullscreen | bdmap indent2em lineheight formatpainter axupimgs',
                 fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
+                images_upload_handler: async (blobInfo, successFun, failFun) => {
+                  const file = blobInfo.blob();
+                  const formData = new FormData();
+                  formData.append('image', file);
+                  const res = await uploadQuestionImage(formData);
+                  if (res.success) {
+                    const { questionAttachment } = res.data;
+                    successFun(questionAttachment.path);
+                  } else {
+                    failFun(res.message);
+                  }
+                },
               }}
             />
           </Panel>
@@ -121,7 +134,7 @@ const QuestionDrawer = (props) => {
               <Space>
                 题目难度：
                 <Radio.Group
-                  value={questionVO.difficulty}
+                  defaultValue={questionVO.difficulty}
                   onChange={(e) => (questionVO.difficulty = e.target.value)}
                 >
                   <Radio value={0}>简单</Radio>
@@ -140,12 +153,28 @@ const QuestionDrawer = (props) => {
                 >
                   关联知识点
                 </Button>
+                {currentTopics === []
+                  ? ''
+                  : currentTopics.map((item) => (
+                      <Space key={item.id}>
+                        <Tag
+                          closable
+                          onClose={() =>
+                            setCurrentTopics([...currentTopics.filter((v) => v.id !== item.id)])
+                          }
+                          color="magenta"
+                        >
+                          {item.name}
+                        </Tag>
+                      </Space>
+                    ))}
                 {!isTopicFormVisible ? (
                   ''
                 ) : (
                   <TopicForm
                     isModalVisible={isTopicFormVisible}
                     setModalVisible={setTopicFormVisible}
+                    currentTopics={currentTopics}
                     setCurrentTopics={setCurrentTopics}
                   />
                 )}

@@ -1,19 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Skeleton, Space, Transfer } from 'antd';
-import { listTopics } from '@/services/topic';
+import { Button, message, Modal, Skeleton, Space, Transfer } from 'antd';
+import { deleteTopic, listTopics } from '@/services/topic';
 import { PlusOutlined } from '@ant-design/icons';
 import CreateUpdateTopicForm from './CreateUpdateTopicForm';
 import '../style.less';
 
 const TopicForm = (props) => {
-  const { isModalVisible, setModalVisible, questionId, setCurrentTopics } = props;
+  const { isModalVisible, setModalVisible, questionId, setCurrentTopics, currentTopics } = props;
   const [topics, setTopics] = useState(undefined);
-  const [questionTopics, setQuestionTopics] = useState([]);
+  const [questionTopics, setQuestionTopics] = useState([...currentTopics.map((topic) => topic.id)]);
   const [isCreateUpdateTopicFormVisible, setCreateUpdateTopicFormVisible] = useState(false);
   const [currentTopicId, setCurrentTopicId] = useState(undefined);
+  const [selectedTopics, setSelectedTopics] = useState([]);
+
+  const fetchTopics = async () => {
+    const res = await listTopics();
+    if (res.success) {
+      setTopics(res.data.topics);
+    }
+  };
+
+  useEffect(() => {
+    fetchTopics();
+  }, []);
+
+  const handleDeleteTopic = async (topic) => {
+    const hide = message.loading(`正在删除知识点【${topic.name}】`);
+    const res = await deleteTopic(topic.id);
+    if (res.success) {
+      hide();
+      message.success('删除成功!');
+    } else {
+      hide();
+      message.error(res.message);
+    }
+    fetchTopics();
+  };
 
   const renderItem = (item) => {
-    const customLabel = (
+    return (
       <div className="transfer-item">
         <div>
           <span>{item.name}</span>
@@ -28,32 +53,24 @@ const TopicForm = (props) => {
           >
             编辑
           </a>
-          <a>删除</a>
+          <a
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteTopic(item);
+            }}
+          >
+            删除
+          </a>
         </Space>
       </div>
     );
-
-    return {
-      label: customLabel,
-      value: item.id,
-    };
   };
 
   const handleChange = (targetKeys, direction, moveKeys) => {
-    console.log(targetKeys, direction, moveKeys);
     setQuestionTopics(targetKeys);
-  };
 
-  const fetchTopics = async () => {
-    const res = await listTopics();
-    if (res.success) {
-      setTopics(res.data.topics);
-    }
+    setSelectedTopics(topics.filter((item) => targetKeys.find((t) => t === item.id)));
   };
-
-  useEffect(() => {
-    fetchTopics();
-  }, []);
 
   return (
     <>
@@ -68,7 +85,8 @@ const TopicForm = (props) => {
         visible={isModalVisible}
         onCancel={() => setModalVisible(false)}
         onOk={() => {
-          setCurrentTopics(topics);
+          setCurrentTopics(selectedTopics);
+          setModalVisible(false);
         }}
       >
         {topics === undefined ? (

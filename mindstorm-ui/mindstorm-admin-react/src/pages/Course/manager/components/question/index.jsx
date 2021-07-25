@@ -31,7 +31,7 @@ const QuestionList = (props) => {
       node.push(
         <Space>
           <a
-            key={i}
+            key={Math.random()}
             onClick={() => {
               const newPath = paths.slice(0, i + 1);
               setPaths(newPath);
