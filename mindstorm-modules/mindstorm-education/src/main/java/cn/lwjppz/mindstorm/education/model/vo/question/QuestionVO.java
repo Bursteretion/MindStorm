@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.education.model.vo.question;
 
+import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
 import cn.lwjppz.mindstorm.education.model.vo.questionoption.QuestionOptionVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,9 @@ public class QuestionVO {
 
     @ApiModelProperty(value = "题目选项列表")
     private List<QuestionOptionVO> options;
+
+    @ApiModelProperty(value = "题目答案列表")
+    private List<QuestionAnswerVO> answers;
 
     @ApiModelProperty(value = "题目答案在题目选项列表中的下标")
     private Integer answerIndex;

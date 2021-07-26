@@ -3,7 +3,6 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.api.permission.feign.RemotePermissionFeignService;
 import cn.lwjppz.mindstorm.api.permission.model.UserTo;
 import cn.lwjppz.mindstorm.common.core.enums.type.QuestionDifficultyType;
-import cn.lwjppz.mindstorm.common.core.enums.type.QuestionType;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
@@ -24,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -123,12 +123,25 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             var optionIds = questionOptionService.createQuestionOptions(question.getId(), questionVO.getOptions());
 
             // 新增题目答案
-            var questionAnswer = new QuestionAnswerVO();
-            questionAnswer.setQuestionId(question.getId());
-            questionAnswer.setAnalyze(questionVO.getAnswerAnalyze());
-            questionAnswer.setValue(questionVO.getAnswerValue());
-            questionAnswer.setQuestionId(optionIds.get(questionVO.getAnswerIndex()));
-            questionAnswerService.createQuestionAnswer(questionAnswer);
+            var answers = questionVO.getAnswers();
+            if (CollectionUtils.isEmpty(answers)) {
+                var questionAnswer = new QuestionAnswerVO();
+                questionAnswer.setQuestionId(question.getId());
+                questionAnswer.setAnalyze(questionVO.getAnswerAnalyze());
+                questionAnswer.setValue(questionVO.getAnswerValue());
+                questionAnswer.setQuestionId(optionIds.get(questionVO.getAnswerIndex()));
+                questionAnswerService.createQuestionAnswer(questionAnswer);
+            } else {
+                for (int i = 0; i < answers.size(); i++) {
+                    var questionAnswer = new QuestionAnswerVO();
+                    questionAnswer.setQuestionId(question.getId());
+                    if (i == 0) {
+                        questionAnswer.setAnalyze(questionVO.getAnswerAnalyze());
+                    }
+                    questionAnswer.setValue(answers.get(i).getValue());
+                    questionAnswerService.createQuestionAnswer(questionAnswer);
+                }
+            }
         }
         return true;
     }

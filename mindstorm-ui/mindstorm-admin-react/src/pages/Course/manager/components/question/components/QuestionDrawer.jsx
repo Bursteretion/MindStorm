@@ -27,6 +27,7 @@ import { listQuestionTypes } from '@/services/questiontype';
 import { Editor } from '@tinymce/tinymce-react';
 import TopicForm from '@/pages/Course/manager/components/question/components/TopicForm';
 import { uploadQuestionImage } from '@/services/attachment';
+import TinyMceModalEditor from '@/components/TinyMceEditor/modal';
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -38,7 +39,15 @@ const QuestionDrawer = (props) => {
   const [currentQuestionType, setCurrentQuestionType] = useState(0);
   const [isTopicFormVisible, setTopicFormVisible] = useState(false);
   const [extraOptions, setExtraOptions] = useState([]);
+  const [extraAnswers, setExtraAnswers] = useState([]);
+  const [currentInputName, setCurrentInputName] = useState(undefined);
+  const [currentInputValue, setCurrentInputValue] = useState('');
+  const [isEditorModalVisible, setEditorModalVisible] = useState(false);
+  const [currentForm, setCurrentForm] = useState(undefined);
   const editorRef = useRef(null);
+  const [optionsForm] = Form.useForm();
+  const [answerForm] = Form.useForm();
+  const [answerAnalyzeForm] = Form.useForm();
   const questionVO = {
     courseId,
     userId,
@@ -47,7 +56,8 @@ const QuestionDrawer = (props) => {
     difficulty: 0,
     isFolder: false,
     options: [],
-    answerIndex: [0],
+    answerIndex: [],
+    answers: [],
     answerValue: '',
     answerAnalyze: '',
     topicIds: [],
@@ -77,24 +87,28 @@ const QuestionDrawer = (props) => {
     return position.reduce((acc, direction) => ({ ...acc, [direction]: extraSlot[direction] }), {});
   }, [position]);
 
-  const handleExtraOptions = (fields = [], type) => {
-    const options = fields.map((item) => ({
-      value: item.name + 4,
-      name: String.fromCharCode(item.name + 69),
-    }));
-    if (type === 1) {
-      setExtraOptions([
-        ...options,
-        {
-          value: fields.length + 4,
-          name: String.fromCharCode(fields.length + 69),
-        },
-      ]);
-    } else if (fields.length === 1) {
-      setExtraOptions([]);
+  const handleEditorModal = (formType = 0, name = '', value = '') => {
+    if (formType === 0) {
+      setCurrentForm(optionsForm);
+    } else if (formType === 1) {
+      setCurrentForm(answerForm);
     } else {
-      setExtraOptions(options.slice(0, fields.length - 1));
+      setCurrentForm(answerAnalyzeForm);
     }
+    setCurrentInputName(name);
+    setCurrentInputValue(value);
+    setEditorModalVisible(true);
+  };
+
+  const handleSaveQuestion = async () => {
+    const options = optionsForm.getFieldsValue(true);
+    const answers = answerForm.getFieldsValue(true);
+    const answerAnalyzes = answerAnalyzeForm.getFieldsValue(true);
+    questionVO.content = editorRef?.current.getContent();
+    questionVO.options = options;
+    questionVO.answers = answers;
+    questionVO.topicIds = currentTopics;
+    console.log(questionVO);
   };
 
   return (
@@ -116,6 +130,17 @@ const QuestionDrawer = (props) => {
         actionRef?.current.reset();
       }}
       visible={isDrawerVisible}
+      footer={
+        <Button
+          onClick={() => {
+            handleSaveQuestion();
+          }}
+          style={{ float: 'right' }}
+          type="primary"
+        >
+          保存题目
+        </Button>
+      }
     >
       <div style={{ width: '80%', margin: '0 auto' }}>
         <ProCard>
@@ -128,7 +153,7 @@ const QuestionDrawer = (props) => {
               tabBarExtraContent={slot}
             >
               {questionTypes.map((item) => (
-                <TabPane tab={item.name} key={item.id + '-' + item.type}></TabPane>
+                <TabPane tab={item.name} key={`${item.id}-${item.type}`}></TabPane>
               ))}
             </Tabs>
           )}
@@ -172,14 +197,18 @@ const QuestionDrawer = (props) => {
             ''
           ) : (
             <Panel header="选项" key="2">
-              <Form preserve={false} autoComplete="off" labelCol={{ span: 2 }}>
+              <Form form={optionsForm} preserve={false} autoComplete="off" labelCol={{ span: 2 }}>
                 <Form.Item
                   key="A"
                   label="选项 A"
                   name="A"
                   rules={[{ required: true, message: `选项 A不能为空！` }]}
                 >
-                  <Input onClick={(e) => console.log((e.target.value = 'xxx'))} />
+                  <Input
+                    onClick={(e) => {
+                      handleEditorModal(0, 'A', e.target.value);
+                    }}
+                  />
                 </Form.Item>
                 <Form.Item
                   key="B"
@@ -187,7 +216,11 @@ const QuestionDrawer = (props) => {
                   name="B"
                   rules={[{ required: true, message: `选项 B不能为空！` }]}
                 >
-                  <Input />
+                  <Input
+                    onClick={(e) => {
+                      handleEditorModal(0, 'B', e.target.value);
+                    }}
+                  />
                 </Form.Item>
                 <Form.Item
                   key="C"
@@ -195,7 +228,11 @@ const QuestionDrawer = (props) => {
                   name="C"
                   rules={[{ required: true, message: `选项 C不能为空！` }]}
                 >
-                  <Input />
+                  <Input
+                    onClick={(e) => {
+                      handleEditorModal(0, 'C', e.target.value);
+                    }}
+                  />
                 </Form.Item>
                 <Form.Item
                   key="D"
@@ -203,52 +240,61 @@ const QuestionDrawer = (props) => {
                   name="D"
                   rules={[{ required: true, message: `选项 D不能为空！` }]}
                 >
-                  <Input />
+                  <Input
+                    onClick={(e) => {
+                      handleEditorModal(0, 'D', e.target.value);
+                    }}
+                  />
                 </Form.Item>
-                <Form.List name="options">
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map((field) => {
-                        const optionName = String.fromCharCode(field.name + 69);
-                        return (
-                          <Form.Item
-                            {...field}
-                            key={field.key}
-                            label={`选项 ${optionName}`}
-                            name={optionName}
-                            fieldKey={[field.fieldKey, 'options']}
-                            rules={[{ required: true, message: `选项 ${optionName}不能为空！` }]}
-                          >
-                            <Input
-                              addonAfter={
-                                <MinusCircleOutlined
-                                  onClick={() => {
-                                    remove(field.name);
-                                    handleExtraOptions(fields, 0);
-                                  }}
-                                />
-                              }
-                            />
-                          </Form.Item>
-                        );
-                      })}
-
-                      <Form.Item>
-                        <Button
-                          type="dashed"
-                          onClick={() => {
-                            add();
-                            handleExtraOptions(fields, 1);
-                          }}
-                          block
-                          icon={<PlusOutlined />}
-                        >
-                          添加选项
-                        </Button>
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
+                {extraOptions.map((item) => {
+                  return (
+                    <Form.Item
+                      key={item.name}
+                      label={`选项 ${item.name}`}
+                      name={item.name}
+                      rules={[{ required: true, message: `选项 ${item.name}不能为空！` }]}
+                    >
+                      <Input
+                        onClick={(e) => {
+                          handleEditorModal(0, item.name, e.target.value);
+                        }}
+                        addonAfter={
+                          <MinusCircleOutlined
+                            onClick={() => {
+                              const newExtraOptions = extraOptions
+                                .filter((option) => option.name !== item.name)
+                                .map((option, index) => {
+                                  return {
+                                    name: String.fromCharCode(index + 69),
+                                    value: index + 4,
+                                  };
+                                });
+                              setExtraOptions(newExtraOptions);
+                            }}
+                          />
+                        }
+                      />
+                    </Form.Item>
+                  );
+                })}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      setExtraOptions([
+                        ...extraOptions,
+                        {
+                          name: String.fromCharCode(extraOptions.length + 69),
+                          value: extraOptions.length + 4,
+                        },
+                      ]);
+                    }}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    添加选项
+                  </Button>
+                </Form.Item>
               </Form>
             </Panel>
           )}
@@ -288,10 +334,15 @@ const QuestionDrawer = (props) => {
                 </Checkbox.Group>
               )}
               {currentQuestionType === 3 && (
-                <Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />
+                <Switch
+                  onChange={(checked) => (questionVO.answerValue = checked)}
+                  checkedChildren={<CheckOutlined />}
+                  unCheckedChildren={<CloseOutlined />}
+                />
               )}
               {currentQuestionType === 2 && [
                 <Form
+                  form={answerForm}
                   key="fillAnswerForm"
                   preserve={false}
                   autoComplete="off"
@@ -303,53 +354,64 @@ const QuestionDrawer = (props) => {
                     name="answer1"
                     rules={[{ required: true, message: `第1空答案不能为空！` }]}
                   >
-                    <Input />
+                    <Input
+                      onClick={(e) => {
+                        handleEditorModal(1, 'answer1', e.target.value);
+                      }}
+                    />
                   </Form.Item>
-                  <Form.List name="answers">
-                    {(fields, { add, remove }) => (
-                      <>
-                        {fields.map((field) => {
-                          return (
-                            <Form.Item
-                              {...field}
-                              key={field.key}
-                              label={`第${field.name + 2}空答案`}
-                              name={`answer${field.name + 2}`}
-                              fieldKey={[field.fieldKey, 'options']}
-                              rules={[
-                                { required: true, message: `第${field.name + 2}空答案不能为空！` },
-                              ]}
-                            >
-                              <Input
-                                addonAfter={
-                                  <MinusCircleOutlined
-                                    onClick={() => {
-                                      remove(field.name);
-                                    }}
-                                  />
-                                }
-                              />
-                            </Form.Item>
-                          );
-                        })}
-
-                        <Form.Item>
-                          <Button
-                            type="dashed"
-                            onClick={() => {
-                              add();
-                            }}
-                            block
-                            icon={<PlusOutlined />}
-                          >
-                            添加选项
-                          </Button>
-                        </Form.Item>
-                      </>
-                    )}
-                  </Form.List>
+                  {extraAnswers.map((item) => {
+                    return (
+                      <Form.Item
+                        key={item.name}
+                        label={`第${item.value}空答案`}
+                        name={item.name}
+                        rules={[{ required: true, message: `第${item.value}空答案不能为空！` }]}
+                      >
+                        <Input
+                          onClick={(e) => {
+                            handleEditorModal(1, item.name, e.target.value);
+                          }}
+                          addonAfter={
+                            <MinusCircleOutlined
+                              onClick={() => {
+                                const newExtraAnswers = extraAnswers
+                                  .filter((answer) => answer.name !== item.name)
+                                  .map((answer, index) => {
+                                    return {
+                                      name: `answer${index + 2}`,
+                                      value: index + 2,
+                                    };
+                                  });
+                                setExtraAnswers(newExtraAnswers);
+                              }}
+                            />
+                          }
+                        />
+                      </Form.Item>
+                    );
+                  })}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => {
+                        setExtraAnswers([
+                          ...extraAnswers,
+                          {
+                            name: `answer${extraAnswers.length + 2}`,
+                            value: extraAnswers.length + 2,
+                          },
+                        ]);
+                      }}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      添加答案
+                    </Button>
+                  </Form.Item>
                 </Form>,
                 <Alert
+                  key="tips"
                   message="提示"
                   description={
                     <div>
@@ -366,7 +428,7 @@ const QuestionDrawer = (props) => {
               {currentQuestionType === 4 && (
                 <div style={{ marginTop: 10 }}>
                   <Editor
-                    onInit={(evt, editor) => (editorRef.current = editor)}
+                    onEditorChange={(value, _) => (questionVO.answerValue = value)}
                     apiKey="nzmlokkyb5avilcxl9sdfudwrnb818m5ovuc4c7av96gwue9"
                     init={{
                       language: 'zh_CN',
@@ -399,6 +461,28 @@ const QuestionDrawer = (props) => {
                   />
                 </div>
               )}
+              <div style={{ marginTop: 20 }}>
+                <Form
+                  form={answerAnalyzeForm}
+                  key="answerAnalyze"
+                  preserve={false}
+                  autoComplete="off"
+                  labelCol={{ span: 2 }}
+                >
+                  <Form.Item
+                    label="答案解析"
+                    name="answerAnalyze"
+                    rules={[{ required: true, message: `答案解析不能为空！` }]}
+                  >
+                    <Input
+                      value={questionVO.answerAnalyze}
+                      onClick={() => {
+                        handleEditorModal(2, 'answerAnalyze');
+                      }}
+                    />
+                  </Form.Item>
+                </Form>
+              </div>
             </div>
           </Panel>
           <Panel header="难度、知识点" key="4">
@@ -454,6 +538,17 @@ const QuestionDrawer = (props) => {
             </Space>
           </Panel>
         </Collapse>
+        {!isEditorModalVisible ? (
+          ''
+        ) : (
+          <TinyMceModalEditor
+            isModalVisible={isEditorModalVisible}
+            setModalVisible={setEditorModalVisible}
+            targetInputName={currentInputName}
+            currentForm={currentForm}
+            currentValue={currentInputValue}
+          />
+        )}
       </div>
     </Drawer>
   );
