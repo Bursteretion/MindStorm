@@ -64,6 +64,9 @@ public class Question implements Serializable {
     @ApiModelProperty(value = "是否是文件夹（0-题目，1-文件夹）")
     private Boolean isFolder;
 
+    @ApiModelProperty(value = "题目答案解析")
+    private String analyze;
+
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic
     private Boolean isDeleted;

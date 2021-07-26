@@ -3,6 +3,7 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.lwjppz.mindstorm.api.permission.feign.RemotePermissionFeignService;
 import cn.lwjppz.mindstorm.api.permission.model.UserTo;
 import cn.lwjppz.mindstorm.common.core.enums.type.QuestionDifficultyType;
+import cn.lwjppz.mindstorm.common.core.enums.type.QuestionType;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,28 +121,38 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             question.setSort(0);
             baseMapper.insert(question);
 
-            // 新增题目选项
-            var optionIds = questionOptionService.createQuestionOptions(question.getId(), questionVO.getOptions());
-
-            // 新增题目答案
-            var answers = questionVO.getAnswers();
-            if (CollectionUtils.isEmpty(answers)) {
+            int questionType = questionVO.getQuestionType();
+            List<String> optionIds = new ArrayList<>();
+            if (questionVO.getOptions().size() != 0) {
+                // 新增题目选项
+                optionIds = questionOptionService.createQuestionOptions(question.getId(), questionVO.getOptions());
+            }
+            if (questionType == QuestionType.SINGLE_CHOICE.getValue()) {
+                // 新增题目答案
                 var questionAnswer = new QuestionAnswerVO();
                 questionAnswer.setQuestionId(question.getId());
-                questionAnswer.setAnalyze(questionVO.getAnswerAnalyze());
-                questionAnswer.setValue(questionVO.getAnswerValue());
-                questionAnswer.setQuestionId(optionIds.get(questionVO.getAnswerIndex()));
+                questionAnswer.setQuestionId(optionIds.get(questionVO.getAnswerIndex().get(0)));
                 questionAnswerService.createQuestionAnswer(questionAnswer);
-            } else {
-                for (int i = 0; i < answers.size(); i++) {
+            } else if (questionType == QuestionType.MULTIPLE_CHOICE.getValue()) {
+                var answerIndex = questionVO.getAnswerIndex();
+                List<String> finalOptionIds = optionIds;
+                answerIndex.forEach(index -> {
                     var questionAnswer = new QuestionAnswerVO();
                     questionAnswer.setQuestionId(question.getId());
-                    if (i == 0) {
-                        questionAnswer.setAnalyze(questionVO.getAnswerAnalyze());
-                    }
-                    questionAnswer.setValue(answers.get(i).getValue());
+                    questionAnswer.setQuestionId(finalOptionIds.get(index));
                     questionAnswerService.createQuestionAnswer(questionAnswer);
-                }
+                });
+            } else if (questionType == QuestionType.FILL_BLANK.getValue()) {
+                var answers = questionVO.getAnswers();
+                answers.forEach(questionAnswerVO -> {
+                    questionAnswerVO.setQuestionId(question.getId());
+                    questionAnswerService.createQuestionAnswer(questionAnswerVO);
+                });
+            } else {
+                var questionAnswer = new QuestionAnswerVO();
+                questionAnswer.setQuestionId(question.getId());
+                questionAnswer.setValue(questionVO.getAnswerValue());
+                questionAnswerService.createQuestionAnswer(questionAnswer);
             }
         }
         return true;

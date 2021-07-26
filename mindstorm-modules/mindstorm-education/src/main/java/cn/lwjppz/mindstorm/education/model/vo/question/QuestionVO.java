@@ -34,6 +34,9 @@ public class QuestionVO {
     @ApiModelProperty(value = "创建用户Id")
     private String userId;
 
+    @ApiModelProperty(value = "题目类型")
+    private Integer questionType;
+
     @ApiModelProperty(value = "题目类型Id")
     private String questionTypeId;
 
@@ -53,13 +56,13 @@ public class QuestionVO {
     private List<QuestionAnswerVO> answers;
 
     @ApiModelProperty(value = "题目答案在题目选项列表中的下标")
-    private Integer answerIndex;
+    private List<Integer> answerIndex;
 
     @ApiModelProperty(value = "题目答案内容，当题目没有选项时")
     private String answerValue;
 
     @ApiModelProperty(value = "题目答案解析")
-    private String answerAnalyze;
+    private String analyze;
 
     @ApiModelProperty(value = "题目关联知识点Id集合")
     private List<String> topicIds;

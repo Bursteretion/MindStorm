@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import {
   Drawer,
+  message,
   Skeleton,
   Space,
   Tabs,
@@ -28,6 +29,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import TopicForm from '@/pages/Course/manager/components/question/components/TopicForm';
 import { uploadQuestionImage } from '@/services/attachment';
 import TinyMceModalEditor from '@/components/TinyMceEditor/modal';
+import { createQuestion } from '@/services/question';
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
@@ -59,7 +61,7 @@ const QuestionDrawer = (props) => {
     answerIndex: [],
     answers: [],
     answerValue: '',
-    answerAnalyze: '',
+    analyze: '',
     topicIds: [],
   };
 
@@ -103,12 +105,35 @@ const QuestionDrawer = (props) => {
   const handleSaveQuestion = async () => {
     const options = optionsForm.getFieldsValue(true);
     const answers = answerForm.getFieldsValue(true);
-    const answerAnalyzes = answerAnalyzeForm.getFieldsValue(true);
+    const answerAnalyze = answerAnalyzeForm.getFieldsValue(true);
     questionVO.content = editorRef?.current.getContent();
-    questionVO.options = options;
-    questionVO.answers = answers;
-    questionVO.topicIds = currentTopics;
+    questionVO.options = Object.keys(options).map((key) => {
+      return {
+        optionName: key,
+        optionValue: options[key],
+      };
+    });
+    questionVO.answers = Object.keys(answers).map((key) => {
+      return {
+        value: answers[key],
+      };
+    });
+    questionVO.analyze = answerAnalyze.answerAnalyze;
+    questionVO.topicIds = currentTopics.map((item) => item.id);
     console.log(questionVO);
+
+    // const hide = message.loading('正在新增问题');
+    // try {
+    //   await createQuestion(questionVO);
+    //   hide();
+    //   message.success(`新增成功！`);
+    //   setDrawerVisible(false);
+    //   return true;
+    // } catch (error) {
+    //   hide();
+    //   message.error(`新增失败请重试！`);
+    //   return false;
+    // }
   };
 
   return (
@@ -148,7 +173,10 @@ const QuestionDrawer = (props) => {
             <Skeleton active />
           ) : (
             <Tabs
-              onTabClick={(key = '') => setCurrentQuestionType(Number(key.substr(key.length - 1)))}
+              onTabClick={(key = '') => {
+                setCurrentQuestionType(Number(key.substr(key.length - 1)));
+                questionVO.questionTypeId = key.substr(0, key.indexOf('-'));
+              }}
               defaultActiveKey="1"
               tabBarExtraContent={slot}
             >
@@ -303,7 +331,13 @@ const QuestionDrawer = (props) => {
               答案：
               {currentQuestionType === 0 && (
                 <Radio.Group
-                  onChange={(e) => (questionVO.answerIndex[0] = e.target.value)}
+                  onChange={(e) => {
+                    if (questionVO.answerIndex.length === 0) {
+                      questionVO.answerIndex.push(e.target.value);
+                    } else {
+                      questionVO.answerIndex[0] = e.target.value;
+                    }
+                  }}
                   defaultValue={questionVO.answerIndex[0]}
                 >
                   <Radio value={0}>A</Radio>
@@ -475,7 +509,7 @@ const QuestionDrawer = (props) => {
                     rules={[{ required: true, message: `答案解析不能为空！` }]}
                   >
                     <Input
-                      value={questionVO.answerAnalyze}
+                      value={questionVO.analyze}
                       onClick={() => {
                         handleEditorModal(2, 'answerAnalyze');
                       }}
