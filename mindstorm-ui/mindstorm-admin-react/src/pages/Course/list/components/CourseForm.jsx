@@ -94,7 +94,7 @@ const CourseForm = (props) => {
       >
         <ProCard>
           <ProCard style={{ padding: 0, textAlign: 'center' }} colSpan="30%">
-            <ImgCrop rotate>
+            <ImgCrop aspect={16 / 9} rotate>
               <Upload
                 style={{ width: 200 }}
                 action="http://localhost:8000/mindstorm-file/file/course-cover/upload"

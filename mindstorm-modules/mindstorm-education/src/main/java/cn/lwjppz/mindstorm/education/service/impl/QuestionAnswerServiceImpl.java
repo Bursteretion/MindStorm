@@ -52,11 +52,7 @@ public class QuestionAnswerServiceImpl extends ServiceImpl<QuestionAnswerMapper,
     public boolean createQuestionAnswer(QuestionAnswerVO questionAnswerVO) {
         // 先删除原来的题目答案
         var questionId = questionAnswerVO.getQuestionId();
-        if (StringUtils.isNotEmpty(questionId)) {
-            LambdaQueryWrapper<QuestionAnswer> wrapper = Wrappers.lambdaQuery();
-            wrapper.eq(QuestionAnswer::getQuestionId, questionAnswerVO);
-            baseMapper.delete(wrapper);
-        }
+        deleteQuestionAnswers(questionId);
 
         // 新增题目答案
         var questionAnswer = new QuestionAnswer();
@@ -64,6 +60,16 @@ public class QuestionAnswerServiceImpl extends ServiceImpl<QuestionAnswerMapper,
         questionAnswer.setQuestionId(questionId);
         baseMapper.insert(questionAnswer);
 
+        return true;
+    }
+
+    @Override
+    public boolean deleteQuestionAnswers(String questionId) {
+        if (StringUtils.isNotEmpty(questionId)) {
+            LambdaQueryWrapper<QuestionAnswer> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(QuestionAnswer::getQuestionId, questionId);
+            baseMapper.delete(wrapper);
+        }
         return true;
     }
 

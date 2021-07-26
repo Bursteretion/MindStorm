@@ -95,6 +95,9 @@ const TopicForm = (props) => {
           <Transfer
             rowKey={(record) => record.id}
             showSearch
+            filterOption={(inputValue, option) => {
+              return option.name.indexOf(inputValue) > -1;
+            }}
             titles={[
               <Button
                 key="create"

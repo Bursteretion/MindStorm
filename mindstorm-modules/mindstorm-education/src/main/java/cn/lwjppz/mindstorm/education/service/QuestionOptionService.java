@@ -34,4 +34,12 @@ public interface QuestionOptionService extends IService<QuestionOption> {
      */
     List<String> createQuestionOptions(String questionId, List<QuestionOptionVO> questionOptions);
 
+    /**
+     * 根据题目Id删除题目选项
+     *
+     * @param questionId 题目Id
+     * @return 是否删除成功
+     */
+    boolean deleteOptions(String questionId);
+
 }

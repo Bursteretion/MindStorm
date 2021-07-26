@@ -27,7 +27,4 @@ public class QuestionAnswerVO {
     @ApiModelProperty(value = "题目答案内容（当题目没有选项时）")
     private String value;
 
-    @ApiModelProperty(value = "题目答案解析")
-    private String analyze;
-
 }

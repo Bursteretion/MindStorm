@@ -40,8 +40,11 @@ public class QuestionVO {
     @ApiModelProperty(value = "题目类型Id")
     private String questionTypeId;
 
-    @ApiModelProperty(value = "题目描述")
-    private String content;
+    @ApiModelProperty(value = "题目描述（纯文本）")
+    private String originalContent;
+
+    @ApiModelProperty(value = "题目描述（HTML）")
+    private String formatContent;
 
     @ApiModelProperty(value = "题目难度")
     private Integer difficulty;
@@ -62,7 +65,7 @@ public class QuestionVO {
     private String answerValue;
 
     @ApiModelProperty(value = "题目答案解析")
-    private String analyze;
+    private String answerAnalyze;
 
     @ApiModelProperty(value = "题目关联知识点Id集合")
     private List<String> topicIds;

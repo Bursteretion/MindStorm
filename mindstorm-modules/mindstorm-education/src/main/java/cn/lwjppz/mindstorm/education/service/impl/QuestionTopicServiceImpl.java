@@ -58,11 +58,7 @@ public class QuestionTopicServiceImpl extends ServiceImpl<QuestionTopicMapper, Q
     public boolean createQuestionTopic(QuestionTopicVO questionTopicVO) {
         // 先删除相关联知识点
         var questionId = questionTopicVO.getQuestionId();
-        if (StringUtils.isNotEmpty(questionId)) {
-            LambdaQueryWrapper<QuestionTopic> wrapper = Wrappers.lambdaQuery();
-            wrapper.eq(QuestionTopic::getQuestionId, questionId);
-            baseMapper.delete(wrapper);
-        }
+        deleteQuestionTopics(questionId);
 
         // 新增关联知识点
         var topicIds = questionTopicVO.getTopicIds();
@@ -75,6 +71,16 @@ public class QuestionTopicServiceImpl extends ServiceImpl<QuestionTopicMapper, Q
             });
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean deleteQuestionTopics(String questionId) {
+        if (StringUtils.isNotEmpty(questionId)) {
+            LambdaQueryWrapper<QuestionTopic> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(QuestionTopic::getQuestionId, questionId);
+            baseMapper.delete(wrapper);
+        }
         return true;
     }
 

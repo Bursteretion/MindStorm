@@ -14,6 +14,7 @@ import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
 import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
+import cn.lwjppz.mindstorm.education.model.vo.questiontopic.QuestionTopicVO;
 import cn.lwjppz.mindstorm.education.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -89,8 +90,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             var questionIds = ServiceUtils.fetchProperty(questions, QuestionTopic::getQuestionId);
             wrapper.in(Question::getId, questionIds);
         }
-        if (StringUtils.isNotEmpty(questionQueryVO.getContent())) {
-            wrapper.like(Question::getContent, questionQueryVO.getContent());
+        if (StringUtils.isNotEmpty(questionQueryVO.getOriginContent())) {
+            wrapper.like(Question::getOriginalContent, questionQueryVO.getOriginContent());
         }
         if (null != questionQueryVO.getDifficulty()) {
             wrapper.eq(Question::getDifficulty, questionQueryVO.getDifficulty());
@@ -115,10 +116,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         BeanUtils.copyProperties(questionVO, question);
         if (isFolder) {
             question.setSort(1);
+            question.setFormatContent(questionVO.getOriginalContent());
             baseMapper.insert(question);
         } else {
             // 新增题目
             question.setSort(0);
+            question.setUsageAmount(0);
+            question.setOriginalContent(ServiceUtils.convertToText(questionVO.getFormatContent()));
             baseMapper.insert(question);
 
             int questionType = questionVO.getQuestionType();
@@ -127,11 +131,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 // 新增题目选项
                 optionIds = questionOptionService.createQuestionOptions(question.getId(), questionVO.getOptions());
             }
+            // 新增题目关联知识点
+            questionTopicService.createQuestionTopic(new QuestionTopicVO(question.getId(), questionVO.getTopicIds()));
+
+            // 新增题目答案
             if (questionType == QuestionType.SINGLE_CHOICE.getValue()) {
-                // 新增题目答案
                 var questionAnswer = new QuestionAnswerVO();
                 questionAnswer.setQuestionId(question.getId());
-                questionAnswer.setQuestionId(optionIds.get(questionVO.getAnswerIndex().get(0)));
+                questionAnswer.setOptionId(optionIds.get(questionVO.getAnswerIndex().get(0)));
                 questionAnswerService.createQuestionAnswer(questionAnswer);
             } else if (questionType == QuestionType.MULTIPLE_CHOICE.getValue()) {
                 var answerIndex = questionVO.getAnswerIndex();
@@ -139,7 +146,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 answerIndex.forEach(index -> {
                     var questionAnswer = new QuestionAnswerVO();
                     questionAnswer.setQuestionId(question.getId());
-                    questionAnswer.setQuestionId(finalOptionIds.get(index));
+                    questionAnswer.setOptionId(finalOptionIds.get(index));
                     questionAnswerService.createQuestionAnswer(questionAnswer);
                 });
             } else if (questionType == QuestionType.FILL_BLANK.getValue()) {
@@ -163,9 +170,32 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return false;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteQuestion(String questionId) {
-        return false;
+        LambdaQueryWrapper<Question> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Question::getId, questionId).or().eq(Question::getPid, questionId);
+        var questions = baseMapper.selectList(wrapper);
+        questions.forEach(question -> {
+            var id = question.getId();
+            // 删除题目关联知识点
+            questionTopicService.deleteQuestionTopics(id);
+
+            // 删除题目选项
+            questionOptionService.deleteOptions(id);
+
+            // 删除题目答案
+            questionAnswerService.deleteQuestionAnswers(id);
+
+            // 删除题目
+            baseMapper.deleteById(questionId);
+
+            // 若是文件夹则递归删除子文件
+            if (question.getIsFolder()) {
+                deleteQuestion(id);
+            }
+        });
+        return true;
     }
 
     @Override

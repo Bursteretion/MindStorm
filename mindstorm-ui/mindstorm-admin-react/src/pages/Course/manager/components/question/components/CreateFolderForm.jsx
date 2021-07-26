@@ -46,7 +46,7 @@ const CreateFolderForm = (props) => {
           labelCol={{ span: 5 }}
         >
           <ProFormText
-            name="content"
+            name="originalContent"
             label="文件夹名称"
             placeholder="请输入文件夹名称"
             rules={[{ required: true, message: '文件夹名称不能为空！' }]}

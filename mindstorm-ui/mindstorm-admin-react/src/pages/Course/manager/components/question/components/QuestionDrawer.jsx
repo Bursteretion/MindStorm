@@ -35,7 +35,7 @@ const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
 const QuestionDrawer = (props) => {
-  const { isDrawerVisible, setDrawerVisible, courseId, actionRef, userId } = props;
+  const { isDrawerVisible, setDrawerVisible, courseId, actionRef, userId, pid } = props;
   const [questionTypes, setQuestionTypes] = useState(undefined);
   const [currentTopics, setCurrentTopics] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(0);
@@ -50,20 +50,23 @@ const QuestionDrawer = (props) => {
   const [optionsForm] = Form.useForm();
   const [answerForm] = Form.useForm();
   const [answerAnalyzeForm] = Form.useForm();
-  const questionVO = {
+  const answerRadioRef = useRef();
+  const [questionVO, setQuestionVO] = useState({
     courseId,
     userId,
+    pid,
     questionTypeId: '',
-    content: '',
+    questionType: 0,
+    formatContent: '',
     difficulty: 0,
     isFolder: false,
     options: [],
-    answerIndex: [],
+    answerIndex: [0],
     answers: [],
     answerValue: '',
-    analyze: '',
+    answerAnalyze: '',
     topicIds: [],
-  };
+  });
 
   const fetchQuestionTypes = async () => {
     const res = await listQuestionTypes();
@@ -103,10 +106,14 @@ const QuestionDrawer = (props) => {
   };
 
   const handleSaveQuestion = async () => {
+    if (editorRef?.current.getContent() === '') {
+      message.warn('请输入题干！');
+      return;
+    }
     const options = optionsForm.getFieldsValue(true);
     const answers = answerForm.getFieldsValue(true);
     const answerAnalyze = answerAnalyzeForm.getFieldsValue(true);
-    questionVO.content = editorRef?.current.getContent();
+    questionVO.formatContent = editorRef?.current.getContent();
     questionVO.options = Object.keys(options).map((key) => {
       return {
         optionName: key,
@@ -118,22 +125,25 @@ const QuestionDrawer = (props) => {
         value: answers[key],
       };
     });
-    questionVO.analyze = answerAnalyze.answerAnalyze;
+    if (questionVO.questionTypeId === '') {
+      questionVO.questionTypeId = questionTypes[0].id;
+    }
+    questionVO.questionType = currentQuestionType;
+    questionVO.answerAnalyze = answerAnalyze.answerAnalyze;
     questionVO.topicIds = currentTopics.map((item) => item.id);
     console.log(questionVO);
 
-    // const hide = message.loading('正在新增问题');
-    // try {
-    //   await createQuestion(questionVO);
-    //   hide();
-    //   message.success(`新增成功！`);
-    //   setDrawerVisible(false);
-    //   return true;
-    // } catch (error) {
-    //   hide();
-    //   message.error(`新增失败请重试！`);
-    //   return false;
-    // }
+    const hide = message.loading('正在新增问题');
+    try {
+      await createQuestion(questionVO);
+      hide();
+      message.success(`新增成功！`);
+      setDrawerVisible(false);
+      actionRef.current.reset();
+    } catch (error) {
+      hide();
+      message.error(`新增失败请重试！`);
+    }
   };
 
   return (
@@ -175,7 +185,7 @@ const QuestionDrawer = (props) => {
             <Tabs
               onTabClick={(key = '') => {
                 setCurrentQuestionType(Number(key.substr(key.length - 1)));
-                questionVO.questionTypeId = key.substr(0, key.indexOf('-'));
+                setQuestionVO({ ...questionVO, questionTypeId: key.substr(0, key.indexOf('-')) });
               }}
               defaultActiveKey="1"
               tabBarExtraContent={slot}
@@ -332,13 +342,10 @@ const QuestionDrawer = (props) => {
               {currentQuestionType === 0 && (
                 <Radio.Group
                   onChange={(e) => {
-                    if (questionVO.answerIndex.length === 0) {
-                      questionVO.answerIndex.push(e.target.value);
-                    } else {
-                      questionVO.answerIndex[0] = e.target.value;
-                    }
+                    setQuestionVO({ ...questionVO, answerIndex: [e.target.value] });
                   }}
                   defaultValue={questionVO.answerIndex[0]}
+                  ref={answerRadioRef}
                 >
                   <Radio value={0}>A</Radio>
                   <Radio value={1}>B</Radio>
@@ -354,7 +361,9 @@ const QuestionDrawer = (props) => {
               {currentQuestionType === 1 && (
                 <Checkbox.Group
                   defaultValue={questionVO.answerIndex}
-                  onChange={(checkedValue) => (questionVO.answerIndex = checkedValue)}
+                  onChange={(checkedValue) =>
+                    setQuestionVO({ ...questionVO, answerIndex: checkedValue })
+                  }
                 >
                   <Checkbox value={0}>A</Checkbox>
                   <Checkbox value={1}>B</Checkbox>
@@ -369,7 +378,9 @@ const QuestionDrawer = (props) => {
               )}
               {currentQuestionType === 3 && (
                 <Switch
-                  onChange={(checked) => (questionVO.answerValue = checked)}
+                  onChange={(checked) => {
+                    setQuestionVO({ ...questionVO, answerValue: checked.toString() });
+                  }}
                   checkedChildren={<CheckOutlined />}
                   unCheckedChildren={<CloseOutlined />}
                 />
@@ -462,7 +473,9 @@ const QuestionDrawer = (props) => {
               {currentQuestionType === 4 && (
                 <div style={{ marginTop: 10 }}>
                   <Editor
-                    onEditorChange={(value, _) => (questionVO.answerValue = value)}
+                    onEditorChange={(value, _) =>
+                      setQuestionVO({ ...questionVO, answerValue: value })
+                    }
                     apiKey="nzmlokkyb5avilcxl9sdfudwrnb818m5ovuc4c7av96gwue9"
                     init={{
                       language: 'zh_CN',
@@ -509,7 +522,7 @@ const QuestionDrawer = (props) => {
                     rules={[{ required: true, message: `答案解析不能为空！` }]}
                   >
                     <Input
-                      value={questionVO.analyze}
+                      value={questionVO.answerAnalyze}
                       onClick={() => {
                         handleEditorModal(2, 'answerAnalyze');
                       }}
@@ -525,7 +538,9 @@ const QuestionDrawer = (props) => {
                 题目难度：
                 <Radio.Group
                   defaultValue={questionVO.difficulty}
-                  onChange={(e) => (questionVO.difficulty = e.target.value)}
+                  onChange={(e) => {
+                    setQuestionVO({ ...questionVO, difficulty: e.target.value });
+                  }}
                 >
                   <Radio value={0}>简单</Radio>
                   <Radio value={1}>中等</Radio>

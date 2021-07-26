@@ -49,8 +49,11 @@ public class Question implements Serializable {
     @ApiModelProperty(value = "题目类型Id")
     private String questionTypeId;
 
-    @ApiModelProperty(value = "题目描述")
-    private String content;
+    @ApiModelProperty(value = "题目描述（纯文本）")
+    private String originalContent;
+
+    @ApiModelProperty(value = "题目描述（HTML）")
+    private String formatContent;
 
     @ApiModelProperty(value = "题目排序")
     private Integer sort;
@@ -65,7 +68,7 @@ public class Question implements Serializable {
     private Boolean isFolder;
 
     @ApiModelProperty(value = "题目答案解析")
-    private String analyze;
+    private String answerAnalyze;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableLogic

@@ -147,4 +147,16 @@ public final class ServiceUtils {
         return objectMapper.convertValue(value, clazz);
     }
 
+    /**
+     * 将HTML字符串转为普通字符串
+     *
+     * @param html HTML字符串
+     * @return 普通字符串
+     */
+    public static String convertToText(String html) {
+        String content = html.replaceAll("</?[^>]+>", "");
+        content = content.replaceAll("<a>\\s*|\t|\r|\n</a>", "");
+        return content;
+    }
+
 }

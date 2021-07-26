@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Popconfirm, Select, Space } from 'antd';
+import { Button, message, Popconfirm, Select, Space } from 'antd';
 import { FolderOpenTwoTone, PlusOutlined, SettingOutlined, ToTopOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { queryQuestion, QuestionDifficultyStatus } from '@/services/question';
+import { deleteQuestion, queryQuestion, QuestionDifficultyStatus } from '@/services/question';
 import { listQuestionTypeSelects } from '@/services/questiontype';
 import { listTopicSelects } from '@/services/topic';
 import QuestionDrawer from './components/QuestionDrawer';
@@ -88,12 +88,24 @@ const QuestionList = (props) => {
     };
   };
 
-  const handleDeleteQuestion = async (questionId) => {};
+  const handleDeleteQuestion = async (question) => {
+    const tip = question.isFolder ? '文件夹' : '题目';
+    const hide = message.loading(`正在删除${tip}【${question.originalContent}】`);
+    try {
+      await deleteQuestion(question.id);
+      hide();
+      message.success(`删除成功！`);
+      actionRef?.current.reset();
+    } catch (error) {
+      hide();
+      message.error(`删除失败请重试！`);
+    }
+  };
 
   const columns = [
     {
       title: '文件夹/题目',
-      dataIndex: 'content',
+      dataIndex: 'originalContent',
       hideInSearch: true,
       render: (_, record) => (
         <Space>
@@ -101,14 +113,14 @@ const QuestionList = (props) => {
           <a
             onClick={() => {
               if (record.isFolder) {
-                if (!paths.find((item) => item === record.content)) {
-                  setPaths([...paths, { name: record.content, value: record.id }]);
+                if (!paths.find((item) => item === record.originalContent)) {
+                  setPaths([...paths, { name: record.originalContent, value: record.id }]);
+                  setPid(record.id);
                 }
               }
-              setPid(record.id);
             }}
           >
-            {record.content}
+            {record.originalContent}
           </a>
         </Space>
       ),
@@ -187,12 +199,12 @@ const QuestionList = (props) => {
       render: (_, record) => [
         <Popconfirm
           key="delete"
-          title={`你确定要删除这个题目吗？`}
+          title={`你确定要删除这个${record.isFolder ? '文件夹' : '题目'}吗？`}
           onConfirm={() => handleDeleteQuestion(record)}
           okText="确定"
           cancelText="取消"
         >
-          <a>移除</a>
+          <a>删除</a>
         </Popconfirm>,
       ],
     },
@@ -280,6 +292,7 @@ const QuestionList = (props) => {
           setDrawerVisible={setDrawerVisible}
           courseId={courseId}
           userId={userId}
+          pid={pid}
           actionRef={actionRef}
         />
       )}

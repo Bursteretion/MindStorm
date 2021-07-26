@@ -31,4 +31,12 @@ public interface QuestionAnswerService extends IService<QuestionAnswer> {
      */
     boolean createQuestionAnswer(QuestionAnswerVO questionAnswerVO);
 
+    /**
+     * 根据题目Id删除题目答案
+     *
+     * @param questionId 题目Id
+     * @return 是否删除成功
+     */
+    boolean deleteQuestionAnswers(String questionId);
+
 }

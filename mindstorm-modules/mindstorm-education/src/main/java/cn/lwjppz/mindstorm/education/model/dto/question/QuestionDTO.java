@@ -21,7 +21,9 @@ public class QuestionDTO {
 
     private String id;
 
-    private String content;
+    private String originalContent;
+
+    private String formatContent;
 
     private String questionType;
 

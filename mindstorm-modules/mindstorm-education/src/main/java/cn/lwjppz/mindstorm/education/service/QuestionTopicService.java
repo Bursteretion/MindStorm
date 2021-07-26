@@ -42,6 +42,14 @@ public interface QuestionTopicService extends IService<QuestionTopic> {
     boolean createQuestionTopic(QuestionTopicVO questionTopicVO);
 
     /**
+     * 根据题目Id删除题目知识点关联
+     *
+     * @param questionId 题目Id
+     * @return 是否删除成功
+     */
+    boolean deleteQuestionTopics(String questionId);
+
+    /**
      * 根据知识点Id获取关联题数
      *
      * @param topicId 知识点Id
