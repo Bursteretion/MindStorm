@@ -32,6 +32,7 @@ const QuestionCreateDrawer = (props) => {
   const [isEditorModalVisible, setEditorModalVisible] = useState(false);
   const [currentForm, setCurrentForm] = useState(undefined);
   const [optionInitialValue, setOptionInitialValue] = useState({});
+  const [answerInitialValue, setAnswerInitialValue] = useState({});
   const editorRef = useRef(null);
   const [optionsForm] = Form.useForm();
   const [answerForm] = Form.useForm();
@@ -44,11 +45,18 @@ const QuestionCreateDrawer = (props) => {
         const res = await infoQuestion(questionId);
         if (res.success) {
           console.log(res.data.question);
-          const { options = [] } = res.data.question;
+          const { options = [], answers = [] } = res.data.question;
           const optionValues = {};
           options.forEach((item) => {
             optionValues[item.name] = item.value;
           });
+          if (answers.length > 0) {
+            const answerValues = {};
+            answers.forEach((item, index) => {
+              answerValues[`answer${index + 1}`] = item.value;
+            });
+            setAnswerInitialValue(answerValues);
+          }
           setOptionInitialValue(optionValues);
           setQuestion(res.data.question);
           setCurrentTopics(res.data.question.topics);
@@ -80,39 +88,41 @@ const QuestionCreateDrawer = (props) => {
     const answersFormValues = answerForm.getFieldsValue(true);
     const answerAnalyze = answerAnalyzeForm.getFieldsValue(true);
     const formatContent = editorRef?.current.getContent();
-    const options = Object.keys(optionsFormValues).map((key) => {
+    const options = question.options.map((item) => {
       return {
-        optionName: key,
-        optionValue: optionsFormValues[key],
+        optionName: item.name,
+        optionValue: optionsFormValues[item.name],
       };
     });
-    const answers = Object.keys(answersFormValues).map((key) => {
+    const answers = question.answers.map((item) => {
       return {
-        value: answersFormValues[key],
+        value: item.value,
       };
     });
     const topicIds = currentTopics.map((item) => item.id);
+    const answerIndex = question.answerIndex && question.answerIndex.sort((a, b) => a - b);
     const questionVO = {
       ...question,
+      answers,
+      answerIndex,
       formatContent,
       options,
-      answers,
       topicIds,
       answerAnalyze: answerAnalyze.answerAnalyze,
     };
-    console.log(questionVO);
+    console.log(questionVO, answersFormValues, answers);
 
-    // const hide = message.loading('正在更新问题');
-    // try {
-    //   await updateQuestion(questionVO);
-    //   hide();
-    //   message.success(`更新成功！`);
-    //   setDrawerVisible(false);
-    //   actionRef.current.reset();
-    // } catch (error) {
-    //   hide();
-    //   message.error(`更新失败请重试！`);
-    // }
+    const hide = message.loading('正在更新问题');
+    try {
+      await updateQuestion(questionVO);
+      hide();
+      message.success(`更新成功！`);
+      setDrawerVisible(false);
+      actionRef.current.reset();
+    } catch (error) {
+      hide();
+      message.error(`更新失败请重试！`);
+    }
   };
 
   return (
@@ -290,7 +300,7 @@ const QuestionCreateDrawer = (props) => {
                     onChange={(e) => {
                       setQuestion({ ...question, answerValue: e.target.value });
                     }}
-                    defaultValue={question.answerValue}
+                    defaultValue={Number(question.answerValue)}
                   >
                     <Radio value={1}>正确</Radio>
                     <Radio value={0}>错误</Radio>
@@ -303,6 +313,7 @@ const QuestionCreateDrawer = (props) => {
                     preserve={false}
                     autoComplete="off"
                     labelCol={{ span: 2 }}
+                    initialValues={answerInitialValue}
                   >
                     {question.answers.map((item, i) => {
                       return (
@@ -314,20 +325,15 @@ const QuestionCreateDrawer = (props) => {
                         >
                           <Input
                             onClick={(e) => {
-                              handleEditorModal(1, item.name, e.target.value);
+                              handleEditorModal(1, `answer${i + 1}`, e.target.value);
                             }}
                             addonAfter={
                               i !== 0 && (
                                 <MinusCircleOutlined
                                   onClick={() => {
-                                    const newAnswers = question.answers
-                                      .filter((answer) => answer.id !== item.id)
-                                      .map((answer, index) => {
-                                        return {
-                                          name: `answer${index + 1}`,
-                                          value: index + 1,
-                                        };
-                                      });
+                                    const newAnswers = question.answers.filter(
+                                      (answer) => answer.id !== item.id,
+                                    );
                                     setQuestion({ ...question, answers: newAnswers });
                                   }}
                                 />
@@ -346,8 +352,8 @@ const QuestionCreateDrawer = (props) => {
                             answers: [
                               ...question.answers,
                               {
-                                name: `answer${question.answers + 1}`,
-                                value: question.answers + 1,
+                                id: `answer${question.answers.length + 1}`,
+                                value: '',
                               },
                             ],
                           });
@@ -379,6 +385,7 @@ const QuestionCreateDrawer = (props) => {
                 {question.questionType === 4 && (
                   <div style={{ marginTop: 10 }}>
                     <Editor
+                      initialValue={question.answerValue}
                       onEditorChange={(value, _) =>
                         setQuestion({ ...question, answerValue: value })
                       }
@@ -431,8 +438,8 @@ const QuestionCreateDrawer = (props) => {
                       rules={[{ required: true, message: `答案解析不能为空！` }]}
                     >
                       <Input
-                        onClick={() => {
-                          handleEditorModal(2, 'answerAnalyze');
+                        onClick={(e) => {
+                          handleEditorModal(2, 'answerAnalyze', e.target.value);
                         }}
                       />
                     </Form.Item>

@@ -43,9 +43,6 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
 
     @Override
     public List<String> createQuestionOptions(String questionId, List<QuestionOptionVO> questionOptions) {
-        // 先删除原来的题目选项
-        deleteOptions(questionId);
-
         List<String> optionIds = new ArrayList<>();
         // 新增题目选项
         questionOptions.forEach(item -> {

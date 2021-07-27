@@ -381,7 +381,7 @@ const QuestionCreateDrawer = (props) => {
                   onChange={(e) => {
                     setQuestionVO({ ...questionVO, answerValue: e.target.value });
                   }}
-                  defaultValue={question.answerValue}
+                  defaultValue={questionVO.answerValue}
                 >
                   <Radio value={1}>正确</Radio>
                   <Radio value={0}>错误</Radio>

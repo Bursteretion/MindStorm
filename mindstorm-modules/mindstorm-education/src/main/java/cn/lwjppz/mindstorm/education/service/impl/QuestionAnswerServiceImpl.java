@@ -60,10 +60,7 @@ public class QuestionAnswerServiceImpl extends ServiceImpl<QuestionAnswerMapper,
 
     @Override
     public boolean createQuestionAnswer(QuestionAnswerVO questionAnswerVO) {
-        // 先删除原来的题目答案
         var questionId = questionAnswerVO.getQuestionId();
-        deleteQuestionAnswers(questionId);
-
         // 新增题目答案
         var questionAnswer = new QuestionAnswer();
         BeanUtils.copyProperties(questionAnswerVO, questionAnswer);

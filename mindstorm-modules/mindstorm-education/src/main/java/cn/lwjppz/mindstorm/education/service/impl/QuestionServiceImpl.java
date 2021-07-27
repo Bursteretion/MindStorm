@@ -139,11 +139,18 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private void execute(QuestionVO questionVO, String questionId) {
         List<String> optionIds = new ArrayList<>();
         if (questionVO.getOptions().size() != 0) {
+            // 先删除题目选项
+            questionOptionService.deleteOptions(questionId);
             // 新增题目选项
             optionIds = questionOptionService.createQuestionOptions(questionId, questionVO.getOptions());
         }
+        // 删除题目关联知识点
+        questionTopicService.deleteQuestionTopics(questionId);
         // 新增题目关联知识点
         questionTopicService.createQuestionTopic(new QuestionTopicVO(questionId, questionVO.getTopicIds()));
+
+        // 删除题目答案
+        questionAnswerService.deleteQuestionAnswers(questionId);
 
         int questionType = questionVO.getQuestionType();
         // 新增题目答案
@@ -164,8 +171,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         } else if (questionType == QuestionType.FILL_BLANK.getValue()) {
             var answers = questionVO.getAnswers();
             answers.forEach(questionAnswerVO -> {
-                questionAnswerVO.setQuestionId(questionId);
-                questionAnswerService.createQuestionAnswer(questionAnswerVO);
+                questionAnswerService.createQuestionAnswer(new QuestionAnswerVO(questionId, null,
+                        questionAnswerVO.getValue()));
             });
         } else {
             var questionAnswer = new QuestionAnswerVO();
@@ -287,6 +294,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         questionDetailDTO.setQuestionType(type.getValue());
         questionDetailDTO.setTopics(topics);
         questionDetailDTO.setOptions(options);
+        questionDetailDTO.setAnswers(answers);
 
         if (questionType.getType().equals(QuestionType.SINGLE_CHOICE.getValue()) ||
                 questionType.getType().equals(QuestionType.MULTIPLE_CHOICE.getValue())) {
@@ -303,7 +311,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                         return 0;
                     }).collect(Collectors.toList());
             questionDetailDTO.setAnswerIndex(answerIndex);
-            questionDetailDTO.setAnswers(answers);
         } else {
             questionDetailDTO.setAnswerValue(answers.get(0).getValue());
         }

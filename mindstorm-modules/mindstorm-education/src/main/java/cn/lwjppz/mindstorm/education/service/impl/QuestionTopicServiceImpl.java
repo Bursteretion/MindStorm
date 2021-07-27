@@ -56,10 +56,7 @@ public class QuestionTopicServiceImpl extends ServiceImpl<QuestionTopicMapper, Q
 
     @Override
     public boolean createQuestionTopic(QuestionTopicVO questionTopicVO) {
-        // 先删除相关联知识点
         var questionId = questionTopicVO.getQuestionId();
-        deleteQuestionTopics(questionId);
-
         // 新增关联知识点
         var topicIds = questionTopicVO.getTopicIds();
         if (!CollectionUtils.isEmpty(topicIds)) {
