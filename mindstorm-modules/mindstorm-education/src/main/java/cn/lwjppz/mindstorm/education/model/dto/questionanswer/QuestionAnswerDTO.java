@@ -17,12 +17,12 @@ import lombok.ToString;
 @ToString
 public class QuestionAnswerDTO {
 
+    private String id;
+
     private String optionId;
 
     private String optionName;
 
     private String value;
-
-    private String analyze;
 
 }

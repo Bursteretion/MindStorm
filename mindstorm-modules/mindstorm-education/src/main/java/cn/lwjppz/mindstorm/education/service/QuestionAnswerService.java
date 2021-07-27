@@ -5,6 +5,8 @@ import cn.lwjppz.mindstorm.education.model.entity.QuestionAnswer;
 import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 题目答案表 服务类
@@ -21,7 +23,7 @@ public interface QuestionAnswerService extends IService<QuestionAnswer> {
      * @param questionId 题目Id
      * @return 题目答案信息
      */
-    QuestionAnswerDTO getQuestionAnswer(String questionId);
+    List<QuestionAnswerDTO> getQuestionAnswers(String questionId);
 
     /**
      * 新增题目答案

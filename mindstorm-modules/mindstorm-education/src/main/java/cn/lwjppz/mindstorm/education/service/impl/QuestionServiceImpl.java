@@ -4,10 +4,12 @@ import cn.lwjppz.mindstorm.api.permission.feign.RemotePermissionFeignService;
 import cn.lwjppz.mindstorm.api.permission.model.UserTo;
 import cn.lwjppz.mindstorm.common.core.enums.type.QuestionDifficultyType;
 import cn.lwjppz.mindstorm.common.core.enums.type.QuestionType;
+import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDTO;
+import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
 import cn.lwjppz.mindstorm.education.mapper.QuestionMapper;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
@@ -29,6 +31,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +46,7 @@ import java.util.stream.Collectors;
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements QuestionService {
 
     private final CourseService courseService;
+    private final TopicService topicService;
     private final QuestionTypeService questionTypeService;
     private final QuestionTopicService questionTopicService;
     private final QuestionOptionService questionOptionService;
@@ -50,12 +54,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     private final RemotePermissionFeignService remotePermissionFeignService;
 
     public QuestionServiceImpl(@Lazy CourseService courseService,
+                               @Lazy TopicService topicService,
                                @Lazy QuestionTypeService questionTypeService,
                                @Lazy QuestionTopicService questionTopicService,
                                @Lazy QuestionOptionService questionOptionService,
                                @Lazy QuestionAnswerService questionAnswerService,
                                @Lazy RemotePermissionFeignService remotePermissionFeignService) {
         this.courseService = courseService;
+        this.topicService = topicService;
         this.questionTypeService = questionTypeService;
         this.questionTopicService = questionTopicService;
         this.questionOptionService = questionOptionService;
@@ -125,49 +131,73 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             question.setOriginalContent(ServiceUtils.convertToText(questionVO.getFormatContent()));
             baseMapper.insert(question);
 
-            int questionType = questionVO.getQuestionType();
-            List<String> optionIds = new ArrayList<>();
-            if (questionVO.getOptions().size() != 0) {
-                // 新增题目选项
-                optionIds = questionOptionService.createQuestionOptions(question.getId(), questionVO.getOptions());
-            }
-            // 新增题目关联知识点
-            questionTopicService.createQuestionTopic(new QuestionTopicVO(question.getId(), questionVO.getTopicIds()));
-
-            // 新增题目答案
-            if (questionType == QuestionType.SINGLE_CHOICE.getValue()) {
-                var questionAnswer = new QuestionAnswerVO();
-                questionAnswer.setQuestionId(question.getId());
-                questionAnswer.setOptionId(optionIds.get(questionVO.getAnswerIndex().get(0)));
-                questionAnswerService.createQuestionAnswer(questionAnswer);
-            } else if (questionType == QuestionType.MULTIPLE_CHOICE.getValue()) {
-                var answerIndex = questionVO.getAnswerIndex();
-                List<String> finalOptionIds = optionIds;
-                answerIndex.forEach(index -> {
-                    var questionAnswer = new QuestionAnswerVO();
-                    questionAnswer.setQuestionId(question.getId());
-                    questionAnswer.setOptionId(finalOptionIds.get(index));
-                    questionAnswerService.createQuestionAnswer(questionAnswer);
-                });
-            } else if (questionType == QuestionType.FILL_BLANK.getValue()) {
-                var answers = questionVO.getAnswers();
-                answers.forEach(questionAnswerVO -> {
-                    questionAnswerVO.setQuestionId(question.getId());
-                    questionAnswerService.createQuestionAnswer(questionAnswerVO);
-                });
-            } else {
-                var questionAnswer = new QuestionAnswerVO();
-                questionAnswer.setQuestionId(question.getId());
-                questionAnswer.setValue(questionVO.getAnswerValue());
-                questionAnswerService.createQuestionAnswer(questionAnswer);
-            }
+            execute(questionVO, question.getId());
         }
         return true;
     }
 
+    private void execute(QuestionVO questionVO, String questionId) {
+        List<String> optionIds = new ArrayList<>();
+        if (questionVO.getOptions().size() != 0) {
+            // 新增题目选项
+            optionIds = questionOptionService.createQuestionOptions(questionId, questionVO.getOptions());
+        }
+        // 新增题目关联知识点
+        questionTopicService.createQuestionTopic(new QuestionTopicVO(questionId, questionVO.getTopicIds()));
+
+        int questionType = questionVO.getQuestionType();
+        // 新增题目答案
+        if (questionType == QuestionType.SINGLE_CHOICE.getValue()) {
+            var questionAnswer = new QuestionAnswerVO();
+            questionAnswer.setQuestionId(questionId);
+            questionAnswer.setOptionId(optionIds.get(questionVO.getAnswerIndex().get(0)));
+            questionAnswerService.createQuestionAnswer(questionAnswer);
+        } else if (questionType == QuestionType.MULTIPLE_CHOICE.getValue()) {
+            var answerIndex = questionVO.getAnswerIndex();
+            List<String> finalOptionIds = optionIds;
+            answerIndex.forEach(index -> {
+                var questionAnswer = new QuestionAnswerVO();
+                questionAnswer.setQuestionId(questionId);
+                questionAnswer.setOptionId(finalOptionIds.get(index));
+                questionAnswerService.createQuestionAnswer(questionAnswer);
+            });
+        } else if (questionType == QuestionType.FILL_BLANK.getValue()) {
+            var answers = questionVO.getAnswers();
+            answers.forEach(questionAnswerVO -> {
+                questionAnswerVO.setQuestionId(questionId);
+                questionAnswerService.createQuestionAnswer(questionAnswerVO);
+            });
+        } else {
+            var questionAnswer = new QuestionAnswerVO();
+            questionAnswer.setQuestionId(questionId);
+            questionAnswer.setValue(questionVO.getAnswerValue());
+            questionAnswerService.createQuestionAnswer(questionAnswer);
+        }
+    }
+
+    @Override
+    public Question infoQuestion(String questionId) {
+        if (StringUtils.isNotEmpty(questionId)) {
+            var question = baseMapper.selectById(questionId);
+            if (null == question) {
+                throw new EntityNotFoundException("该题目不存在！");
+            }
+            return question;
+        }
+        return null;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateQuestion(QuestionVO questionVO) {
-        return false;
+        var question = new Question();
+        BeanUtils.copyProperties(questionVO, question);
+
+        question.setOriginalContent(ServiceUtils.convertToText(questionVO.getFormatContent()));
+        baseMapper.updateById(question);
+
+        execute(questionVO, questionVO.getId());
+        return true;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -228,5 +258,56 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return questions.stream()
                 .map(this::convertToQuestionDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public QuestionDetailDTO convertToQuestionDetailDTO(Question question) {
+        var questionId = question.getId();
+
+        // 获取题目选项
+        var options = questionOptionService.getQuestionOptions(questionId);
+
+        // 获取题目答案
+        var answers = questionAnswerService.getQuestionAnswers(questionId);
+
+        // 获取题目关联知识点
+        var questionTopics = questionTopicService.listQuestionTopic(questionId);
+        var topics =
+                questionTopics.stream()
+                        .map(item -> topicService.convertTopicDTO(topicService.infoTopic(item.getTopicId())))
+                        .collect(Collectors.toList());
+
+        // 获取题目类型
+        var questionType = questionTypeService.getById(question.getQuestionTypeId());
+        var type = ValueEnum.valueToEnum(QuestionType.class, questionType.getType());
+
+        var questionDetailDTO = new QuestionDetailDTO();
+        BeanUtils.copyProperties(question, questionDetailDTO);
+
+        questionDetailDTO.setQuestionType(type.getValue());
+        questionDetailDTO.setTopics(topics);
+        questionDetailDTO.setOptions(options);
+
+        if (questionType.getType().equals(QuestionType.SINGLE_CHOICE.getValue()) ||
+                questionType.getType().equals(QuestionType.MULTIPLE_CHOICE.getValue())) {
+            var answerIndex = answers.stream()
+                    .map(answer -> {
+                        var optionId = answer.getOptionId();
+                        if (StringUtils.isNotEmpty(optionId)) {
+                            for (int i = 0; i < options.size(); i++) {
+                                if (options.get(i).getId().equals(optionId)) {
+                                    return i;
+                                }
+                            }
+                        }
+                        return 0;
+                    }).collect(Collectors.toList());
+            questionDetailDTO.setAnswerIndex(answerIndex);
+            questionDetailDTO.setAnswers(answers);
+        } else {
+            questionDetailDTO.setAnswerValue(answers.get(0).getValue());
+        }
+
+        return questionDetailDTO;
     }
 }

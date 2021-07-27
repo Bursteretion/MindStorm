@@ -5,22 +5,25 @@ import ProTable from '@ant-design/pro-table';
 import { deleteQuestion, queryQuestion, QuestionDifficultyStatus } from '@/services/question';
 import { listQuestionTypeSelects } from '@/services/questiontype';
 import { listTopicSelects } from '@/services/topic';
-import QuestionDrawer from './components/QuestionDrawer';
+import QuestionCreateDrawer from './components/QuestionCreateDrawer';
 import { useModel } from 'umi';
 import CreateFolderForm from './components/CreateFolderForm';
 import styles from '@/pages/Course/manager/style.less';
 import QuestionTypeForm from './components/QuestionTypeForm';
+import QuestionUpdateDrawer from '@/pages/Course/manager/components/question/components/QuestionUpdateDrawer';
 
 const QuestionList = (props) => {
   const { courseId } = props;
   const actionRef = useRef();
   const [questionTypes, setQuestionTypes] = useState(undefined);
   const [topics, setTopics] = useState(undefined);
-  const [isDrawerVisible, setDrawerVisible] = useState(false);
+  const [isQuestionCreateDrawerVisible, setQuestionCreateDrawerVisible] = useState(false);
+  const [isQuestionUpdateDrawerVisible, setQuestionUpdateDrawerVisible] = useState(false);
   const [isCreateFolderModalVisible, setCreateFolderModalVisible] = useState(false);
   const [isQuestionTypeModalVisible, setQuestionTypeModalVisible] = useState(false);
   const [paths, setPaths] = useState([{ name: '课程题库', value: '0' }]);
   const [pid, setPid] = useState('0');
+  const [questionId, setQuestionId] = useState(undefined);
   const { userId = '' } = useModel('@@initialState', (res) => ({
     userId: res.initialState.currentUser.id,
   }));
@@ -197,6 +200,15 @@ const QuestionList = (props) => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
+        <a
+          onClick={() => {
+            setQuestionId(record.id);
+            setQuestionUpdateDrawerVisible(true);
+          }}
+          key="edit"
+        >
+          编辑
+        </a>,
         <Popconfirm
           key="delete"
           title={`你确定要删除这个${record.isFolder ? '文件夹' : '题目'}吗？`}
@@ -230,7 +242,7 @@ const QuestionList = (props) => {
               icon={<PlusOutlined />}
               type="primary"
               onClick={() => {
-                setDrawerVisible(true);
+                setQuestionCreateDrawerVisible(true);
               }}
             >
               创建题目
@@ -256,7 +268,7 @@ const QuestionList = (props) => {
               icon={<ToTopOutlined />}
               type="link"
               onClick={() => {
-                setDrawerVisible(true);
+                setQuestionCreateDrawerVisible(true);
               }}
             >
               导出全部
@@ -284,16 +296,26 @@ const QuestionList = (props) => {
           setModalVisible={setQuestionTypeModalVisible}
         />
       )}
-      {!isDrawerVisible ? (
+      {!isQuestionCreateDrawerVisible ? (
         ''
       ) : (
-        <QuestionDrawer
-          isDrawerVisible={isDrawerVisible}
-          setDrawerVisible={setDrawerVisible}
+        <QuestionCreateDrawer
+          isDrawerVisible={isQuestionCreateDrawerVisible}
+          setDrawerVisible={setQuestionCreateDrawerVisible}
           courseId={courseId}
           userId={userId}
           pid={pid}
           actionRef={actionRef}
+        />
+      )}
+      {!isQuestionUpdateDrawerVisible ? (
+        ''
+      ) : (
+        <QuestionUpdateDrawer
+          isDrawerVisible={isQuestionUpdateDrawerVisible}
+          setDrawerVisible={setQuestionUpdateDrawerVisible}
+          actionRef={actionRef}
+          questionId={questionId}
         />
       )}
     </>

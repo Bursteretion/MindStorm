@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDTO;
+import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
@@ -44,6 +45,14 @@ public interface QuestionService extends IService<Question> {
     boolean createQuestion(QuestionVO questionVO);
 
     /**
+     * 根据题目Id获取题目信息
+     *
+     * @param questionId 题目Id
+     * @return 题目信息
+     */
+    Question infoQuestion(String questionId);
+
+    /**
      * 更新题目信息
      *
      * @param questionVO 题目信息
@@ -74,5 +83,13 @@ public interface QuestionService extends IService<Question> {
      * @return QuestionDTO对象集合
      */
     List<QuestionDTO> convertToQuestionDTO(List<Question> questions);
+
+    /**
+     * 将 Question 对象转为 QuestionDetailDTO 对象
+     *
+     * @param question Question 对象
+     * @return QuestionDetailDTO 对象
+     */
+    QuestionDetailDTO convertToQuestionDetailDTO(Question question);
 
 }

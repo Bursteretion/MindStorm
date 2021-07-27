@@ -32,9 +32,10 @@ public class QuestionOptionServiceImpl extends ServiceImpl<QuestionOptionMapper,
         if (StringUtils.isNotEmpty(questionId)) {
             LambdaQueryWrapper<QuestionOption> wrapper = Wrappers.lambdaQuery();
             wrapper.eq(QuestionOption::getQuestionId, questionId);
+            wrapper.orderByAsc(QuestionOption::getGmtCreate);
             var questionOptions = baseMapper.selectList(wrapper);
             return questionOptions.stream()
-                    .map(item -> new QuestionOptionDTO(item.getName(), item.getValue()))
+                    .map(item -> new QuestionOptionDTO(item.getId(), item.getName(), item.getValue()))
                     .collect(Collectors.toList());
         }
         return null;

@@ -13,6 +13,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * 题目答案表 服务实现类
@@ -31,19 +34,26 @@ public class QuestionAnswerServiceImpl extends ServiceImpl<QuestionAnswerMapper,
     }
 
     @Override
-    public QuestionAnswerDTO getQuestionAnswer(String questionId) {
+    public List<QuestionAnswerDTO> getQuestionAnswers(String questionId) {
         if (StringUtils.isNotEmpty(questionId)) {
             LambdaQueryWrapper<QuestionAnswer> wrapper = Wrappers.lambdaQuery();
             wrapper.eq(QuestionAnswer::getQuestionId, questionId);
-            var questionAnswer = baseMapper.selectOne(wrapper);
+            wrapper.orderByAsc(QuestionAnswer::getGmtCreate);
+            var answers = baseMapper.selectList(wrapper);
 
-            var questionAnswerDTO = new QuestionAnswerDTO();
-            BeanUtils.copyProperties(questionAnswer, questionAnswerDTO);
+            List<QuestionAnswerDTO> res = new ArrayList<>();
+            answers.forEach(answer -> {
+                var questionAnswerDTO = new QuestionAnswerDTO();
+                BeanUtils.copyProperties(answer, questionAnswerDTO);
 
-            var questionOption = questionOptionService.getById(questionAnswer.getOptionId());
-            questionAnswerDTO.setOptionId(questionOption.getId());
-            questionAnswerDTO.setOptionName(questionOption.getName());
-            return questionAnswerDTO;
+                if (StringUtils.isNotEmpty(answer.getOptionId())) {
+                    var questionOption = questionOptionService.getById(answer.getOptionId());
+                    questionAnswerDTO.setOptionId(questionOption.getId());
+                    questionAnswerDTO.setOptionName(questionOption.getName());
+                }
+                res.add(questionAnswerDTO);
+            });
+            return res;
         }
         return null;
     }

@@ -34,7 +34,7 @@ import { createQuestion } from '@/services/question';
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
-const QuestionDrawer = (props) => {
+const QuestionCreateDrawer = (props) => {
   const { isDrawerVisible, setDrawerVisible, courseId, actionRef, userId, pid } = props;
   const [questionTypes, setQuestionTypes] = useState(undefined);
   const [currentTopics, setCurrentTopics] = useState([]);
@@ -377,13 +377,15 @@ const QuestionDrawer = (props) => {
                 </Checkbox.Group>
               )}
               {currentQuestionType === 3 && (
-                <Switch
-                  onChange={(checked) => {
-                    setQuestionVO({ ...questionVO, answerValue: checked.toString() });
+                <Radio.Group
+                  onChange={(e) => {
+                    setQuestionVO({ ...questionVO, answerValue: e.target.value });
                   }}
-                  checkedChildren={<CheckOutlined />}
-                  unCheckedChildren={<CloseOutlined />}
-                />
+                  defaultValue={question.answerValue}
+                >
+                  <Radio value={1}>正确</Radio>
+                  <Radio value={0}>错误</Radio>
+                </Radio.Group>
               )}
               {currentQuestionType === 2 && [
                 <Form
@@ -603,4 +605,4 @@ const QuestionDrawer = (props) => {
   );
 };
 
-export default QuestionDrawer;
+export default QuestionCreateDrawer;

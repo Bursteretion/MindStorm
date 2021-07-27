@@ -41,6 +41,13 @@ public class QuestionController {
         return CommonResult.ok().data("success", success);
     }
 
+    @GetMapping("/info/{questionId}")
+    @ApiOperation("获取题目信息")
+    public CommonResult infoQuestion(@ApiParam("题目Id") @PathVariable("questionId") String questionId) {
+        var question = questionService.convertToQuestionDetailDTO(questionService.infoQuestion(questionId));
+        return CommonResult.ok().data("question", question);
+    }
+
     @PostMapping("/update")
     @ApiOperation("更新题目信息")
     public CommonResult updateQuestion(@ApiParam("题目信息") @RequestBody QuestionVO questionVO) {
