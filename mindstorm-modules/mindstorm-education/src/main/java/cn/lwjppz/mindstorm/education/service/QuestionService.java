@@ -3,8 +3,10 @@ package cn.lwjppz.mindstorm.education.service;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionFolderDTO;
+import cn.lwjppz.mindstorm.education.model.dto.question.TreeFolderDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
+import cn.lwjppz.mindstorm.education.model.vo.question.QuestionMoveVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -109,4 +111,19 @@ public interface QuestionService extends IService<Question> {
      * @return 题目文件夹信息
      */
     QuestionFolderDTO infoFolder(String folderId);
+
+    /**
+     * 获取树形题目文件夹结构数据
+     *
+     * @return 树形题目文件夹
+     */
+    List<TreeFolderDTO> listTreeFolders();
+
+    /**
+     * 移动文件夹/题目
+     *
+     * @param questionMoveVO 相关Id信息
+     * @return 是否移动成功
+     */
+    boolean moveQuestion(QuestionMoveVO questionMoveVO);
 }

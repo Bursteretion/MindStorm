@@ -11,10 +11,12 @@ import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionFolderDTO;
+import cn.lwjppz.mindstorm.education.model.dto.question.TreeFolderDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
 import cn.lwjppz.mindstorm.education.mapper.QuestionMapper;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
+import cn.lwjppz.mindstorm.education.model.vo.question.QuestionMoveVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
 import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -340,5 +343,38 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
             return folderDTO;
         }
         return null;
+    }
+
+    @Override
+    public List<TreeFolderDTO> listTreeFolders() {
+        LambdaQueryWrapper<Question> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Question::getIsFolder, true).orderByAsc(Question::getGmtCreate);
+        var folders = baseMapper.selectList(wrapper);
+        var treeFolders = folders.stream().map(folder -> new TreeFolderDTO(folder.getId(),
+                folder.getPid(), folder.getOriginalContent(),
+                new ArrayList<>())).collect(Collectors.toList());
+
+        Map<String, TreeFolderDTO> treeFolderMap = new HashMap<>(folders.size() << 1);
+        treeFolders.forEach(treeFolder -> treeFolderMap.put(treeFolder.getFolderId(), treeFolder));
+
+        treeFolders.forEach(treeFolder -> {
+            if (treeFolderMap.containsKey(treeFolder.getPid())) {
+                var treeFolderDTO = treeFolderMap.get(treeFolder.getPid());
+                treeFolderDTO.getChildren().add(treeFolder);
+            }
+        });
+
+        return treeFolders.stream()
+                .filter(treeFolder -> "0".equals(treeFolder.getPid()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean moveQuestion(QuestionMoveVO questionMoveVO) {
+        var questionId = questionMoveVO.getQuestionId();
+        var question = baseMapper.selectById(questionId);
+        question.setPid(questionMoveVO.getMoveToPid());
+        baseMapper.updateById(question);
+        return true;
     }
 }
