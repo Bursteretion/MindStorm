@@ -525,8 +525,8 @@ const QuestionCreateDrawer = (props) => {
                   >
                     <Input
                       value={questionVO.answerAnalyze}
-                      onClick={() => {
-                        handleEditorModal(2, 'answerAnalyze');
+                      onClick={(e) => {
+                        handleEditorModal(2, 'answerAnalyze', e.target.value);
                       }}
                     />
                   </Form.Item>
