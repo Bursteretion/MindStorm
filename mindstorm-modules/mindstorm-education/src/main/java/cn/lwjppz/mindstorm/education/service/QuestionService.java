@@ -2,7 +2,9 @@ package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
+import cn.lwjppz.mindstorm.education.model.dto.question.QuestionFolderDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
+import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -61,6 +63,14 @@ public interface QuestionService extends IService<Question> {
     boolean updateQuestion(QuestionVO questionVO);
 
     /**
+     * 重命名题目文件夹
+     *
+     * @param questionFolderVO 文件夹信息
+     * @return 是否更新成功
+     */
+    boolean renameFolder(QuestionFolderVO questionFolderVO);
+
+    /**
      * 删除题目
      *
      * @param questionId 题目Id
@@ -92,4 +102,11 @@ public interface QuestionService extends IService<Question> {
      */
     QuestionDetailDTO convertToQuestionDetailDTO(Question question);
 
+    /**
+     * 获取题目文件夹信息
+     *
+     * @param folderId 题目文件夹Id
+     * @return 题目文件夹信息
+     */
+    QuestionFolderDTO infoFolder(String folderId);
 }

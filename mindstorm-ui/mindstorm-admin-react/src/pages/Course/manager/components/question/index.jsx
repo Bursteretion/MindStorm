@@ -7,7 +7,7 @@ import { listQuestionTypeSelects } from '@/services/questiontype';
 import { listTopicSelects } from '@/services/topic';
 import QuestionCreateDrawer from './components/QuestionCreateDrawer';
 import { useModel } from 'umi';
-import CreateFolderForm from './components/CreateFolderForm';
+import CreateUpdateFolderForm from './components/CreateUpdateFolderForm';
 import styles from '@/pages/Course/manager/style.less';
 import QuestionTypeForm from './components/QuestionTypeForm';
 import QuestionUpdateDrawer from '@/pages/Course/manager/components/question/components/QuestionUpdateDrawer';
@@ -28,6 +28,9 @@ const QuestionList = (props) => {
     userId: res.initialState.currentUser.id,
   }));
 
+  /**
+   * 生成文件路径
+   */
   const generatePath = () => {
     const node = [];
     for (let i = 0; i < paths.length; i++) {
@@ -200,15 +203,28 @@ const QuestionList = (props) => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a
-          onClick={() => {
-            setQuestionId(record.id);
-            setQuestionUpdateDrawerVisible(true);
-          }}
-          key="edit"
-        >
-          编辑
-        </a>,
+        !record.isFolder && (
+          <a
+            onClick={() => {
+              setQuestionId(record.id);
+              setQuestionUpdateDrawerVisible(true);
+            }}
+            key="edit"
+          >
+            编辑
+          </a>
+        ),
+        record.isFolder && (
+          <a
+            onClick={() => {
+              setQuestionId(record.id);
+              setCreateFolderModalVisible(true);
+            }}
+            key="rename"
+          >
+            重命名
+          </a>
+        ),
         <Popconfirm
           key="delete"
           title={`你确定要删除这个${record.isFolder ? '文件夹' : '题目'}吗？`}
@@ -279,13 +295,14 @@ const QuestionList = (props) => {
       {!isCreateFolderModalVisible ? (
         ''
       ) : (
-        <CreateFolderForm
+        <CreateUpdateFolderForm
           isModalVisible={isCreateFolderModalVisible}
           setModalVisible={setCreateFolderModalVisible}
           actionRef={actionRef}
           courseId={courseId}
           userId={userId}
           pid={pid}
+          questionId={questionId}
         />
       )}
       {!isQuestionTypeModalVisible ? (

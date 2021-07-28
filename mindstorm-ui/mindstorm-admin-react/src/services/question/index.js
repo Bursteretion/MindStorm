@@ -15,9 +15,16 @@ export async function createQuestion(questionVO) {
 }
 
 export async function updateQuestion(questionVO) {
-  return request('/mindstorm-education/education/question/update', {
+  return request('/mindstorm-education/education/question/update/question', {
     method: 'POST',
     data: questionVO,
+  });
+}
+
+export async function renameFolder(folderVO) {
+  return request('/mindstorm-education/education/question/update/folder', {
+    method: 'POST',
+    data: folderVO,
   });
 }
 
@@ -28,7 +35,11 @@ export async function deleteQuestion(questionId) {
 }
 
 export async function infoQuestion(questionId) {
-  return request(`/mindstorm-education/education/question/info/${questionId}`);
+  return request(`/mindstorm-education/education/question/info/question/${questionId}`);
+}
+
+export async function infoFolder(questionId) {
+  return request(`/mindstorm-education/education/question/info/folder/${questionId}`);
 }
 
 export const QuestionDifficultyStatus = {

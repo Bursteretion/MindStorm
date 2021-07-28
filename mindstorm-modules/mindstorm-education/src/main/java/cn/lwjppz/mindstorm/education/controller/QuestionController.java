@@ -2,6 +2,7 @@ package cn.lwjppz.mindstorm.education.controller;
 
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
+import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
 import cn.lwjppz.mindstorm.education.service.QuestionService;
@@ -41,17 +42,31 @@ public class QuestionController {
         return CommonResult.ok().data("success", success);
     }
 
-    @GetMapping("/info/{questionId}")
+    @GetMapping("/info/question/{questionId}")
     @ApiOperation("获取题目信息")
     public CommonResult infoQuestion(@ApiParam("题目Id") @PathVariable("questionId") String questionId) {
         var question = questionService.convertToQuestionDetailDTO(questionService.infoQuestion(questionId));
         return CommonResult.ok().data("question", question);
     }
 
-    @PostMapping("/update")
+    @GetMapping("/info/folder/{folderId}")
+    @ApiOperation("获取题目信息")
+    public CommonResult infoFolder(@ApiParam("文件夹Id") @PathVariable("folderId") String folderId) {
+        var folder = questionService.infoFolder(folderId);
+        return CommonResult.ok().data("folder", folder);
+    }
+
+    @PostMapping("/update/question")
     @ApiOperation("更新题目信息")
     public CommonResult updateQuestion(@ApiParam("题目信息") @RequestBody QuestionVO questionVO) {
         var success = questionService.updateQuestion(questionVO);
+        return CommonResult.ok().data("success", success);
+    }
+
+    @PostMapping("/update/folder")
+    @ApiOperation("重命名文件夹")
+    public CommonResult renameFolder(@ApiParam("文件夹信息") @RequestBody QuestionFolderVO questionFolderVO) {
+        var success = questionService.renameFolder(questionFolderVO);
         return CommonResult.ok().data("success", success);
     }
 

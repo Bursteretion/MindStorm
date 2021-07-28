@@ -10,9 +10,11 @@ import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
+import cn.lwjppz.mindstorm.education.model.dto.question.QuestionFolderDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
 import cn.lwjppz.mindstorm.education.mapper.QuestionMapper;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
+import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
 import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
@@ -207,6 +209,16 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         return true;
     }
 
+    @Override
+    public boolean renameFolder(QuestionFolderVO questionFolderVO) {
+        var question = new Question();
+        BeanUtils.copyProperties(questionFolderVO, question);
+        question.setFormatContent(questionFolderVO.getOriginalContent());
+
+        baseMapper.updateById(question);
+        return true;
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteQuestion(String questionId) {
@@ -316,5 +328,17 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         }
 
         return questionDetailDTO;
+    }
+
+    @Override
+    public QuestionFolderDTO infoFolder(String folderId) {
+        if (StringUtils.isNotEmpty(folderId)) {
+            var folder = baseMapper.selectById(folderId);
+            var folderDTO = new QuestionFolderDTO();
+            folderDTO.setOriginalContent(folder.getOriginalContent());
+            folderDTO.setId(folder.getId());
+            return folderDTO;
+        }
+        return null;
     }
 }
