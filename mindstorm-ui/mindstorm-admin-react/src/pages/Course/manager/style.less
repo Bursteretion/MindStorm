@@ -53,7 +53,8 @@
     text-align: center;
     background-color: @menu-bg;
     width: 180px;
-    height: 100%;
+    height: 100vh;
+    overflow-x: hidden;
     border-right: @border-width-base @border-style-base @border-color-split;
 
     .courseCover {
@@ -82,13 +83,21 @@
       }
 
       .ant-menu-item {
-        height: 40px!important;
+        height: 50px!important;
         justify-content: center!important;
         padding-left: 0 !important;
         font-size: 16px;
         .ant-menu-title-content {
           flex: none !important;
         }
+      }
+
+      .ant-menu-inline .ant-menu-selected::after, .ant-menu-inline .ant-menu-item-selected::after {
+        opacity: 0!important;
+      }
+
+      .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+        background-color: #F0F6FF !important;
       }
     }
   }

@@ -203,6 +203,9 @@ const QuestionList = (props) => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
+        <a onClick={() => {}} key="move">
+          移动
+        </a>,
         !record.isFolder && (
           <a
             onClick={() => {
