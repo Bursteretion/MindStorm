@@ -10,7 +10,8 @@ import { useModel } from 'umi';
 import CreateUpdateFolderForm from './components/CreateUpdateFolderForm';
 import styles from '@/pages/Course/manager/style.less';
 import QuestionTypeForm from './components/QuestionTypeForm';
-import QuestionUpdateDrawer from '@/pages/Course/manager/components/question/components/QuestionUpdateDrawer';
+import QuestionUpdateDrawer from './components/QuestionUpdateDrawer';
+import QuestionFolderMoveForm from './components/QuestionFolderMoveForm';
 
 const QuestionList = (props) => {
   const { courseId } = props;
@@ -20,9 +21,11 @@ const QuestionList = (props) => {
   const [isQuestionCreateDrawerVisible, setQuestionCreateDrawerVisible] = useState(false);
   const [isQuestionUpdateDrawerVisible, setQuestionUpdateDrawerVisible] = useState(false);
   const [isCreateFolderModalVisible, setCreateFolderModalVisible] = useState(false);
+  const [isQuestionFolderMoveModalVisible, setQuestionFolderMoveModalVisible] = useState(false);
   const [isQuestionTypeModalVisible, setQuestionTypeModalVisible] = useState(false);
   const [paths, setPaths] = useState([{ name: '课程题库', value: '0' }]);
   const [pid, setPid] = useState('0');
+  const [questionPid, setQuestionPid] = useState('0');
   const [questionId, setQuestionId] = useState(undefined);
   const { userId = '' } = useModel('@@initialState', (res) => ({
     userId: res.initialState.currentUser.id,
@@ -203,7 +206,15 @@ const QuestionList = (props) => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a onClick={() => {}} key="move">
+        <a
+          onClick={() => {
+            setQuestionId(record.id);
+            setQuestionPid(record.pid);
+            console.log(record.pid);
+            setQuestionFolderMoveModalVisible(true);
+          }}
+          key="move"
+        >
           移动
         </a>,
         !record.isFolder && (
@@ -269,7 +280,14 @@ const QuestionList = (props) => {
             <Button key="import" shape="round">
               批量导入
             </Button>,
-            <Button key="folder" shape="round" onClick={() => setCreateFolderModalVisible(true)}>
+            <Button
+              key="folder"
+              shape="round"
+              onClick={() => {
+                setQuestionId(undefined);
+                setCreateFolderModalVisible(true);
+              }}
+            >
               新建文件夹
             </Button>,
             <Button
@@ -336,6 +354,18 @@ const QuestionList = (props) => {
           setDrawerVisible={setQuestionUpdateDrawerVisible}
           actionRef={actionRef}
           questionId={questionId}
+        />
+      )}
+      {!isQuestionFolderMoveModalVisible ? (
+        ''
+      ) : (
+        <QuestionFolderMoveForm
+          isModalVisible={isQuestionFolderMoveModalVisible}
+          setModalVisible={setQuestionFolderMoveModalVisible}
+          courseId={courseId}
+          questionId={questionId}
+          questionPid={questionPid}
+          actionRef={actionRef}
         />
       )}
     </>

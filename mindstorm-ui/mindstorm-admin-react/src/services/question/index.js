@@ -7,6 +7,13 @@ export async function queryQuestion(params) {
   });
 }
 
+export async function listTreeFolders(params) {
+  return request('/mindstorm-education/education/question/list/folder', {
+    method: 'GET',
+    params,
+  });
+}
+
 export async function createQuestion(questionVO) {
   return request('/mindstorm-education/education/question/create', {
     method: 'POST',
@@ -40,6 +47,13 @@ export async function infoQuestion(questionId) {
 
 export async function infoFolder(questionId) {
   return request(`/mindstorm-education/education/question/info/folder/${questionId}`);
+}
+
+export async function moveQuestion(params) {
+  return request('/mindstorm-education/education/question/move', {
+    method: 'POST',
+    data: params,
+  });
 }
 
 export const QuestionDifficultyStatus = {

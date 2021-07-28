@@ -3,6 +3,7 @@ package cn.lwjppz.mindstorm.education.controller;
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
+import cn.lwjppz.mindstorm.education.model.vo.question.QuestionMoveVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
 import cn.lwjppz.mindstorm.education.service.QuestionService;
@@ -33,6 +34,13 @@ public class QuestionController {
     public CommonResult query(@ApiParam("查询条件") @RequestBody QuestionQueryVO questionQueryVO) {
         var queryQuestionPage = questionService.listQuestions(questionQueryVO);
         return CommonResult.ok().data("queryQuestionPage", queryQuestionPage);
+    }
+
+    @GetMapping("/list/folder")
+    @ApiOperation("获取该课程下树形题目文件夹信息")
+    public CommonResult listFolders(@ApiParam("课程Id") @RequestParam("courseId") String courseId) {
+        var treeFolders = questionService.listTreeFolders(courseId);
+        return CommonResult.ok().data("treeFolders", treeFolders);
     }
 
     @PostMapping("/create")
@@ -67,6 +75,13 @@ public class QuestionController {
     @ApiOperation("重命名文件夹")
     public CommonResult renameFolder(@ApiParam("文件夹信息") @RequestBody QuestionFolderVO questionFolderVO) {
         var success = questionService.renameFolder(questionFolderVO);
+        return CommonResult.ok().data("success", success);
+    }
+
+    @PostMapping("/move")
+    @ApiOperation("移动文件夹/题目")
+    public CommonResult moveQuestion(@ApiParam("文件夹/题目Id信息") @RequestBody QuestionMoveVO questionMoveVO) {
+        var success = questionService.moveQuestion(questionMoveVO);
         return CommonResult.ok().data("success", success);
     }
 

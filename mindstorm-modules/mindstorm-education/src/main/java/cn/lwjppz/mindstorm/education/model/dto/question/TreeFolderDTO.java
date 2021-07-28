@@ -19,11 +19,11 @@ import java.util.List;
 @ToString
 public class TreeFolderDTO {
 
-    private String folderId;
+    private String key;
 
     private String pid;
 
-    private String folderName;
+    private String title;
 
     private List<TreeFolderDTO> children;
 

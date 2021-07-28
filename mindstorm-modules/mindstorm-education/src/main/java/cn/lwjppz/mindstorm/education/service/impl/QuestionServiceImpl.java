@@ -346,8 +346,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     @Override
-    public List<TreeFolderDTO> listTreeFolders() {
+    public List<TreeFolderDTO> listTreeFolders(String courseId) {
         LambdaQueryWrapper<Question> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Question::getCourseId, courseId);
         wrapper.eq(Question::getIsFolder, true).orderByAsc(Question::getGmtCreate);
         var folders = baseMapper.selectList(wrapper);
         var treeFolders = folders.stream().map(folder -> new TreeFolderDTO(folder.getId(),
@@ -355,7 +356,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 new ArrayList<>())).collect(Collectors.toList());
 
         Map<String, TreeFolderDTO> treeFolderMap = new HashMap<>(folders.size() << 1);
-        treeFolders.forEach(treeFolder -> treeFolderMap.put(treeFolder.getFolderId(), treeFolder));
+        treeFolders.forEach(treeFolder -> treeFolderMap.put(treeFolder.getKey(), treeFolder));
 
         treeFolders.forEach(treeFolder -> {
             if (treeFolderMap.containsKey(treeFolder.getPid())) {

@@ -115,9 +115,10 @@ public interface QuestionService extends IService<Question> {
     /**
      * 获取树形题目文件夹结构数据
      *
+     * @param courseId 课程Id
      * @return 树形题目文件夹
      */
-    List<TreeFolderDTO> listTreeFolders();
+    List<TreeFolderDTO> listTreeFolders(String courseId);
 
     /**
      * 移动文件夹/题目

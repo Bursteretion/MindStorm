@@ -21,6 +21,8 @@ public class QuestionDTO {
 
     private String id;
 
+    private String pid;
+
     private String originalContent;
 
     private String formatContent;
