@@ -15,10 +15,7 @@ import cn.lwjppz.mindstorm.education.model.dto.question.TreeFolderDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
 import cn.lwjppz.mindstorm.education.mapper.QuestionMapper;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionMoveVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
+import cn.lwjppz.mindstorm.education.model.vo.question.*;
 import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
 import cn.lwjppz.mindstorm.education.model.vo.questiontopic.QuestionTopicVO;
 import cn.lwjppz.mindstorm.education.service.*;
@@ -377,5 +374,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         question.setPid(questionMoveVO.getMoveToPid());
         baseMapper.updateById(question);
         return true;
+    }
+
+    @Override
+    public boolean importQuestion(List<QuestionImportVO> questionImports) {
+
+        return false;
     }
 }

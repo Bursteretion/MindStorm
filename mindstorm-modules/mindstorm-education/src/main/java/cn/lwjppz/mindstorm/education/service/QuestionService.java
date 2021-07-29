@@ -5,10 +5,7 @@ import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionFolderDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.TreeFolderDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionMoveVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
+import cn.lwjppz.mindstorm.education.model.vo.question.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -127,4 +124,12 @@ public interface QuestionService extends IService<Question> {
      * @return 是否移动成功
      */
     boolean moveQuestion(QuestionMoveVO questionMoveVO);
+
+    /**
+     * 导入题目
+     *
+     * @param questionImports 题目信息
+     * @return 是否导入成功
+     */
+    boolean importQuestion(List<QuestionImportVO> questionImports);
 }
