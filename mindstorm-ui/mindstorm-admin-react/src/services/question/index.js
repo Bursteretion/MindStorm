@@ -56,6 +56,13 @@ export async function moveQuestion(params) {
   });
 }
 
+export async function importQuestion(params) {
+  return request('/mindstorm-education/education/question/import', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export const QuestionDifficultyStatus = {
   2: { text: '困难', status: 2 },
   1: { text: '中等', status: 1 },

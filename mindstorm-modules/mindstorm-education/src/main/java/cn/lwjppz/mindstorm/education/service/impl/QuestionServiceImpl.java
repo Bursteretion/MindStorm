@@ -106,6 +106,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (null != questionQueryVO.getDifficulty()) {
             wrapper.eq(Question::getDifficulty, questionQueryVO.getDifficulty());
         }
+        wrapper.or(i -> i.eq(Question::getPid, questionQueryVO.getPid()).eq(Question::getIsFolder, true));
         wrapper.orderByDesc(Question::getSort).orderByDesc(Question::getGmtCreate);
 
         IPage<Question> page = new Page<>(questionQueryVO.getPageIndex(), questionQueryVO.getPageSize());
@@ -400,7 +401,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 questionVO.setCourseId(questionImportVO.getCourseId());
                 questionVO.setUserId(questionImportVO.getUserId());
                 questionVO.setIsFolder(false);
-
+                questionVO.setOptions(new ArrayList<>());
                 // 获取导入目录
                 var directory = questionImportVO.getDirectory();
                 if (StringUtils.isEmpty(directory)) {
@@ -410,7 +411,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                     List<String> dirIds = doDirectoryImport(questionImportVO, directory);
                     questionVO.setPid(dirIds.get(dirIds.size() - 1));
                 }
-
                 // 设置题目类型
                 var questionType = questionTypeService.getQuestionTypeByName(questionImportVO.getQuestionTypeName());
                 questionVO.setQuestionType(questionType.getType());
@@ -471,7 +471,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 } else if (QuestionType.FILL_BLANK.getValue().equals(questionType.getType())) {
                     var answerCount = questionImportVO.getOptionCount();
                     List<QuestionAnswerVO> answers = new ArrayList<>();
-                    for (int i = 0; i < answerCount; i ++ ) {
+                    for (int i = 0; i < answerCount; i++) {
                         answers.add(new QuestionAnswerVO(null, null, importOptions.get(i)));
                     }
                     questionVO.setAnswers(answers);
@@ -482,7 +482,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
                 System.out.println(questionVO);
 
                 // 执行添加
-//                createQuestion(questionVO);
+                createQuestion(questionVO);
             });
         }
         return true;

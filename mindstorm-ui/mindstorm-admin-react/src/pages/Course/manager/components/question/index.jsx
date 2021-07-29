@@ -12,6 +12,7 @@ import styles from '@/pages/Course/manager/style.less';
 import QuestionTypeForm from './components/QuestionTypeForm';
 import QuestionUpdateDrawer from './components/QuestionUpdateDrawer';
 import QuestionFolderMoveForm from './components/QuestionFolderMoveForm';
+import ImportQuestionForm from '@/pages/Course/manager/components/question/components/ImportQuestionForm';
 
 const QuestionList = (props) => {
   const { courseId } = props;
@@ -23,6 +24,7 @@ const QuestionList = (props) => {
   const [isCreateFolderModalVisible, setCreateFolderModalVisible] = useState(false);
   const [isQuestionFolderMoveModalVisible, setQuestionFolderMoveModalVisible] = useState(false);
   const [isQuestionTypeModalVisible, setQuestionTypeModalVisible] = useState(false);
+  const [isImportModalVisible, setImportModalVisible] = useState(false);
   const [paths, setPaths] = useState([{ name: '课程题库', value: '0' }]);
   const [pid, setPid] = useState('0');
   const [questionPid, setQuestionPid] = useState('0');
@@ -146,7 +148,7 @@ const QuestionList = (props) => {
         if (type === 'form') {
           return null;
         }
-        return <Select name="questionType" allowClear options={questionTypes} />;
+        return <Select name="questionTypeId" allowClear options={questionTypes} />;
       },
     },
     {
@@ -277,7 +279,13 @@ const QuestionList = (props) => {
             >
               创建题目
             </Button>,
-            <Button key="import" shape="round">
+            <Button
+              key="import"
+              shape="round"
+              onClick={() => {
+                setImportModalVisible(true);
+              }}
+            >
               批量导入
             </Button>,
             <Button
@@ -365,6 +373,17 @@ const QuestionList = (props) => {
           courseId={courseId}
           questionId={questionId}
           questionPid={questionPid}
+          actionRef={actionRef}
+        />
+      )}
+      {!isImportModalVisible ? (
+        ''
+      ) : (
+        <ImportQuestionForm
+          isModalVisible={isImportModalVisible}
+          setModalVisible={setImportModalVisible}
+          courseId={courseId}
+          userId={userId}
           actionRef={actionRef}
         />
       )}
