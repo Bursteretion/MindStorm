@@ -9,6 +9,7 @@ import cn.lwjppz.mindstorm.education.model.vo.question.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public interface QuestionService extends IService<Question> {
      * @param questionVO 题目信息
      * @return 是否新增成功
      */
-    boolean createQuestion(QuestionVO questionVO);
+    Question createQuestion(QuestionVO questionVO);
 
     /**
      * 根据题目Id获取题目信息
@@ -124,6 +125,14 @@ public interface QuestionService extends IService<Question> {
      * @return 是否移动成功
      */
     boolean moveQuestion(QuestionMoveVO questionMoveVO);
+
+    /**
+     * 执行导入操作
+     *
+     * @param questionUploadVO 题目导入信息
+     * @return 是否导入成功
+     */
+    boolean doUpload(QuestionUploadVO questionUploadVO) throws IOException;
 
     /**
      * 导入题目

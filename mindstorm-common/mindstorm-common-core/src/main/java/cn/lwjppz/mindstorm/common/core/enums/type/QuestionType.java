@@ -2,6 +2,10 @@ package cn.lwjppz.mindstorm.common.core.enums.type;
 
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p></p>
  *
@@ -39,4 +43,5 @@ public enum QuestionType implements ValueEnum<Integer> {
     public String getName() {
         return name;
     }
+
 }

@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.education.listener;
 
 import cn.lwjppz.mindstorm.education.model.vo.question.QuestionImportVO;
+import cn.lwjppz.mindstorm.education.model.vo.question.QuestionUploadVO;
 import cn.lwjppz.mindstorm.education.service.QuestionService;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -28,14 +29,21 @@ public class QuestionImportListener extends AnalysisEventListener<QuestionImport
     private static final int BATCH_COUNT = 5;
     private final List<QuestionImportVO> questionImports = new ArrayList<>();
     private final QuestionService questionService;
+    private final QuestionUploadVO questionUploadVO;
 
-    public QuestionImportListener(@Lazy QuestionService questionService) {
+    public QuestionImportListener(QuestionService questionService,
+                                  QuestionUploadVO questionUploadVO) {
         this.questionService = questionService;
+        this.questionUploadVO = questionUploadVO;
     }
 
     @Override
     public void invoke(QuestionImportVO questionImportVO, AnalysisContext analysisContext) {
+        questionImportVO.setCourseId(questionUploadVO.getCourseId());
+        questionImportVO.setUserId(questionUploadVO.getUserId());
+
         LOGGER.info("解析到一条数据:{}", JSON.toJSONString(questionImportVO));
+
         questionImports.add(questionImportVO);
         if (questionImports.size() >= BATCH_COUNT) {
             processImport();

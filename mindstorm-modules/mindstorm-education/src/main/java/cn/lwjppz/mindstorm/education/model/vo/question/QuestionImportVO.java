@@ -18,6 +18,10 @@ import lombok.ToString;
 @ToString
 public class QuestionImportVO {
 
+    private String courseId;
+
+    private String userId;
+
     @ExcelProperty("目录")
     private String directory;
 
@@ -40,24 +44,24 @@ public class QuestionImportVO {
     private Integer optionCount;
 
     @ExcelProperty("A")
-    private String answerA;
+    private String optionA;
 
     @ExcelProperty("B")
-    private String answerB;
+    private String optionB;
 
     @ExcelProperty("C")
-    private String answerC;
+    private String optionC;
 
     @ExcelProperty("D")
-    private String answerD;
+    private String optionD;
 
     @ExcelProperty("E")
-    private String answerE;
+    private String optionE;
 
     @ExcelProperty("F")
-    private String answerF;
+    private String optionF;
 
     @ExcelProperty("G")
-    private String answerG;
+    private String optionG;
 
 }

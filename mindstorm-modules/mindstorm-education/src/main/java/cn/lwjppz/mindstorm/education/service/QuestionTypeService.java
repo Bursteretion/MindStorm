@@ -35,6 +35,14 @@ public interface QuestionTypeService extends IService<QuestionType> {
     QuestionType createQuestionType(QuestionTypeVO questionTypeVO);
 
     /**
+     * 通过题目类型名称获取题目类型信息
+     *
+     * @param name 题目类型名称
+     * @return 题目类型信息
+     */
+    QuestionType getQuestionTypeByName(String name);
+
+    /**
      * 更改题型名称
      *
      * @param questionTypeSimpleVO 题型信息

@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.education.service.impl;
 
+import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.model.dto.questiontype.QuestionTypeDTO;
@@ -10,6 +11,9 @@ import cn.lwjppz.mindstorm.education.model.vo.questiontype.QuestionTypeSimpleVO;
 import cn.lwjppz.mindstorm.education.model.vo.questiontype.QuestionTypeVO;
 import cn.lwjppz.mindstorm.education.service.QuestionService;
 import cn.lwjppz.mindstorm.education.service.QuestionTypeService;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -47,6 +51,20 @@ public class QuestionTypeServiceImpl extends ServiceImpl<QuestionTypeMapper, Que
 
         baseMapper.insert(questionType);
         return questionType;
+    }
+
+    @Override
+    public QuestionType getQuestionTypeByName(String name) {
+        if (StringUtils.isNotEmpty(name)) {
+            LambdaQueryWrapper<QuestionType> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(QuestionType::getName, name);
+            var questionType = baseMapper.selectOne(wrapper);
+            if (null == questionType) {
+                throw new EntityNotFoundException("未找到该题目类型!");
+            }
+            return questionType;
+        }
+        return null;
     }
 
     @Override
