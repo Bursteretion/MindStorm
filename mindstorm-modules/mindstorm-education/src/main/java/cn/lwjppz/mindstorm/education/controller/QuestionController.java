@@ -2,14 +2,16 @@ package cn.lwjppz.mindstorm.education.controller;
 
 
 import cn.lwjppz.mindstorm.common.core.support.CommonResult;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionFolderVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionMoveVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionQueryVO;
-import cn.lwjppz.mindstorm.education.model.vo.question.QuestionVO;
+import cn.lwjppz.mindstorm.education.listener.QuestionImportListener;
+import cn.lwjppz.mindstorm.education.model.vo.question.*;
 import cn.lwjppz.mindstorm.education.service.QuestionService;
+import com.alibaba.excel.EasyExcel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -90,6 +92,14 @@ public class QuestionController {
     public CommonResult deleteQuestion(@ApiParam("题目Id") @PathVariable("questionId") String questionId) {
         var success = questionService.deleteQuestion(questionId);
         return CommonResult.ok().data("success", success);
+    }
+
+    @PostMapping("/import")
+    @ApiOperation("导入题目")
+    public CommonResult importQuestion(@ApiParam("题目Excel文件") MultipartFile importFile) throws IOException {
+        EasyExcel.read(importFile.getInputStream(), QuestionImportVO.class,
+                new QuestionImportListener(questionService)).sheet().doRead();
+        return CommonResult.ok().data("success", true);
     }
 
 }
