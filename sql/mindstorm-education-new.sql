@@ -114,6 +114,93 @@ CREATE TABLE `mse_course_class_student` (
 
 insert  into `mse_course_class_student`(`id`,`class_id`,`student_id`,`gmt_create`,`gmt_modified`) values ('1417329278942855170','1416948351054065665','1415295010376908802','2021-07-20 03:43:27','2021-07-20 03:43:27'),('1417329563803205634','1416948351054065665','1415279829995380737','2021-07-20 03:44:35','2021-07-20 03:44:35'),('1418186930870689794','1416199646961147906','1415279829995380737','2021-07-22 12:31:28','2021-07-22 12:31:28'),('1418186938802118657','1416199646961147906','1415295010376908802','2021-07-22 12:31:30','2021-07-22 12:31:30'),('1418217561675714562','1418217403479150594','1415279829995380737','2021-07-22 14:33:11','2021-07-22 14:33:11');
 
+/*Table structure for table `mse_exam` */
+
+DROP TABLE IF EXISTS `mse_exam`;
+
+CREATE TABLE `mse_exam` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '考试Id',
+  `exam_paper_id` char(19) NOT NULL COMMENT '试卷Id',
+  `course_id` char(19) NOT NULL COMMENT '考试所属课程Id',
+  `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '考试状态（0-未开始，1-进行中，2-已结束）',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '考试排序',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考试表';
+
+/*Data for the table `mse_exam` */
+
+/*Table structure for table `mse_exam_paper` */
+
+DROP TABLE IF EXISTS `mse_exam_paper`;
+
+CREATE TABLE `mse_exam_paper` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '试卷Id',
+  `pid` char(19) DEFAULT NULL COMMENT '上级文件夹Id',
+  `course_id` char(19) NOT NULL COMMENT '试卷所属课程Id',
+  `user_id` char(19) NOT NULL COMMENT '试卷创建用户Id',
+  `name` varchar(100) NOT NULL COMMENT '试卷（文件夹）名称',
+  `question_count` int(11) DEFAULT NULL COMMENT '试卷题目数量',
+  `publish_count` int(11) DEFAULT NULL COMMENT '试卷发放次数',
+  `difficulty` tinyint(3) DEFAULT '0' COMMENT '试卷难度（0-简单，1-中等，2-困难）',
+  `sort` int(11) NOT NULL DEFAULT '0' COMMENT '试卷排序',
+  `is_folder` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否是文件夹（0-题目，1-文件夹）',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='试卷表';
+
+/*Data for the table `mse_exam_paper` */
+
+/*Table structure for table `mse_exam_setting` */
+
+DROP TABLE IF EXISTS `mse_exam_setting`;
+
+CREATE TABLE `mse_exam_setting` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT '设置Id',
+  `exam_paper_id` char(19) NOT NULL COMMENT '考试试卷Id',
+  `publish_class` varchar(255) NOT NULL COMMENT '考试发放班级Id集合',
+  `start_time` datetime NOT NULL COMMENT '考试开始时间',
+  `end_time` datetime NOT NULL COMMENT '考试结束时间',
+  `limit_time` int(11) NOT NULL COMMENT '考试限时',
+  `immediate_publish` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否立即发放（0-否，1-是）',
+  `submit_limit_time` int(11) DEFAULT NULL COMMENT '限时提交时间（考试开始xx分钟内不允许提交）',
+  `entry_limit_time` int(11) DEFAULT NULL COMMENT '限时进入时间（开考xx分钟后不允许参加考试）',
+  `disorder_question` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否打乱题目顺序（学生接收到的题目显示顺序不同）',
+  `disorder_option` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否打乱选项顺序（学生接收到的题目选项顺序不同）',
+  `passing_standard_score` float NOT NULL COMMENT '及格标准分数',
+  `expired_auto_submit` tinyint(1) unsigned NOT NULL COMMENT '考试到达截止时间后是否自动提交',
+  `allow_retest` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许学生重考',
+  `retest_count` int(11) DEFAULT NULL COMMENT '允许重考次数',
+  `keep_last_answer` tinyint(1) unsigned DEFAULT NULL COMMENT '学生重考是否保留前一次考试的作答记录',
+  `final_score_standard` tinyint(1) DEFAULT NULL COMMENT '最终成绩（0-最后一次考试成绩，1-最高成绩）',
+  `allow_look_paper` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许学生考后查看试卷',
+  `allow_look_answer` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许查看答案',
+  `look_answer_standard` tinyint(1) NOT NULL DEFAULT '0' COMMENT '查看答案标准（0-学生提交后，1-考试截止后）',
+  `allow_look_score` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许学生查看分数',
+  `allow_look_rank` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许学生查看排名',
+  `allow_paste` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许学生粘贴答案',
+  `send_notice` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否发通知提醒',
+  `notice_content` text COMMENT '通知内容',
+  `need_exam_code` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否进入考试需要考试码',
+  `exam_code` varchar(50) DEFAULT NULL COMMENT '考试码',
+  `exam_code_expired_time` datetime DEFAULT NULL COMMENT '考试码到期时间',
+  `limit_ip` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否限制IP参加考试',
+  `allow_ip` text COMMENT '允许的IP',
+  `fill_to_subjective` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否填空类型的题目设为主观题',
+  `fill_ingore_case` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '填空题答案是否不区分大小写',
+  `multiple_half_score` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '多选题未选全给一半分',
+  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考试设置表';
+
+/*Data for the table `mse_exam_setting` */
+
 /*Table structure for table `mse_profession` */
 
 DROP TABLE IF EXISTS `mse_profession`;
