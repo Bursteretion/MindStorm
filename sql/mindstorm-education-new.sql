@@ -141,19 +141,37 @@ CREATE TABLE `mse_exam_paper` (
   `pid` char(19) DEFAULT NULL COMMENT '上级文件夹Id',
   `course_id` char(19) NOT NULL COMMENT '试卷所属课程Id',
   `user_id` char(19) NOT NULL COMMENT '试卷创建用户Id',
-  `name` varchar(100) NOT NULL COMMENT '试卷（文件夹）名称',
+  `title` varchar(100) NOT NULL COMMENT '试卷（文件夹）名称',
   `question_count` int(11) DEFAULT NULL COMMENT '试卷题目数量',
+  `total_score` decimal(10,0) NOT NULL COMMENT '试卷总分',
   `publish_count` int(11) DEFAULT NULL COMMENT '试卷发放次数',
   `difficulty` tinyint(3) DEFAULT '0' COMMENT '试卷难度（0-简单，1-中等，2-困难）',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '试卷排序',
   `is_folder` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否是文件夹（0-题目，1-文件夹）',
-  `is_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '试卷状态（0-未完成，1-完成）',
+  `is_deleted` tinyint(1) unsigned DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='试卷表';
 
 /*Data for the table `mse_exam_paper` */
+
+/*Table structure for table `mse_exam_paper_question` */
+
+DROP TABLE IF EXISTS `mse_exam_paper_question`;
+
+CREATE TABLE `mse_exam_paper_question` (
+  `id` char(19) NOT NULL DEFAULT '' COMMENT 'Id',
+  `exam_paper_id` char(19) NOT NULL COMMENT '试卷Id',
+  `question_id` char(19) NOT NULL COMMENT '题目Id',
+  `score` float NOT NULL COMMENT '题目分数',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='试卷题目表';
+
+/*Data for the table `mse_exam_paper_question` */
 
 /*Table structure for table `mse_exam_setting` */
 
@@ -171,7 +189,7 @@ CREATE TABLE `mse_exam_setting` (
   `entry_limit_time` int(11) DEFAULT NULL COMMENT '限时进入时间（开考xx分钟后不允许参加考试）',
   `disorder_question` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否打乱题目顺序（学生接收到的题目显示顺序不同）',
   `disorder_option` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否打乱选项顺序（学生接收到的题目选项顺序不同）',
-  `passing_standard_score` float NOT NULL COMMENT '及格标准分数',
+  `passing_standard_score` decimal(10,0) NOT NULL COMMENT '及格标准分数',
   `expired_auto_submit` tinyint(1) unsigned NOT NULL COMMENT '考试到达截止时间后是否自动提交',
   `allow_retest` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许学生重考',
   `retest_count` int(11) DEFAULT NULL COMMENT '允许重考次数',
