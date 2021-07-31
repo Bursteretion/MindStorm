@@ -3,6 +3,7 @@ package cn.lwjppz.mindstorm.education.model.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -43,7 +44,7 @@ public class ExamPaperQuestion implements Serializable {
     private String questionId;
 
     @ApiModelProperty(value = "题目分数")
-    private Float score;
+    private BigDecimal score;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)

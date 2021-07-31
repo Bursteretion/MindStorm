@@ -63,9 +63,6 @@ public class ExamPaper implements Serializable {
     @ApiModelProperty(value = "试卷难度（0-简单，1-中等，2-困难）")
     private Integer difficulty;
 
-    @ApiModelProperty(value = "试卷排序")
-    private Integer sort;
-
     @ApiModelProperty(value = "是否是文件夹（0-题目，1-文件夹）")
     private Boolean isFolder;
 
