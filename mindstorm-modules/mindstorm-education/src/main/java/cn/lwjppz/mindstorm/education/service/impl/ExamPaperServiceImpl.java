@@ -3,13 +3,17 @@ package cn.lwjppz.mindstorm.education.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.lwjppz.mindstorm.api.permission.feign.RemotePermissionFeignService;
 import cn.lwjppz.mindstorm.api.permission.model.UserTo;
+import cn.lwjppz.mindstorm.common.core.exception.EntityNotFoundException;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
-import cn.lwjppz.mindstorm.education.model.dto.exampaper.ExamPaperDTO;
-import cn.lwjppz.mindstorm.education.model.entity.ExamPaper;
 import cn.lwjppz.mindstorm.education.mapper.ExamPaperMapper;
+import cn.lwjppz.mindstorm.education.model.dto.exampaper.ExamPaperDTO;
+import cn.lwjppz.mindstorm.education.model.dto.exampaper.ExamPaperDetailDTO;
+import cn.lwjppz.mindstorm.education.model.entity.ExamPaper;
 import cn.lwjppz.mindstorm.education.model.vo.exampaper.ExamPaperQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.exampaper.ExamPaperVO;
+import cn.lwjppz.mindstorm.education.model.vo.exampaperquestion.ExamPaperQuestionVO;
+import cn.lwjppz.mindstorm.education.service.ExamPaperQuestionService;
 import cn.lwjppz.mindstorm.education.service.ExamPaperService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -19,6 +23,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,9 +40,12 @@ import java.util.stream.Collectors;
 public class ExamPaperServiceImpl extends ServiceImpl<ExamPaperMapper, ExamPaper> implements ExamPaperService {
 
     private final RemotePermissionFeignService remotePermissionFeignService;
+    private final ExamPaperQuestionService examPaperQuestionService;
 
-    public ExamPaperServiceImpl(@Lazy RemotePermissionFeignService remotePermissionFeignService) {
+    public ExamPaperServiceImpl(@Lazy RemotePermissionFeignService remotePermissionFeignService,
+                                @Lazy ExamPaperQuestionService examPaperQuestionService) {
         this.remotePermissionFeignService = remotePermissionFeignService;
+        this.examPaperQuestionService = examPaperQuestionService;
     }
 
     @Override
@@ -71,6 +79,18 @@ public class ExamPaperServiceImpl extends ServiceImpl<ExamPaperMapper, ExamPaper
     }
 
     @Override
+    public ExamPaper infoExamPaper(String examPaperId) {
+        if (StringUtils.isNotEmpty(examPaperId)) {
+            var examPaper = baseMapper.selectById(examPaperId);
+            if (null == examPaper) {
+                throw new EntityNotFoundException("该试卷没有找到！");
+            }
+            return examPaper;
+        }
+        return null;
+    }
+
+    @Override
     public boolean renameExamPaper(String examPaperId, String newName) {
         if (StringUtils.isNotEmpty(examPaperId) && StringUtils.isNotEmpty(newName)) {
             var examPaper = baseMapper.selectById(examPaperId);
@@ -86,6 +106,22 @@ public class ExamPaperServiceImpl extends ServiceImpl<ExamPaperMapper, ExamPaper
         BeanUtil.copyProperties(examPaperVO, examPaper);
 
         baseMapper.updateById(examPaper);
+
+        // 新增试卷题目
+        var examPaperQuestions = examPaperVO.getExamPaperQuestions();
+        if (!CollectionUtils.isEmpty(examPaperQuestions)) {
+            var examPaperQuestionsVOS = examPaperQuestions.stream().map(examPaperQuestionVO -> {
+                var examPaperQuestion = new ExamPaperQuestionVO();
+                examPaperQuestion.setExamPaperId(examPaper.getId());
+                examPaperQuestion.setQuestionId(examPaperQuestionVO.getQuestionId());
+                examPaperQuestion.setScore(examPaperQuestionVO.getScore());
+                return examPaperQuestion;
+            }).collect(Collectors.toList());
+            // 新增试卷题目之前先将原试卷题目删除
+            examPaperQuestionService.deleteExamPaperQuestions(examPaper.getId());
+            // 新增
+            examPaperQuestionService.insertExamPaperQuestions(examPaperQuestionsVOS);
+        }
         return true;
     }
 
@@ -106,6 +142,16 @@ public class ExamPaperServiceImpl extends ServiceImpl<ExamPaperMapper, ExamPaper
         return examPapers.stream()
                 .map(this::convertToExamPaperDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ExamPaperDetailDTO convertToExamPaperDetailDTO(ExamPaper examPaper) {
+        var examPaperDetailDTO = new ExamPaperDetailDTO();
+        BeanUtils.copyProperties(examPaper, examPaperDetailDTO);
+
+        var questions = examPaperQuestionService.listExamPaperQuestions(examPaper.getId());
+        examPaperDetailDTO.setQuestions(questions);
+        return examPaperDetailDTO;
     }
 
 

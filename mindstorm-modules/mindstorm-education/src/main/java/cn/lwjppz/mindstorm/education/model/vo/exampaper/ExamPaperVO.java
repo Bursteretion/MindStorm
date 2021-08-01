@@ -1,5 +1,6 @@
 package cn.lwjppz.mindstorm.education.model.vo.exampaper;
 
+import cn.lwjppz.mindstorm.education.model.vo.exampaperquestion.ExamPaperQuestionVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p></p>
@@ -49,5 +51,8 @@ public class ExamPaperVO {
 
     @ApiModelProperty(value = "试卷状态（0-未完成，1-完成）")
     private Boolean status;
+
+    @ApiModelProperty(value = "试卷题目集合")
+    private List<ExamPaperQuestionVO> examPaperQuestions;
 
 }

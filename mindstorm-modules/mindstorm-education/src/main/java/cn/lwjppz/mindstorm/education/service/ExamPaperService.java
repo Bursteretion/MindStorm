@@ -1,6 +1,7 @@
 package cn.lwjppz.mindstorm.education.service;
 
 import cn.lwjppz.mindstorm.education.model.dto.exampaper.ExamPaperDTO;
+import cn.lwjppz.mindstorm.education.model.dto.exampaper.ExamPaperDetailDTO;
 import cn.lwjppz.mindstorm.education.model.entity.ExamPaper;
 import cn.lwjppz.mindstorm.education.model.vo.exampaper.ExamPaperQueryVO;
 import cn.lwjppz.mindstorm.education.model.vo.exampaper.ExamPaperVO;
@@ -36,6 +37,14 @@ public interface ExamPaperService extends IService<ExamPaper> {
     ExamPaper createExamPaper(ExamPaperVO examPaperVO);
 
     /**
+     * 获取试卷详情
+     *
+     * @param examPaperId 试卷Id
+     * @return 试卷信息
+     */
+    ExamPaper infoExamPaper(String examPaperId);
+
+    /**
      * 更改试卷名
      *
      * @param examPaperId 试卷Id
@@ -52,6 +61,7 @@ public interface ExamPaperService extends IService<ExamPaper> {
      */
     boolean updateExamPaper(ExamPaperVO examPaperVO);
 
+
     /**
      * 将 ExamPaper 对象转为 ExamPaperDTO 对象
      *
@@ -67,5 +77,13 @@ public interface ExamPaperService extends IService<ExamPaper> {
      * @return ExamPaperDTO 对象集合
      */
     List<ExamPaperDTO> convertToExamPaperDTO(List<ExamPaper> examPapers);
+
+    /**
+     * 将 ExamPaper 对象转为 ExamPaperDetailDTO 对象
+     *
+     * @param examPaper ExamPaper 对象
+     * @return ExamPaperDetailDTO 对象
+     */
+    ExamPaperDetailDTO convertToExamPaperDetailDTO(ExamPaper examPaper);
 
 }
