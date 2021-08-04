@@ -12,7 +12,7 @@ import styles from '@/pages/Course/manager/style.less';
 import QuestionTypeForm from './components/QuestionTypeForm';
 import QuestionUpdateDrawer from './components/QuestionUpdateDrawer';
 import QuestionFolderMoveForm from './components/QuestionFolderMoveForm';
-import ImportQuestionForm from '@/pages/Course/manager/components/question/components/ImportQuestionForm';
+import ImportQuestionForm from './components/ImportQuestionForm';
 
 const QuestionList = (props) => {
   const { courseId } = props;
@@ -212,7 +212,6 @@ const QuestionList = (props) => {
           onClick={() => {
             setQuestionId(record.id);
             setQuestionPid(record.pid);
-            console.log(record.pid);
             setQuestionFolderMoveModalVisible(true);
           }}
           key="move"

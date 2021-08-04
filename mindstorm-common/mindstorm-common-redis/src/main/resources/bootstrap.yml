@@ -1,6 +1,6 @@
 spring:
   redis:
-#    host: 119.29.28.63
-#    port: 6380
-     host: 127.0.0.1
-     port: 6379
+    host: 119.29.28.63
+    port: 6380
+#     host: 127.0.0.1
+#     port: 6379

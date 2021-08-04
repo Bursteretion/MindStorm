@@ -126,6 +126,17 @@ public class ExamPaperServiceImpl extends ServiceImpl<ExamPaperMapper, ExamPaper
     }
 
     @Override
+    public boolean deleteExamPaper(String examPaperId) {
+        if (StringUtils.isNotEmpty(examPaperId)) {
+            // 删除试卷题目
+            examPaperQuestionService.deleteExamPaperQuestions(examPaperId);
+            // 删除试卷
+            baseMapper.deleteById(examPaperId);
+        }
+        return true;
+    }
+
+    @Override
     public ExamPaperDTO convertToExamPaperDTO(ExamPaper examPaper) {
         var examPagerDTO = new ExamPaperDTO();
         BeanUtil.copyProperties(examPaper, examPagerDTO);

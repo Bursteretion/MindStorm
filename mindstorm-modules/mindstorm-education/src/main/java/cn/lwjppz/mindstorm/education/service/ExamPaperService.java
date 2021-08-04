@@ -61,6 +61,14 @@ public interface ExamPaperService extends IService<ExamPaper> {
      */
     boolean updateExamPaper(ExamPaperVO examPaperVO);
 
+    /**
+     * 根据试卷Id删除该试卷
+     *
+     * @param examPaperId 试卷Id
+     * @return 是否删除成功
+     */
+    boolean deleteExamPaper(String examPaperId);
+
 
     /**
      * 将 ExamPaper 对象转为 ExamPaperDTO 对象

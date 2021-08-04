@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Menu, Avatar, Skeleton } from 'antd';
+import { Avatar, Card, Menu, Skeleton } from 'antd';
 import styles from './style.less';
 import ClassList from './components/class';
 import QuestionList from './components/question';
@@ -7,6 +7,7 @@ import { menuMap } from './menuMap';
 import { FrownOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { infoCourse } from '@/services/course';
+import ExamManager from '@/pages/Course/manager/components/exam';
 
 const { Item } = Menu;
 
@@ -48,6 +49,8 @@ const CourseManager = () => {
         return <ClassList courseId={course.id} />;
       case 'question':
         return <QuestionList courseId={course.id} />;
+      case 'exam':
+        return <ExamManager courseId={course.id} />;
       default:
         break;
     }

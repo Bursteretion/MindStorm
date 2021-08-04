@@ -4,6 +4,7 @@
   background-color: #F1F3F6;
   height: 100%;
   width: 100%;
+  min-width: 100%;
   .header {
     position: relative;
     padding: 16px 24px;
@@ -106,6 +107,7 @@
     flex: 1;
     margin: 30px;
     margin-left: 210px;
+    min-width: 1200px;
 
     .title {
       margin-bottom: 12px;
@@ -132,21 +134,6 @@
     .ant-list-item {
       padding-top: 14px;
       padding-bottom: 14px;
-    }
-  }
-}
-
-@media screen and (max-width: @screen-md) {
-  .main {
-    flex-direction: column;
-
-    .leftMenu {
-      width: 100%;
-      border: none;
-    }
-
-    .right {
-      padding: 40px;
     }
   }
 }
