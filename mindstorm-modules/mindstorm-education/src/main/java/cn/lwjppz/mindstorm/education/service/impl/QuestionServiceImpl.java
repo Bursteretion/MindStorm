@@ -10,12 +10,12 @@ import cn.lwjppz.mindstorm.common.core.support.ValueEnum;
 import cn.lwjppz.mindstorm.common.core.utils.ServiceUtils;
 import cn.lwjppz.mindstorm.common.core.utils.StringUtils;
 import cn.lwjppz.mindstorm.education.listener.QuestionImportListener;
+import cn.lwjppz.mindstorm.education.mapper.QuestionMapper;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionDetailDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.QuestionFolderDTO;
 import cn.lwjppz.mindstorm.education.model.dto.question.TreeFolderDTO;
 import cn.lwjppz.mindstorm.education.model.entity.Question;
-import cn.lwjppz.mindstorm.education.mapper.QuestionMapper;
 import cn.lwjppz.mindstorm.education.model.entity.QuestionTopic;
 import cn.lwjppz.mindstorm.education.model.vo.question.*;
 import cn.lwjppz.mindstorm.education.model.vo.questionanswer.QuestionAnswerVO;
@@ -106,7 +106,8 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         if (null != questionQueryVO.getDifficulty()) {
             wrapper.eq(Question::getDifficulty, questionQueryVO.getDifficulty());
         }
-        wrapper.or(i -> i.eq(Question::getPid, questionQueryVO.getPid()).eq(Question::getIsFolder, true));
+        wrapper.or(i -> i.eq(Question::getCourseId, questionQueryVO.getCourseId()).eq(Question::getPid,
+                questionQueryVO.getPid()).eq(Question::getIsFolder, true));
         wrapper.orderByDesc(Question::getSort).orderByDesc(Question::getGmtCreate);
 
         IPage<Question> page = new Page<>(questionQueryVO.getPageIndex(), questionQueryVO.getPageSize());

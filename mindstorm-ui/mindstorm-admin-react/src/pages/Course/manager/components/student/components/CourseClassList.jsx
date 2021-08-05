@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Space, Input } from 'antd';
+import { Button, Input, Space } from 'antd';
 import { PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { queryCourseClass } from '@/services/courseclass';
 import '../index.less';
 import RecordDropDown from './RecordDropDown';
 import ClassForm from '@/pages/Course/manager/components/class/components/ClassForm';
+import { history } from 'umi';
 
 const { Search } = Input;
 
 const CourseClassList = (props) => {
-  const { courseId, setCurrentClassId, classId } = props;
+  const { courseId } = history.location.query;
+  const { setCurrentClassId, classId } = props;
   const [loading, setLoading] = useState(false);
   const [courseClasses, setCourseClasses] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -95,7 +97,6 @@ const CourseClassList = (props) => {
           isModalVisible={isModalVisible}
           setModalVisible={setModalVisible}
           handleQueryCourseClass={handleQueryCourseClass}
-          courseId={courseId}
         />
       )}
     </>

@@ -3,14 +3,18 @@ import { Button, Drawer, Dropdown, Menu, Popconfirm, Space } from 'antd';
 import { FolderOpenTwoTone, PlusOutlined, ToTopOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import styles from '@/pages/Course/manager/style.less';
-import { queryExamPaper } from '@/services/exampaper';
-import { useModel } from 'umi';
+import { createExamPaper, queryExamPaper } from '@/services/exampaper';
+import { history, useModel } from 'umi';
+import CreateUpdateExamPaperSelf from './components/CreateUpdateExamPaperSelfDrawer';
+import { getTimeFormat } from '@/utils/utils';
 
 const ExamPaperTable = (props) => {
-  const { courseId, isDrawerVisible, setDrawerVisible } = props;
+  const { courseId } = history.location.query;
+  const { isDrawerVisible, setDrawerVisible } = props;
   const actionRef = useRef();
   const [examPaperId, setExamPaperId] = useState(undefined);
   const [examPaperPid, setExamPaperPid] = useState(undefined);
+  const [isExamPaperSelfDrawerVisible, setExamPaperSelfDrawerVisible] = useState(false);
   const [paths, setPaths] = useState([{ name: '全部试卷', value: '0' }]);
   const [pid, setPid] = useState('0');
   const { userId = '' } = useModel('@@initialState', (res) => ({
@@ -59,6 +63,25 @@ const ExamPaperTable = (props) => {
       total,
       success: res.success,
     };
+  };
+
+  const handleCreateExamPaper = async () => {
+    const examPaper = {
+      courseId,
+      userId,
+      title: `新建试卷${getTimeFormat('yyyyMMddHHmmss')}`,
+      questionCount: 0,
+      totalScore: 0.0,
+      difficulty: 0,
+      isFolder: false,
+      status: 0,
+    };
+    const res = await createExamPaper(examPaper);
+    if (res.success) {
+      console.log(res.data);
+      setExamPaperId(res.data.examPaper.id);
+      setExamPaperSelfDrawerVisible(true);
+    }
   };
 
   const columns = [
@@ -215,7 +238,13 @@ const ExamPaperTable = (props) => {
                 key="create"
                 overlay={
                   <Menu>
-                    <Menu.Item key="createBySelf">
+                    <Menu.Item
+                      key="createBySelf"
+                      onClick={(e) => {
+                        e.domEvent.stopPropagation();
+                        handleCreateExamPaper();
+                      }}
+                    >
                       <a>手动创建试卷</a>
                     </Menu.Item>
                     <Menu.Item key="createAuto">
@@ -263,6 +292,14 @@ const ExamPaperTable = (props) => {
           />
         )}
       </Drawer>
+      {!isExamPaperSelfDrawerVisible ? (
+        ''
+      ) : (
+        <CreateUpdateExamPaperSelf
+          isDrawerVisible={isExamPaperSelfDrawerVisible}
+          setDrawerVisible={setExamPaperSelfDrawerVisible}
+        />
+      )}
     </>
   );
 };

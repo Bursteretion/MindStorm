@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Form, message, Modal, Upload } from 'antd';
+import React from 'react';
+import { message, Modal, Upload } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import { getToken } from '@/utils/authority';
 import { importQuestion } from '@/services/question';
+import { history } from 'umi';
 
 const { Dragger } = Upload;
 
-const CreateUpdateFolderForm = (props) => {
-  const { isModalVisible, setModalVisible, courseId, userId, actionRef } = props;
+const CreateUpdateFolderForm = () => {
+  const { courseId } = history.location.query;
+  const { isModalVisible, setModalVisible, userId, actionRef } = props;
 
   const draggerProps = {
     name: 'importFile',

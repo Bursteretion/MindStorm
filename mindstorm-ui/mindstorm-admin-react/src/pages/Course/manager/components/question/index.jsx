@@ -6,7 +6,7 @@ import { deleteQuestion, queryQuestion, QuestionDifficultyStatus } from '@/servi
 import { listQuestionTypeSelects } from '@/services/questiontype';
 import { listTopicSelects } from '@/services/topic';
 import QuestionCreateDrawer from './components/QuestionCreateDrawer';
-import { useModel } from 'umi';
+import { history, useModel } from 'umi';
 import CreateUpdateFolderForm from './components/CreateUpdateFolderForm';
 import styles from '@/pages/Course/manager/style.less';
 import QuestionTypeForm from './components/QuestionTypeForm';
@@ -14,8 +14,8 @@ import QuestionUpdateDrawer from './components/QuestionUpdateDrawer';
 import QuestionFolderMoveForm from './components/QuestionFolderMoveForm';
 import ImportQuestionForm from './components/ImportQuestionForm';
 
-const QuestionList = (props) => {
-  const { courseId } = props;
+const QuestionList = () => {
+  const { courseId } = history.location.query;
   const actionRef = useRef();
   const [questionTypes, setQuestionTypes] = useState(undefined);
   const [topics, setTopics] = useState(undefined);
@@ -327,7 +327,6 @@ const QuestionList = (props) => {
           isModalVisible={isCreateFolderModalVisible}
           setModalVisible={setCreateFolderModalVisible}
           actionRef={actionRef}
-          courseId={courseId}
           userId={userId}
           pid={pid}
           questionId={questionId}
@@ -347,7 +346,6 @@ const QuestionList = (props) => {
         <QuestionCreateDrawer
           isDrawerVisible={isQuestionCreateDrawerVisible}
           setDrawerVisible={setQuestionCreateDrawerVisible}
-          courseId={courseId}
           userId={userId}
           pid={pid}
           actionRef={actionRef}
@@ -369,7 +367,6 @@ const QuestionList = (props) => {
         <QuestionFolderMoveForm
           isModalVisible={isQuestionFolderMoveModalVisible}
           setModalVisible={setQuestionFolderMoveModalVisible}
-          courseId={courseId}
           questionId={questionId}
           questionPid={questionPid}
           actionRef={actionRef}
@@ -381,7 +378,6 @@ const QuestionList = (props) => {
         <ImportQuestionForm
           isModalVisible={isImportModalVisible}
           setModalVisible={setImportModalVisible}
-          courseId={courseId}
           userId={userId}
           actionRef={actionRef}
         />

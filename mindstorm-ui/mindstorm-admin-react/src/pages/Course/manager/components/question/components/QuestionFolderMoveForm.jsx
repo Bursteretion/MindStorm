@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { message, Modal, Skeleton, Tree } from 'antd';
 import { listTreeFolders, moveQuestion } from '@/services/question';
+import { history } from 'umi';
 
 const { DirectoryTree } = Tree;
 
 const QuestionFolderMoveForm = (props) => {
-  const { isModalVisible, setModalVisible, courseId, actionRef, questionId, questionPid } = props;
+  const { courseId } = history.location.query;
+  const { isModalVisible, setModalVisible, actionRef, questionId, questionPid } = props;
   const [treeFolders, setTreeFolders] = useState(undefined);
   const [currentFolder, setCurrentFolder] = useState(undefined);
   const [selectedFolder, setSelectedFolder] = useState(undefined);

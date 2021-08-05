@@ -22,12 +22,16 @@ const RecordDropDown = (props) => {
   };
 
   const menu = (
-    <Menu>
+    <Menu
+      onClick={(e) => {
+        e.domEvent.stopPropagation();
+      }}
+    >
       <Menu.Item key="resetClassName">
-        <a>重命名</a>
+        <span>重命名</span>
       </Menu.Item>
       <Menu.Item key="settingClass">
-        <a>设置</a>
+        <span>设置</span>
       </Menu.Item>
       <Menu.Item key="deleteClass">
         <Popconfirm
@@ -37,7 +41,7 @@ const RecordDropDown = (props) => {
           okText="确定"
           cancelText="取消"
         >
-          <a>删除</a>
+          <span>删除</span>
         </Popconfirm>
       </Menu.Item>
     </Menu>
@@ -46,7 +50,7 @@ const RecordDropDown = (props) => {
   return (
     <>
       <Dropdown overlay={menu}>
-        <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+        <a className="ant-dropdown-link" onClick={(e) => e.stopPropagation()}>
           更多 <DownOutlined />
         </a>
       </Dropdown>

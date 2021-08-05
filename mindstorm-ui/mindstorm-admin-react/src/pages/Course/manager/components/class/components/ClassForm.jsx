@@ -2,10 +2,12 @@ import React from 'react';
 import { Form, message, Modal } from 'antd';
 import { ProFormDigit, ProFormText } from '@ant-design/pro-form';
 import { createCourseClass } from '@/services/courseclass';
+import { history } from 'umi';
 
 const ClassForm = (props) => {
+  const { courseId } = history.location.query;
   const [courseClassForm] = Form.useForm();
-  const { isModalVisible, setModalVisible, handleQueryCourseClass, courseId } = props;
+  const { isModalVisible, setModalVisible, handleQueryCourseClass } = props;
 
   const handleSubmitForm = async (courseClassVO) => {
     const courseClass = { ...courseClassVO, courseId };

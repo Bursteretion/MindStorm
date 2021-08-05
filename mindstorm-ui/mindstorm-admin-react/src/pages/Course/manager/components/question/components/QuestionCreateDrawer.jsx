@@ -1,26 +1,19 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { FrownOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
-  CheckOutlined,
-  CloseOutlined,
-  FrownOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from '@ant-design/icons';
-import {
+  Alert,
+  Button,
+  Checkbox,
+  Collapse,
   Drawer,
+  Form,
+  Input,
   message,
+  Radio,
   Skeleton,
   Space,
   Tabs,
-  Collapse,
-  Radio,
-  Button,
   Tag,
-  Form,
-  Input,
-  Checkbox,
-  Switch,
-  Alert,
 } from 'antd';
 import styles from '@/pages/Course/manager/style.less';
 import ProCard from '@ant-design/pro-card';
@@ -30,12 +23,14 @@ import TopicForm from '@/pages/Course/manager/components/question/components/Top
 import { uploadQuestionImage } from '@/services/attachment';
 import TinyMceModalEditor from '@/components/TinyMceEditor/modal';
 import { createQuestion } from '@/services/question';
+import { history } from 'umi';
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
 const QuestionCreateDrawer = (props) => {
-  const { isDrawerVisible, setDrawerVisible, courseId, actionRef, userId, pid } = props;
+  const { courseId } = history.location.query;
+  const { isDrawerVisible, setDrawerVisible, actionRef, userId, pid } = props;
   const [questionTypes, setQuestionTypes] = useState(undefined);
   const [currentTopics, setCurrentTopics] = useState([]);
   const [currentQuestionType, setCurrentQuestionType] = useState(0);

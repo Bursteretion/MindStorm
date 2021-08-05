@@ -5,9 +5,11 @@ import { FrownOutlined } from '@ant-design/icons';
 import ProCard from '@ant-design/pro-card';
 import CourseClassList from './components/CourseClassList';
 import StudentTable from './components/StudentTable';
+import { history } from 'umi';
 
 const StudentMain = (props) => {
-  const { isDrawerVisible, setDrawerVisible, classId, courseId, handleQueryCourseClass } = props;
+  const { courseId } = history.location.query;
+  const { isDrawerVisible, setDrawerVisible, classId, handleQueryCourseClass } = props;
   const [currentClassId, setCurrentClassId] = useState(classId);
   const childRef = React.createRef();
 
@@ -38,11 +40,7 @@ const StudentMain = (props) => {
       >
         <ProCard className="mainCard" split="vertical">
           <ProCard className="leftCard" colSpan="290px" ghost>
-            <CourseClassList
-              classId={classId}
-              courseId={courseId}
-              setCurrentClassId={setCurrentClassId}
-            />
+            <CourseClassList classId={classId} setCurrentClassId={setCurrentClassId} />
           </ProCard>
           <ProCard>
             <StudentTable childRef={childRef} currentClassId={currentClassId} />

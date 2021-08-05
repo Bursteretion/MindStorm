@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Form, message, Modal, Skeleton } from 'antd';
 import { ProFormText } from '@ant-design/pro-form';
 import { createQuestion, infoFolder, renameFolder } from '@/services/question';
+import { history } from 'umi';
 
 const CreateUpdateFolderForm = (props) => {
-  const { isModalVisible, setModalVisible, courseId, userId, pid, actionRef, questionId } = props;
+  const { courseId } = history.location.query;
+  const { isModalVisible, setModalVisible, userId, pid, actionRef, questionId } = props;
   const [FolderForm] = Form.useForm();
   const [folder, setFolder] = useState(undefined);
 

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import ProList from '@ant-design/pro-list';
-import { Tag, message, Popconfirm, Row, Col, Input, Button } from 'antd';
+import { Button, Col, Input, message, Popconfirm, Row, Tag } from 'antd';
 import { deleteCourseClass, queryCourseClass, updateCourseClass } from '@/services/courseclass';
 import { PlusOutlined } from '@ant-design/icons';
 import ClassForm from './components/ClassForm';
 import StudentMain from '@/pages/Course/manager/components/student';
+import { history } from 'umi';
 
 const { Search } = Input;
 
-const ClassList = (props) => {
-  const { courseId } = props;
+const ClassList = () => {
+  const { courseId } = history.location.query;
   const [courseClasses, setCourseClasses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -26,9 +27,7 @@ const ClassList = (props) => {
   };
 
   useEffect(() => {
-    if (courseId !== undefined) {
-      handleQueryCourseClass({ courseId, className: '' });
-    }
+    handleQueryCourseClass({ courseId, className: '' });
   }, [courseId]);
 
   const handleDeleteCourseClass = async (courseClass) => {
@@ -153,14 +152,12 @@ const ClassList = (props) => {
           isModalVisible={isModalVisible}
           setModalVisible={setModalVisible}
           handleQueryCourseClass={handleQueryCourseClass}
-          courseId={courseId}
         />
       )}
       {!isDrawerVisible && classId === undefined ? (
         ''
       ) : (
         <StudentMain
-          courseId={courseId}
           classId={classId}
           isDrawerVisible={isDrawerVisible}
           setDrawerVisible={setDrawerVisible}
