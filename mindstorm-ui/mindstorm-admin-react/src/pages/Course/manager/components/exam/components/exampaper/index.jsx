@@ -5,7 +5,7 @@ import ProTable from '@ant-design/pro-table';
 import styles from '@/pages/Course/manager/style.less';
 import { createExamPaper, queryExamPaper } from '@/services/exampaper';
 import { history, useModel } from 'umi';
-import CreateUpdateExamPaperSelf from './components/CreateUpdateExamPaperSelfDrawer';
+import CreateUpdateExamPaperSelfDrawer from './components/CreateUpdateExamPaperSelfDrawer';
 import { getTimeFormat } from '@/utils/utils';
 
 const ExamPaperTable = (props) => {
@@ -171,7 +171,7 @@ const ExamPaperTable = (props) => {
           <a
             onClick={() => {
               setExamPaperId(record.id);
-              // setQuestionUpdateDrawerVisible(true);
+              setExamPaperSelfDrawerVisible(true);
             }}
             key="edit"
           >
@@ -295,9 +295,10 @@ const ExamPaperTable = (props) => {
       {!isExamPaperSelfDrawerVisible ? (
         ''
       ) : (
-        <CreateUpdateExamPaperSelf
+        <CreateUpdateExamPaperSelfDrawer
           isDrawerVisible={isExamPaperSelfDrawerVisible}
           setDrawerVisible={setExamPaperSelfDrawerVisible}
+          examPaperId={examPaperId}
         />
       )}
     </>

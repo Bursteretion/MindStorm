@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, message, Popconfirm, Select, Space } from 'antd';
+import { Button, message, Popconfirm, Select, Space, Table } from 'antd';
 import { FolderOpenTwoTone, PlusOutlined, SettingOutlined, ToTopOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { deleteQuestion, queryQuestion, QuestionDifficultyStatus } from '@/services/question';
@@ -14,7 +14,8 @@ import QuestionUpdateDrawer from './components/QuestionUpdateDrawer';
 import QuestionFolderMoveForm from './components/QuestionFolderMoveForm';
 import ImportQuestionForm from './components/ImportQuestionForm';
 
-const QuestionList = () => {
+const QuestionList = (props) => {
+  const { selectQuestion = false, selectedQuestionIds = [], setSelectedQuestions } = props;
   const { courseId } = history.location.query;
   const actionRef = useRef();
   const [questionTypes, setQuestionTypes] = useState(undefined);
@@ -25,6 +26,7 @@ const QuestionList = () => {
   const [isQuestionFolderMoveModalVisible, setQuestionFolderMoveModalVisible] = useState(false);
   const [isQuestionTypeModalVisible, setQuestionTypeModalVisible] = useState(false);
   const [isImportModalVisible, setImportModalVisible] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState(selectedQuestionIds);
   const [paths, setPaths] = useState([{ name: '课程题库', value: '0' }]);
   const [pid, setPid] = useState('0');
   const [questionPid, setQuestionPid] = useState('0');
@@ -144,6 +146,12 @@ const QuestionList = () => {
     {
       title: '题目类型',
       dataIndex: 'questionType',
+      hideInSearch: true,
+    },
+    {
+      title: '题目类型',
+      dataIndex: 'questionTypeId',
+      hideInTable: true,
       renderFormItem: (item, { type }) => {
         if (type === 'form') {
           return null;
@@ -177,16 +185,19 @@ const QuestionList = () => {
       title: '创建者',
       dataIndex: 'userRealName',
       search: false,
+      hideInTable: selectQuestion,
     },
     {
       title: '课程',
       dataIndex: 'courseName',
       search: false,
+      hideInTable: selectQuestion,
     },
     {
       title: '创建时间',
       dataIndex: 'gmtCreate',
       valueType: 'dateTime',
+      hideInTable: selectQuestion,
       hideInForm: true,
       hideInSearch: true,
     },
@@ -260,12 +271,53 @@ const QuestionList = () => {
           className={styles.table}
           columns={columns}
           actionRef={actionRef}
+          rowSelection={
+            selectQuestion && {
+              selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+              selectedKeys,
+              getCheckboxProps: (record) => {
+                return {
+                  disabled: record.isFolder,
+                };
+              },
+              onChange: (selectedRowKeys) => {
+                setSelectedKeys(selectedRowKeys);
+              },
+            }
+          }
           rowKey={(record) => record.id}
           request={(params) => handleQueryQuestions(params)}
           dateFormatter="string"
           headerTitle={generatePath()}
           pagination={{ defaultCurrent: 1, defaultPageSize: 10 }}
           options={{ fullScreen: true }}
+          tableAlertRender={
+            selectQuestion
+              ? ({ selectedRowKeys, selectedRows, onCleanSelected }) => (
+                  <Space size={24}>
+                    <span>
+                      已选 {selectedRowKeys.length} 题
+                      <a
+                        style={{ marginLeft: 8 }}
+                        onClick={() => setSelectedQuestions(selectedRows)}
+                      >
+                        加入试卷
+                      </a>
+                      <a
+                        style={{ marginLeft: 8 }}
+                        onClick={() => {
+                          onCleanSelected();
+                          setSelectedQuestions([]);
+                        }}
+                      >
+                        取消选择
+                      </a>
+                    </span>
+                  </Space>
+                )
+              : false
+          }
+          tableAlertOptionRender={false}
           toolBarRender={() => [
             <Button
               key="create"
@@ -307,16 +359,18 @@ const QuestionList = () => {
             >
               题型管理
             </Button>,
-            <Button
-              key="export"
-              icon={<ToTopOutlined />}
-              type="link"
-              onClick={() => {
-                setQuestionCreateDrawerVisible(true);
-              }}
-            >
-              导出全部
-            </Button>,
+            !selectQuestion && (
+              <Button
+                key="export"
+                icon={<ToTopOutlined />}
+                type="link"
+                onClick={() => {
+                  setQuestionCreateDrawerVisible(true);
+                }}
+              >
+                导出全部
+              </Button>
+            ),
           ]}
         />
       )}
